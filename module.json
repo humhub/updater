@@ -1,0 +1,12 @@
+{
+    "id": "updater",
+    "name": "Humhub Updater",
+    "description": "Automatic  HumHub updater. (For web & console)",
+    "keywords": [
+        "core"
+    ],
+    "humhub": {
+        "minVersion": "0.9.0"
+    },
+    "version": "0.9"
+}
