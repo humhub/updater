@@ -222,7 +222,7 @@ class UpdatePackage {
      * @param type $file
      */
     private function deleteFile($file) {
-        return @unlink($realFilePath);
+        return @unlink($file);
     }
 
 }
