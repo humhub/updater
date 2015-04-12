@@ -130,7 +130,7 @@ class UpdatePackage {
         foreach ($changedFiles as $fileName => $info) {
             $realFilePath = Yii::getPathOfAlias('webroot') . DIRECTORY_SEPARATOR . $fileName;
             if ($info['changeType'] == 'D') {
-                if ($this->deleteFile($realFilePath)) {
+                if (!$this->deleteFile($realFilePath)) {
                     $warnings[] = "Deletion of " . $realFilePath . " failed!";
                 }
             } elseif ($info['changeType'] == 'A' || $info['changeType'] == 'M') {
