@@ -12,7 +12,7 @@ class UpdaterModule extends HWebModule {
             'label' => Yii::t('UpdaterModule.base', 'Update HumHub <sup>BETA</sup>'),
             'url' => Yii::app()->getController()->createUrl('//updater/update'),
             'icon' => '<i class="fa fa-cloud-download"></i>',
-            'group' => 'manage',
+            'group' => 'settings',
             'sortOrder' => 9000,
             'isActive' => (Yii::app()->controller->module && Yii::app()->controller->module->id == 'updater')
         ));
