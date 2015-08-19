@@ -14,7 +14,7 @@ class UpdatePackage {
     public $md5;
 
     private function getDirectory() {
-        $packageDir = $this->getUpdaterDirectory() . DIRECTORY_SEPARATOR . $this->versionTo;
+        $packageDir = $this->getUpdaterDirectory() . DIRECTORY_SEPARATOR . preg_replace('/\.zip$/i','',$this->fileName);
 
         if (!is_dir($packageDir)) {
             throw new CException("Could not get package directory!");
