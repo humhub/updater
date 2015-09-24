@@ -1,3 +1,6 @@
+<?php
+    use yii\helpers\Html;
+?>
 <div class="panel panel-default">
     <div class="panel-heading"><strong><?php echo $updatePackage->versionTo; ?></strong> <?php echo Yii::t('UpdaterModule.base', 'successfully installed!'); ?></div>
     <div class="panel-body">
@@ -25,7 +28,7 @@
         </div>
         <br />
         <br />
-        <?php echo HHtml::postLink(Yii::t("UpdaterModule.base", "Check for next update"), $this->createUrl("index"), array('class' => 'btn btn-primary')); ?>
+        <?php echo Html::a(Yii::t("UpdaterModule.base", "Check for next update"), ["index"], array('class' => 'btn btn-primary', 'data-method' => 'POST')); ?>
     </div>
 
 </div>

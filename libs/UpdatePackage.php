@@ -1,100 +1,140 @@
 <?php
 
+namespace humhub\modules\updater\libs;
+
+use Yii;
+use yii\base\Exception;
+use yii\helpers\Json;
+
 /**
  * UpdatePackage
  *
  * @author luke
  */
-class UpdatePackage {
+class UpdatePackage
+{
 
     public $versionTo;
     public $versionFrom;
     public $downloadUrl;
+
+    /**
+     * @var string the download package file name
+     */
     public $fileName;
     public $md5;
 
-    private function getDirectory() {
-        $packageDir = $this->getUpdaterDirectory() . DIRECTORY_SEPARATOR . $this->versionTo;
+    public function __construct($fileName, $versionFrom, $versionTo)
+    {
+        $this->fileName = $fileName;
+        $this->versionFrom = $versionFrom;
+        $this->versionTo = $versionTo;
+    }
+
+    /**
+     * Returns the package directory
+     * 
+     * @return string
+     * @throws Exception
+     */
+    private function getDirectory()
+    {
+        $packageDir = Yii::$app->getModule('updater')->getTempPath() . DIRECTORY_SEPARATOR . basename(str_replace('.zip', '', $this->fileName));
 
         if (!is_dir($packageDir)) {
-            throw new CException("Could not get package directory!");
+            throw new Exception("Could not get package directory!" . $packageDir);
         }
 
         return $packageDir;
     }
 
-    private function getUpdaterDirectory() {
-        $workDir = Yii::app()->getRuntimePath() . DIRECTORY_SEPARATOR . 'updater';
-        if (!is_dir($workDir)) {
-            if (!@mkdir($workDir)) {
-                throw new CException("Could not create updater runtime folder!");
-            }
-        }
-        return $workDir;
-    }
-
-    private function getNewFileDirectory() {
+    /**
+     * Returns the package directory which contains all changed files
+     * 
+     * @return string
+     * @throws Exception
+     */
+    private function getNewFileDirectory()
+    {
         $fileDir = $this->getDirectory() . DIRECTORY_SEPARATOR . 'files';
 
         if (!is_dir($fileDir)) {
-            throw new CException("Could not get package file directory!");
+            throw new Exception("Could not get package file directory!");
         }
 
         return $fileDir;
     }
 
-    public function download() {
-        $targetFile = $this->getUpdaterDirectory() . DIRECTORY_SEPARATOR . $this->fileName;
+    /**
+     * Downloads the update package
+     * 
+     * @throws Exception
+     */
+    public function download()
+    {
+        $targetFile = Yii::$app->getModule('updater')->getTempPath() . DIRECTORY_SEPARATOR . $this->fileName;
 
+        // Unlink download if exists and not matches the md5
         if (is_file($targetFile) && md5_file($targetFile) != $this->md5) {
             unlink($targetFile);
         }
 
-        try {
-            $http = new Zend_Http_Client($this->downloadUrl, array(
-                'adapter' => 'Zend_Http_Client_Adapter_Curl',
-                'curloptions' => Yii::app()->getModule('updater')->getCurlOptions(),
-                'timeout' => 300
-            ));
-            $response = $http->request();
-            file_put_contents($targetFile, $response->getBody());
-        } catch (Exception $ex) {
-            throw new CHttpException('500', Yii::t('UpdaterModule.libs_UpdatePackage', 'Update download failed! (%error%)', array('%error%' => $ex->getMessage())));
+        // Download Package
+        if (!is_file($targetFile)) {
+            try {
+                $http = new \Zend\Http\Client($this->downloadUrl, array(
+                    'adapter' => '\Zend\Http\Client\Adapter\Curl',
+                    'curloptions' => Yii::$app->getModule('updater')->getCurlOptions(),
+                    'timeout' => 300
+                ));
+                $response = $http->send();
+                file_put_contents($targetFile, $response->getBody());
+            } catch (Exception $ex) {
+                throw new Exception(Yii::t('UpdaterModule.libs_UpdatePackage', 'Update download failed! (%error%)', array('%error%' => $ex->getMessage())));
+            }
         }
 
         if (md5_file($targetFile) != $this->md5) {
-            throw new CHttpException('500', Yii::t('UpdaterModule.base', 'Update package invalid!'));
+            throw new Exception(Yii::t('UpdaterModule.base', 'Update package invalid!'));
         }
     }
 
-    public function extract() {
-        $targetFile = $this->getUpdaterDirectory() . DIRECTORY_SEPARATOR . $this->fileName;
+    public function extract()
+    {
+        $targetFile = Yii::$app->getModule('updater')->getTempPath() . DIRECTORY_SEPARATOR . $this->fileName;
 
         if (!is_file($targetFile) || md5_file($targetFile) != $this->md5) {
-            unlink($targetFile);
+            throw new Exception("Invalid package file!");
         }
 
-        $zip = new ZipArchive;
+        $zip = new \ZipArchive();
         $res = $zip->open($targetFile);
         if ($res === TRUE) {
-            $zip->extractTo($this->getUpdaterDirectory());
+            $zip->extractTo(Yii::$app->getModule('updater')->getTempPath());
             $zip->close();
         } else {
-            throw new CHttpException('500', Yii::t('UpdaterModule.base', 'Could not extract update package!'));
+            throw new Exception(Yii::t('UpdaterModule.base', 'Could not extract update package!'));
         }
     }
 
     /**
      * Returns the results of package validations
      */
-    public function validate() {
+    public function validate()
+    {
         $results = array();
         $results['notWritable'] = array();
         $results['modified'] = array();
 
         $changedFiles = $this->getChangedFiles();
         foreach ($changedFiles as $fileName => $info) {
-            $realFilePath = Yii::getPathOfAlias('webroot') . DIRECTORY_SEPARATOR . $fileName;
+            
+            // Ignore warnings of composer changes
+            if (strpos($fileName, 'protected/vendor/') !== FALSE) {
+                continue;
+            }
+            
+            $realFilePath = Yii::getAlias('@webroot') . DIRECTORY_SEPARATOR . $fileName;
 
             if ($info['changeType'] == 'D') {
                 if (is_file($realFilePath) && !$this->isWritable($realFilePath)) {
@@ -123,12 +163,13 @@ class UpdatePackage {
         return $results;
     }
 
-    public function install() {
+    public function install()
+    {
         $warnings = array();
 
         $changedFiles = $this->getChangedFiles();
         foreach ($changedFiles as $fileName => $info) {
-            $realFilePath = Yii::getPathOfAlias('webroot') . DIRECTORY_SEPARATOR . $fileName;
+            $realFilePath = Yii::getAlias('@webroot') . DIRECTORY_SEPARATOR . $fileName;
             if ($info['changeType'] == 'D') {
                 if (!$this->deleteFile($realFilePath)) {
                     $warnings[] = "Deletion of " . $realFilePath . " failed!";
@@ -144,16 +185,18 @@ class UpdatePackage {
         return $warnings;
     }
 
-    public function getChangedFiles() {
+    public function getChangedFiles()
+    {
         $file = $this->getDirectory() . DIRECTORY_SEPARATOR . "update.json";
         if (!is_file($file)) {
-            throw new CException("Could not open update.json!");
+            throw new Exception("Could not open update.json!");
         }
-        $update = CJSON::decode(file_get_contents($file));
+        $update = Json::decode(file_get_contents($file));
         return $update['changedFiles'];
     }
 
-    public function getReleaseNotes() {
+    public function getReleaseNotes()
+    {
         $releaseNotesFile = $this->getDirectory() . DIRECTORY_SEPARATOR . 'changes.md';
         if (is_file($releaseNotesFile)) {
             return file_get_contents($releaseNotesFile);
@@ -167,7 +210,8 @@ class UpdatePackage {
      * 
      * @param String $f 
      */
-    private function isWritable($f) {
+    private function isWritable($f)
+    {
 
         if (is_dir($f) || is_file($f)) {
             return is_writable($f);
@@ -193,7 +237,8 @@ class UpdatePackage {
      * 
      * @param String $file
      */
-    private function installFile($source, $target) {
+    private function installFile($source, $target)
+    {
 
         $directory = dirname($target);
         if (!is_dir($directory)) {
@@ -221,7 +266,8 @@ class UpdatePackage {
      * @todo Also delete parent directories - when empty
      * @param type $file
      */
-    private function deleteFile($file) {
+    private function deleteFile($file)
+    {
         return @unlink($file);
     }
 

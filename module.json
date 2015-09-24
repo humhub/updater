@@ -1,12 +1,12 @@
 {
     "id": "updater",
     "name": "Humhub Updater (Beta)",
-    "description": "Automatic  HumHub updater. (For web & console) - Beta/Test Version!",
+    "description": "Automatic HumHub updater. Beta Version!",
     "keywords": [
         "core"
     ],
     "humhub": {
-        "minVersion": "0.9.0"
+        "minVersion": "0.20.0"
     },
-    "version": "0.1"
+    "version": "0.2"
 }

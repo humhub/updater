@@ -1,3 +1,7 @@
+<?php
+
+use yii\helpers\Html;
+?>
 <div class="panel panel-default">
     <div class="panel-heading"><?php echo Yii::t('UpdaterModule.base', '<strong>Update</strong> HumHub <sup>BETA</sup>'); ?></div>
     <div class="panel-body">
@@ -14,12 +18,13 @@
                 <li><?php echo Yii::t('UpdaterModule.base', 'Make sure all files are writable by application'); ?></li>
                 <li><?php echo Yii::t('UpdaterModule.base', 'Please update installed marketplace modules before and after the update'); ?></li>
                 <li><?php echo Yii::t('UpdaterModule.base', 'Make sure custom modules or themes are compatible with version %version%', array('%version%' => $updatePackage->versionTo)); ?></li>
-                <li><?php echo Yii::t('UpdaterModule.base', 'Do not use this updater in combination with Git!'); ?></li>
+                <li><?php echo Yii::t('UpdaterModule.base', 'Do not use this updater in combination with Git or Composer installations!'); ?></li>
             </ul>
         </div>
 
-        <?php echo HHtml::postLink(Yii::t('UpdaterModule.base', "Start Installation"), $this->createUrl("start"), array('class' => 'btn btn-primary')); ?>
+        <?php echo Html::a(Yii::t('UpdaterModule.base', "Start Installation"), ["start"], array('class' => 'btn btn-primary', 'data-loader' => "modal", 'data-message' => Yii::t('UpdaterModule.base', 'Downloading update package...'), 'data-method' => 'POST')); ?>
 
     </div>
 
 </div>
+
