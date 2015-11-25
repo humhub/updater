@@ -6,7 +6,7 @@
         "core"
     ],
     "humhub": {
-        "minVersion": "0.20.0"
+        "minVersion": "0.20"
     },
-    "version": "0.2"
+    "version": "0.3"
 }

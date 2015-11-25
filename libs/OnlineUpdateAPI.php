@@ -22,32 +22,37 @@ class OnlineUpdateAPI
      */
     public static function getAvailableUpdate()
     {
-        try {
 
-            $url = Yii::$app->getModule('admin')->marketplaceApiUrl . "getHumHubUpdates?version=" . Yii::$app->version . "&updaterVersion=" . Yii::$app->getModule('updater')->version . "&installId=" . Setting::Get('installationId', 'admin');
-            $http = new \Zend\Http\Client($url, array(
-                'adapter' => '\Zend\Http\Client\Adapter\Curl',
-                'curloptions' => Yii::$app->getModule('updater')->getCurlOptions(),
-                'timeout' => 30
-            ));
-            $response = $http->send();
-            $info = Json::decode($response->getBody());
-            
-
-            if (!isset($info['fromVersion'])) {
-                return null;
+        $info = [];
+        if (class_exists('\humhub\modules\admin\libs\HumHubAPI')) {
+            $info = \humhub\modules\admin\libs\HumHubAPI::request('getHumHubUpdates', [
+                'updaterVersion' => Yii::$app->getModule('updater')->version
+            ]);
+        } else {
+            // older Versions
+            try {
+                $url = Yii::$app->getModule('admin')->marketplaceApiUrl . "getHumHubUpdates?version=" . Yii::$app->version . "&updaterVersion=" . Yii::$app->getModule('updater')->version . "&installId=" . Setting::Get('installationId', 'admin');
+                $http = new \Zend\Http\Client($url, array(
+                    'adapter' => '\Zend\Http\Client\Adapter\Curl',
+                    'curloptions' => Yii::$app->getModule('updater')->getCurlOptions(),
+                    'timeout' => 30
+                ));
+                $response = $http->send();
+                $info = Json::decode($response->getBody());
+            } catch (Exception $ex) {
+                throw new Exception(Yii::t('UpdaterModule.base', 'Could not get update info online! (%error%)', array('%error%' => $ex->getMessage())));
             }
-
-            $package = new UpdatePackage($info['fileName'], $info['fromVersion'], $info['toVersion']);
-            $package->md5 = $info['md5'];
-            $package->downloadUrl = $info['downloadUrl'];
-
-            return $package;
-        } catch (Exception $ex) {
-            throw new Exception(Yii::t('UpdaterModule.base', 'Could not get update info online! (%error%)', array('%error%' => $ex->getMessage())));
         }
 
-        return null;
+        if (!isset($info['fromVersion'])) {
+            return null;
+        }
+
+        $package = new UpdatePackage($info['fileName'], $info['fromVersion'], $info['toVersion']);
+        $package->md5 = $info['md5'];
+        $package->downloadUrl = $info['downloadUrl'];
+
+        return $package;
     }
 
 }

@@ -55,13 +55,36 @@ class UpdateController extends \humhub\modules\admin\components\Controller
         }
 
         $warnings = $updatePackage->install();
+        Yii::$app->getSession()->setFlash('updater_warnings', $warnings);
+        
+        // Flush caches
+        Yii::$app->moduleManager->flushCache();
+        Yii::$app->cache->flush();
+        $this->redirect(['migrate']);
+    }
+
+    public function actionMigrate()
+    {
+
         $migration = \humhub\commands\MigrateController::webMigrateAll();
+
+        Yii::$app->getSession()->setFlash('updater_migration', $migration);
 
         // Flush caches
         Yii::$app->moduleManager->flushCache();
         Yii::$app->cache->flush();
+        $this->redirect(['finish']);
+    }
 
-        return $this->render('run', array('updatePackage' => $updatePackage, 'warnings' => $warnings, 'migration' => $migration));
+    public function actionFinish()
+    {
+        Yii::$app->moduleManager->flushCache();
+        Yii::$app->cache->flush();
+
+        $migration = Yii::$app->session->getFlash('updater_migration', '');
+        $warnings = Yii::$app->session->getFlash('updater_warnings', []);
+        
+        return $this->render('run', array('warnings' => $warnings, 'migration' => $migration));
     }
 
 }
