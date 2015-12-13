@@ -25,7 +25,7 @@ class OnlineUpdateAPI
 
         $info = [];
         if (class_exists('\humhub\modules\admin\libs\HumHubAPI')) {
-            $info = \humhub\modules\admin\libs\HumHubAPI::request('getHumHubUpdates', [
+            $info = \humhub\modules\admin\libs\HumHubAPI::request('v1/modules/getHumHubUpdates', [
                 'updaterVersion' => Yii::$app->getModule('updater')->version
             ]);
         } else {
