@@ -189,11 +189,13 @@ class UpdatePackage
             } elseif ($info['changeType'] == 'A' || $info['changeType'] == 'M') {
                 $newFile = $this->getNewFileDirectory() . DIRECTORY_SEPARATOR . $info['newFileMD5'];
                 if (!$this->installFile($newFile, $realFilePath)) {
-                    if ($this->showWarningForFile($fileName)) {
-                        $warnings[] = "Failed to install new version of " . $realFilePath . "!";
-                    }
+                    $warnings[] = "Failed to install new version of " . $realFilePath . "!";
                 }
             }
+        }
+
+        if (function_exists('opcache_reset')) {
+            @opcache_reset();
         }
 
         return $warnings;
