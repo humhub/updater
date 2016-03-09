@@ -126,14 +126,26 @@ class UpdatePackage
         $results['notWritable'] = array();
         $results['modified'] = array();
 
+
+        $ignoreWarnings = [
+            'protected/vendor/',
+            'composer.json',
+            '.gitignore',
+            'm151010_124437_group_permissions.php',
+            'm150928_103711_permissions.php',
+            'm150928_134934_groups.php'
+        ];
+
         $changedFiles = $this->getChangedFiles();
         foreach ($changedFiles as $fileName => $info) {
-            
-            // Ignore warnings of composer changes
-            if (strpos($fileName, 'protected/vendor/') !== FALSE) {
-                continue;
+
+            // Ignore warnings
+            foreach ($ignoreWarnings as $ignoreFilePart) {
+                if (strpos($fileName, $ignoreFilePart) !== FALSE) {
+                    continue 2;
+                }
             }
-            
+
             $realFilePath = Yii::getAlias('@webroot') . DIRECTORY_SEPARATOR . $fileName;
 
             if ($info['changeType'] == 'D') {

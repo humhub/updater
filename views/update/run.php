@@ -2,7 +2,7 @@
     use yii\helpers\Html;
 ?>
 <div class="panel panel-default">
-    <div class="panel-heading"><strong><?php echo Yii::$app->version; ?></strong> <?php echo Yii::t('UpdaterModule.base', 'successfully installed!'); ?></div>
+    <div class="panel-heading"><strong><?php echo $version; ?></strong> <?php echo Yii::t('UpdaterModule.base', 'successfully installed!'); ?></div>
     <div class="panel-body">
 
         <?php if (count($warnings) != 0): ?>

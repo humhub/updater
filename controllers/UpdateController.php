@@ -68,6 +68,7 @@ class UpdateController extends \humhub\modules\admin\components\Controller
 
         $warnings = $updatePackage->install();
         Yii::$app->getSession()->setFlash('updater_warnings', $warnings);
+        Yii::$app->getSession()->setFlash('new_humhub_version', $updatePackage->versionTo);
 
         // Flush caches
         Yii::$app->moduleManager->flushCache();
@@ -95,8 +96,14 @@ class UpdateController extends \humhub\modules\admin\components\Controller
 
         $migration = Yii::$app->session->getFlash('updater_migration', '');
         $warnings = Yii::$app->session->getFlash('updater_warnings', []);
-
-        return $this->render('run', array('warnings' => $warnings, 'migration' => $migration));
+        
+        $version = Yii::$app->version;
+        if (Yii::$app->getSession()->hasFlash('new_humhub_version')) {
+            // Use updated version from flash, to avoid display of "cached" version 
+            $version = Yii::$app->getSession()->getFlash('new_humhub_version');
+        }
+        
+        return $this->render('run', array('warnings' => $warnings, 'migration' => $migration, 'version' => $version));
     }
 
 }
