@@ -3,7 +3,7 @@ return array (
   '<strong>Update</strong> HumHub' => '<strong>HumHub</strong> aktualisieren',
   '<strong>Update</strong> HumHub <sup>BETA</sup>' => '<strong>HumHub</strong> <sup>BETA</sup> aktualisieren',
   'Backup all your files & database before proceed' => 'Vor dem Fortfahren eine Sicherheitskopie aller Dateien und der Datenbank erstellen',
-  'Check for next update' => 'Auf Updad',
+  'Check for next update' => 'Auf nächstes Update prüfen',
   'Could not extract update package!' => 'Konnte das Updatepaket nicht entpacken!',
   'Could not get update info online! (%error%)' => 'Konnte keine Updateinformationen beziehen! (%error%)',
   'Database migration results:' => 'Ergebnisse der Datenbankmigration:',
