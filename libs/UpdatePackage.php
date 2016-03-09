@@ -24,6 +24,18 @@ class UpdatePackage
     public $fileName;
     public $md5;
 
+    /**
+     * @var array list of warnings to ingore
+     */
+    public $ignoreWarnings = [
+        'protected/vendor/',
+        'composer.json',
+        '.gitignore',
+        'm151010_124437_group_permissions.php',
+        'm150928_103711_permissions.php',
+        'm150928_134934_groups.php'
+    ];
+
     public function __construct($fileName, $versionFrom, $versionTo)
     {
         $this->fileName = $fileName;
@@ -126,26 +138,12 @@ class UpdatePackage
         $results['notWritable'] = array();
         $results['modified'] = array();
 
-
-        $ignoreWarnings = [
-            'protected/vendor/',
-            'composer.json',
-            '.gitignore',
-            'm151010_124437_group_permissions.php',
-            'm150928_103711_permissions.php',
-            'm150928_134934_groups.php'
-        ];
-
         $changedFiles = $this->getChangedFiles();
         foreach ($changedFiles as $fileName => $info) {
 
-            // Ignore warnings
-            foreach ($ignoreWarnings as $ignoreFilePart) {
-                if (strpos($fileName, $ignoreFilePart) !== FALSE) {
-                    continue 2;
-                }
+            if (!$this->showWarningForFile($fileName)) {
+                continue;
             }
-
             $realFilePath = Yii::getAlias('@webroot') . DIRECTORY_SEPARATOR . $fileName;
 
             if ($info['changeType'] == 'D') {
@@ -184,12 +182,16 @@ class UpdatePackage
             $realFilePath = Yii::getAlias('@webroot') . DIRECTORY_SEPARATOR . $fileName;
             if ($info['changeType'] == 'D') {
                 if (!$this->deleteFile($realFilePath)) {
-                    $warnings[] = "Deletion of " . $realFilePath . " failed!";
+                    if ($this->showWarningForFile($fileName)) {
+                        $warnings[] = "Deletion of " . $realFilePath . " failed!";
+                    }
                 }
             } elseif ($info['changeType'] == 'A' || $info['changeType'] == 'M') {
                 $newFile = $this->getNewFileDirectory() . DIRECTORY_SEPARATOR . $info['newFileMD5'];
                 if (!$this->installFile($newFile, $realFilePath)) {
-                    $warnings[] = "Failed to install new version of " . $realFilePath . "!";
+                    if ($this->showWarningForFile($fileName)) {
+                        $warnings[] = "Failed to install new version of " . $realFilePath . "!";
+                    }
                 }
             }
         }
@@ -281,6 +283,24 @@ class UpdatePackage
     private function deleteFile($file)
     {
         return @unlink($file);
+    }
+
+    /**
+     * Check if a warning should displayed for given file
+     * 
+     * @param string $fileName
+     * @return boolean show warning
+     */
+    protected function showWarningForFile($fileName)
+    {
+        // Ignore warnings
+        foreach ($this->ignoreWarnings as $ignoreFilePart) {
+            if (strpos($fileName, $ignoreFilePart) !== false) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
 }
