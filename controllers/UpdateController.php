@@ -14,6 +14,18 @@ use humhub\modules\updater\libs\OnlineUpdateAPI;
 class UpdateController extends \humhub\modules\admin\components\Controller
 {
 
+    public function init()
+    {
+        // Fix: Handle admin layout file change in (v1.0.0-beta.3 -> v1.0.0-beta.4)
+        if ($this->subLayout == '@humhub/modules/admin/views/_layout') {
+            if (!file_exists(Yii::getAlias($this->subLayout) . '.php')) {
+                $this->subLayout = '@humhub/modules/admin/views/layouts/main';
+            }
+        }
+
+        parent::init();
+    }
+
     public function actionIndex()
     {
         $updatePackage = OnlineUpdateAPI::getAvailableUpdate();
@@ -56,7 +68,7 @@ class UpdateController extends \humhub\modules\admin\components\Controller
 
         $warnings = $updatePackage->install();
         Yii::$app->getSession()->setFlash('updater_warnings', $warnings);
-        
+
         // Flush caches
         Yii::$app->moduleManager->flushCache();
         Yii::$app->cache->flush();
@@ -83,7 +95,7 @@ class UpdateController extends \humhub\modules\admin\components\Controller
 
         $migration = Yii::$app->session->getFlash('updater_migration', '');
         $warnings = Yii::$app->session->getFlash('updater_warnings', []);
-        
+
         return $this->render('run', array('warnings' => $warnings, 'migration' => $migration));
     }
 
