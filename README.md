@@ -12,7 +12,7 @@ __Author website:__ [humhub.org](http://humhub.org)
 
 ## Bugtracker
 
-<https://github.com/humhub/humhub-modules-updaterr/issues>
+<https://github.com/humhub/humhub-modules-updater/issues>
 
 ## Usage
 
