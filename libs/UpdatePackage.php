@@ -259,18 +259,18 @@ class UpdatePackage
         $directory = dirname($target);
         if (!is_dir($directory)) {
             if (!@mkdir($directory, 0777, true)) {
-                Yii::log("InstallFile - Could not create folder: " . $directory, CLogger::LEVEL_ERROR);
+                Yii::error("InstallFile - Could not create folder: " . $directory);
                 return false;
             }
         }
 
         if (!is_file($source)) {
-            Yii::log("InstallFile - Could not find source: " . $source, CLogger::LEVEL_ERROR);
+            Yii::error("InstallFile - Could not find source: " . $source);
             return false;
         }
 
         if (@copy($source, $target) == false) {
-            Yii::log("InstallFile - Could not copy to: " . $target, CLogger::LEVEL_ERROR);
+            Yii::error("InstallFile - Could not copy to: " . $target);
             return false;
         }
         return true;
