@@ -73,12 +73,20 @@ class UpdateController extends \humhub\modules\admin\components\Controller
         // Flush caches
         Yii::$app->moduleManager->flushCache();
         Yii::$app->cache->flush();
-        $this->redirect(['migrate']);
+
+        if ($updatePackage->versionTo == 'v1.1.0-beta.1') {
+            $urlifyClass = Yii::getAlias('@app/vendor/jbroadway/urlify/URLify.php');
+            if (file_exists($urlifyClass)) {
+                require_once($urlifyClass);
+            }
+            return $this->actionMigrate();
+        }
+
+        return $this->redirect(['migrate']);
     }
 
     public function actionMigrate()
     {
-
         $migration = \humhub\commands\MigrateController::webMigrateAll();
 
         Yii::$app->getSession()->setFlash('updater_migration', $migration);
@@ -96,13 +104,13 @@ class UpdateController extends \humhub\modules\admin\components\Controller
 
         $migration = Yii::$app->session->getFlash('updater_migration', '');
         $warnings = Yii::$app->session->getFlash('updater_warnings', []);
-        
+
         $version = Yii::$app->version;
         if (Yii::$app->getSession()->hasFlash('new_humhub_version')) {
             // Use updated version from flash, to avoid display of "cached" version 
             $version = Yii::$app->getSession()->getFlash('new_humhub_version');
         }
-        
+
         return $this->render('run', array('warnings' => $warnings, 'migration' => $migration, 'version' => $version));
     }
 
