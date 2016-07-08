@@ -22,7 +22,7 @@ return array (
   'Start Installation' => 'Kurulumu Başlat',
   'The following files seems to be not original (%version%) and will be overwritten or deleted during update process.' => 'Aşağıdaki dosyalar (%version%) sürüme ait görünüyor, değişiklikler yapılıp güncelleme işlemi sırasında silinecektir.',
   'There is a new update to %version% available!' => 'Yeni bir sürüm %version% mevcut!',
-  'There is no new HumHub update available!' => 'Yeni HumHub güncellemesi mevcut!',
+  'There is no new HumHub update available!' => 'Yeni güncelleme mevcut değil!',
   'Update HumHub <sup>BETA</sup>' => 'HumHub Güncelleme <sup>BETA</sup>',
   'Update package invalid!' => 'Güncelleştirme paketi geçersiz!',
   'Warning!' => 'Uyarı!',
