@@ -16,6 +16,8 @@ class UpdateController extends \humhub\modules\admin\components\Controller
 
     public function init()
     {
+        set_time_limit(0);
+
         // Fix: Handle admin layout file change in (v1.0.0-beta.3 -> v1.0.0-beta.4)
         if ($this->subLayout == '@humhub/modules/admin/views/_layout') {
             if (!file_exists(Yii::getAlias($this->subLayout) . '.php')) {
@@ -28,90 +30,58 @@ class UpdateController extends \humhub\modules\admin\components\Controller
 
     public function actionIndex()
     {
-        $updatePackage = OnlineUpdateAPI::getAvailableUpdate();
-        if ($updatePackage === null) {
-            return $this->render('no_update_available');
+        $availableUpdate = OnlineUpdateAPI::getAvailableUpdate();
+        if ($availableUpdate === null) {
+            return $this->render('index_noupdate');
         }
 
-        $showGitWarning = true;
+        $releaseNotes = \humhub\widgets\MarkdownView::widget(['markdown' => $availableUpdate->releaseNotes]);
 
-        return $this->render('index', array(
-                    'updatePackage' => $updatePackage,
-                    'showGitWarning' => $showGitWarning,
-        ));
+        // Fix older release notes
+        if (strpos($releaseNotes, '<li>') === false) {
+            $releaseNotes = nl2br($availableUpdate->releaseNotes) . '<br />';
+        }
+
+        return $this->render('index', [
+                    'versionTo' => $availableUpdate->versionTo,
+                    'releaseNotes' => $releaseNotes,
+                    'newUpdaterAvailable' => $this->isNewUpdaterModuleAvailable(),
+        ]);
     }
 
     public function actionStart()
     {
-        $this->forcePostRequest();
+        $availableUpdate = OnlineUpdateAPI::getAvailableUpdate();
 
-        $updatePackage = OnlineUpdateAPI::getAvailableUpdate();
-        if ($updatePackage === null) {
-            return $this->redirect($this->createUrl('index'));
-        }
-
-        $updatePackage->download();
-        $updatePackage->extract();
-        $validationResults = $updatePackage->validate();
-
-        return $this->render('start', array('updatePackage' => $updatePackage, 'validationResults' => $validationResults));
+        return $this->renderAjax('start', [
+                    'versionTo' => $availableUpdate->versionTo,
+                    'fileName' => $availableUpdate->fileName,
+        ]);
     }
 
-    public function actionRun()
+    public function actionDownload()
     {
         $this->forcePostRequest();
+        Yii::$app->response->format = 'json';
 
-        $updatePackage = OnlineUpdateAPI::getAvailableUpdate();
-        if ($updatePackage === null) {
-            return $this->redirect(Url::to(['index']));
-        }
+        $availableUpdate = OnlineUpdateAPI::getAvailableUpdate();
+        $availableUpdate->download();
 
-        $warnings = $updatePackage->install();
-        Yii::$app->getSession()->setFlash('updater_warnings', $warnings);
-        Yii::$app->getSession()->setFlash('new_humhub_version', $updatePackage->versionTo);
-
-        // Flush caches
-        Yii::$app->moduleManager->flushCache();
-        Yii::$app->cache->flush();
-
-        if ($updatePackage->versionTo == 'v1.1.0-beta.1') {
-            $urlifyClass = Yii::getAlias('@app/vendor/jbroadway/urlify/URLify.php');
-            if (file_exists($urlifyClass)) {
-                require_once($urlifyClass);
-            }
-            return $this->actionMigrate();
-        }
-
-        return $this->redirect(['migrate']);
+        return ['status' => 'ok'];
     }
 
-    public function actionMigrate()
+    protected function isNewUpdaterModuleAvailable()
     {
-        $migration = \humhub\commands\MigrateController::webMigrateAll();
-
-        Yii::$app->getSession()->setFlash('updater_migration', $migration);
-
-        // Flush caches
-        Yii::$app->moduleManager->flushCache();
-        Yii::$app->cache->flush();
-        $this->redirect(['finish']);
-    }
-
-    public function actionFinish()
-    {
-        Yii::$app->moduleManager->flushCache();
         Yii::$app->cache->flush();
 
-        $migration = Yii::$app->session->getFlash('updater_migration', '');
-        $warnings = Yii::$app->session->getFlash('updater_warnings', []);
+        $onlineModuleManager = new \humhub\modules\admin\libs\OnlineModuleManager();
+        $modules = $onlineModuleManager->getModuleUpdates();
 
-        $version = Yii::$app->version;
-        if (Yii::$app->getSession()->hasFlash('new_humhub_version')) {
-            // Use updated version from flash, to avoid display of "cached" version 
-            $version = Yii::$app->getSession()->getFlash('new_humhub_version');
+        if (isset($modules['updater'])) {
+            return true;
         }
 
-        return $this->render('run', array('warnings' => $warnings, 'migration' => $migration, 'version' => $version));
+        return false;
     }
 
 }

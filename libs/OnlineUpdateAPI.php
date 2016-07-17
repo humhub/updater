@@ -26,7 +26,7 @@ class OnlineUpdateAPI
         $info = [];
         if (class_exists('\humhub\modules\admin\libs\HumHubAPI')) {
             $info = \humhub\modules\admin\libs\HumHubAPI::request('v1/modules/getHumHubUpdates', [
-                'updaterVersion' => Yii::$app->getModule('updater')->version
+                        'updaterVersion' => Yii::$app->getModule('updater')->version
             ]);
         } else {
             // older Versions
@@ -48,10 +48,13 @@ class OnlineUpdateAPI
             return null;
         }
 
-        $package = new UpdatePackage($info['fileName'], $info['fromVersion'], $info['toVersion']);
-        $package->md5 = $info['md5'];
+        $package = new AvailableUpdate();
+        $package->fileName = $info['fileName'];
+        $package->versionFrom = $info['fromVersion'];
+        $package->versionTo = $info['toVersion'];
         $package->downloadUrl = $info['downloadUrl'];
-
+        $package->releaseNotes = $info['releaseNotes'];
+        $package->md5 = $info['md5'];
         return $package;
     }
 

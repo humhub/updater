@@ -17,11 +17,11 @@ class Events extends \yii\base\Object
     public static function onAdminMenuInit($event)
     {
         $event->sender->addItem(array(
-            'label' => Yii::t('UpdaterModule.base', 'Update HumHub <sup>BETA</sup>'),
+            'label' => Yii::t('UpdaterModule.base', 'Update HumHub'),
             'url' => Url::to(['/updater/update']),
             'icon' => '<i class="fa fa-cloud-download"></i>',
             'group' => 'manage',
-            'sortOrder' => 9000,
+            'sortOrder' => 90000,
             'isActive' => (Yii::$app->controller->module && Yii::$app->controller->module->id == 'updater')
         ));
     }

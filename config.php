@@ -1,6 +1,7 @@
 <?php
 
 use humhub\modules\admin\widgets\AdminMenu;
+use yii\web\Application;
 
 return [
     'id' => 'updater',
@@ -8,6 +9,7 @@ return [
     'namespace' => 'humhub\modules\updater',
     'events' => [
         ['class' => AdminMenu::className(), 'event' => AdminMenu::EVENT_INIT, 'callback' => ['humhub\modules\updater\Events', 'onAdminMenuInit']],
+        ['class' => 'yii\web\Application', 'event' => Application::EVENT_BEFORE_REQUEST, 'callback' => ['humhub\modules\updater\modules\packageinstaller\Module', 'onApplicationInit']]
     ],
 ];
 ?>

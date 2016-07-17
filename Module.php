@@ -9,16 +9,14 @@ use humhub\models\Setting;
 class Module extends \humhub\components\Module
 {
 
-    public $tempPath = '@runtime/updater';
-
     /**
      * Returns the temp path of updater
      * 
      * @return type
      */
-    public function getTempPath()
+    public static function getTempPath()
     {
-        $path = Yii::getAlias($this->tempPath);
+        $path = Yii::getAlias('@runtime/updater');
 
         if (!is_dir($path)) {
             if (!@mkdir($path)) {
@@ -61,7 +59,7 @@ class Module extends \humhub\components\Module
 
             return $options;
         }
-        
+
         return \humhub\libs\CURLHelper::getOptions();
     }
 
