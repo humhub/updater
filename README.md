@@ -1,6 +1,6 @@
 ## Description
-Automatic HumHub Updater Module. This module is still in early beta!
 
+Automatic HumHub Updater.
 
 __Module website:__ <https://github.com/humhub/humhub-modules-updater>    
 __Author:__ luke    
