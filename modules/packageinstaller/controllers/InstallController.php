@@ -51,7 +51,7 @@ class InstallController extends \yii\base\Controller
     {
         $notWritable = $this->updatePackage->checkFilePermissions();
         if (count($notWritable)) {
-            throw new Exception("Some files are not writable!");
+            throw new \Exception(Yii::t('UpdaterModule.base', 'Make sure all files are writable!'));
         }
         return ['status' => 'ok'];
     }
