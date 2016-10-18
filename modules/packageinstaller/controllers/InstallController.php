@@ -50,9 +50,14 @@ class InstallController extends \yii\base\Controller
     public function actionValidate()
     {
         $notWritable = $this->updatePackage->checkFilePermissions();
+
         if (count($notWritable)) {
-            throw new \Exception(Yii::t('UpdaterModule.base', 'Make sure all files are writable!'));
+            $fileList = implode(', ', $notWritable);
+            $files = (strlen($fileList) > 255) ? substr($fileList, 0, 255) . '...' : $fileList;
+
+            throw new \Exception(Yii::t('UpdaterModule.base', 'Make sure all files are writable! (' . $files . ')'));
         }
+
         return ['status' => 'ok'];
     }
 
