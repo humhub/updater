@@ -154,7 +154,7 @@ class UpdatePackage
 
         // Complete static files package provided
         if (is_dir($this->getNewFileDirectory() . DIRECTORY_SEPARATOR . 'static')) {
-    
+
             // Not exists prior 1.2
             if (is_dir(Yii::getAlias('@webroot/static'))) {
                 rename(Yii::getAlias('@webroot/static'), $this->getBackupPath() . DIRECTORY_SEPARATOR . 'static_' . time());
@@ -165,14 +165,15 @@ class UpdatePackage
         $changedFiles = $this->getChangedFiles();
         foreach ($changedFiles as $fileName => $info) {
             $realFilePath = Yii::getAlias('@webroot') . DIRECTORY_SEPARATOR . $fileName;
-            if ($info['changeType'] == 'D') {
-                if (!$this->deleteFile($realFilePath)) {
-                    Yii::warning('Deletion of file:' . $realFilePath . ' failed!', 'updater');
-                }
-            } elseif ($info['changeType'] == 'A' || $info['changeType'] == 'M') {
+
+            if ($info['changeType'] == 'A' || $info['changeType'] == 'M') {
                 $newFile = $this->getNewFileDirectory() . DIRECTORY_SEPARATOR . $info['newFileMD5'];
                 if (!$this->installFile($newFile, $realFilePath)) {
                     Yii::warning('Update of file:' . $realFilePath . ' failed!', 'updater');
+                }
+            } elseif ($info['changeType'] == 'D') {
+                if (!$this->deleteFile($realFilePath)) {
+                    Yii::warning('Deletion of file:' . $realFilePath . ' failed!', 'updater');
                 }
             }
         }
