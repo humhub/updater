@@ -154,7 +154,11 @@ class UpdatePackage
 
         // Complete static files package provided
         if (is_dir($this->getNewFileDirectory() . DIRECTORY_SEPARATOR . 'static')) {
-            rename(Yii::getAlias('@webroot/static'), $this->getBackupPath() . DIRECTORY_SEPARATOR . 'static_' . time());
+    
+            // Not exists prior 1.2
+            if (is_dir(Yii::getAlias('@webroot/static'))) {
+                rename(Yii::getAlias('@webroot/static'), $this->getBackupPath() . DIRECTORY_SEPARATOR . 'static_' . time());
+            }
             rename($this->getNewFileDirectory() . DIRECTORY_SEPARATOR . 'static', Yii::getAlias('@webroot/static'));
         }
 
@@ -308,7 +312,7 @@ class UpdatePackage
             mkdir($path);
         }
 
-        if ($this->isWritable($path)) {
+        if (!$this->isWritable($path)) {
             Yii::error('Backup directory not writable: ' . $path);
         }
 
