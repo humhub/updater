@@ -124,12 +124,39 @@ class UpdatePackage
                 }
             }
         }
+
+        $vendorPath = Yii::getAlias('@webroot/protected/vendor');
+        if (!$this->isWritable($vendorPath)) {
+            $notWritable[] = $vendorPath;
+        }
+
+        $webrootStaticPath = Yii::getAlias('@webroot/static');
+        if (!$this->isWritable($webrootStaticPath)) {
+            $notWritable[] = $webrootStaticPath;
+        }
+
+        // Test Backup Path
+        $this->getBackupPath();
+
+
         return $notWritable;
     }
 
     public function install()
     {
         $warnings = array();
+
+        // Complete vendor package provided
+        if (is_dir($this->getNewFileDirectory() . DIRECTORY_SEPARATOR . 'vendor')) {
+            rename(Yii::getAlias('@webroot/protected/vendor'), $this->getBackupPath() . DIRECTORY_SEPARATOR . 'vendor_' . time());
+            rename($this->getNewFileDirectory() . DIRECTORY_SEPARATOR . 'vendor', Yii::getAlias('@webroot/protected/vendor'));
+        }
+
+        // Complete static files package provided
+        if (is_dir($this->getNewFileDirectory() . DIRECTORY_SEPARATOR . 'static')) {
+            rename(Yii::getAlias('@webroot/static'), $this->getBackupPath() . DIRECTORY_SEPARATOR . 'static_' . time());
+            rename($this->getNewFileDirectory() . DIRECTORY_SEPARATOR . 'static', Yii::getAlias('@webroot/static'));
+        }
 
         $changedFiles = $this->getChangedFiles();
         foreach ($changedFiles as $fileName => $info) {
@@ -268,6 +295,24 @@ class UpdatePackage
         } catch (\Exception $ex) {
             Yii::error('Could not remove directory: ' . $this->getDirectory(), 'updater');
         }
+    }
+
+    protected function getBackupPath()
+    {
+        if (!is_dir(Yii::getAlias('@runtime/updater'))) {
+            mkdir(Yii::getAlias('@runtime/updater'));
+        }
+
+        $path = Yii::getAlias('@runtime/updater/backups');
+        if (!is_dir($path)) {
+            mkdir($path);
+        }
+
+        if ($this->isWritable($path)) {
+            Yii::error('Backup directory not writable: ' . $path);
+        }
+
+        return $path;
     }
 
 }

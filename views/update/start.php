@@ -9,7 +9,7 @@ use yii\helpers\Url;
             <h4 class="modal-title" id="myModalLabel"><?php echo Yii::t('UpdaterModule.base', '<strong>Update</strong> to HumHub {version}', ['version' => $versionTo]); ?></h4>
         </div>
         <div class="modal-body">
-            
+
             <div id="startDialog">
                 <div class="alert alert-danger">
                     <strong><?php echo Yii::t('UpdaterModule.base', 'Please note:'); ?></strong><br />
@@ -24,7 +24,7 @@ use yii\helpers\Url;
                 </div>
                 <div class="checkbox">
                     <label>
-                        <input type="checkbox" value="1" checked id="chkBoxResetTheme"> <?php echo Yii::t('UpdaterModule.base', 'Switch to default theme after update'); ?>
+                        <input type="checkbox" value="1" checked id="chkBoxResetTheme"> <?php echo Yii::t('UpdaterModule.base', 'Switch to default theme after update (strongly recommended)'); ?>
                     </label>
                 </div>
             </div>
@@ -48,12 +48,13 @@ use yii\helpers\Url;
             <div class="alert alert-success" id="successMessageBox">
                 <p><strong><i class="fa fa-thumbs-up"></i> <?php echo Yii::t('UpdaterModule.base', 'Update successful'); ?></strong></p>
                 <p><?php echo Yii::t('UpdaterModule.base', 'The update was successfully installed!'); ?></p>
+                <p><?php echo Yii::t('UpdaterModule.base', 'Please update installed modules when new version is available!'); ?></p>
             </div>
 
         </div>
         <div class="modal-footer">
-            <?= Html::a(Yii::t('UpdaterModule.base', 'Start'), '#', ['id' => 'btnUpdaterStart', 'class' => 'btn btn-success pull-left startButton']); ?>
-            <?= Html::a(Yii::t('UpdaterModule.base', 'Abort'), ['/updater/update'], ['class' => 'btn btn-danger pull-right startButton']); ?>
+            <?= Html::a(Yii::t('UpdaterModule.base', 'Start'), '#', ['id' => 'btnUpdaterStart', 'class' => 'btn btn-success pull-left startButton', 'data-pjax-prevent' => '']); ?>
+            <?= Html::a(Yii::t('UpdaterModule.base', 'Abort'), ['/updater/update'], ['class' => 'btn btn-danger pull-right startButton', 'data-pjax-prevent' => '']); ?>
 
             <?= Html::a(Yii::t('UpdaterModule.base', 'Close'), ['/updater/update'], ['id' => 'btnUpdaterClose', 'data-ui-loader' => '', 'class' => 'btn btn-primary']); ?>
             <div class="loader-modal loader colorWarning pull-right hidden"><i class="fa fa-warning"></i> Do not interrupt!</div>
@@ -72,7 +73,7 @@ use yii\helpers\Url;
     $("#btnUpdaterStart").click(function () {
         $('#startDialog').hide();
         $('.startButton').hide();
-        
+
         setModalLoader();
         step_download();
     });
@@ -111,7 +112,7 @@ use yii\helpers\Url;
             json = JSON.parse(response);
             message = json.message;
         }
-        
+
         if (message != "") {
             $('#errorMessage').html(message);
         }
