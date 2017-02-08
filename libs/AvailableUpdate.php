@@ -42,8 +42,9 @@ class AvailableUpdate
                     'curloptions' => Yii::$app->getModule('updater')->getCurlOptions(),
                     'timeout' => 300
                 ));
+                $http->setStream();
                 $response = $http->send();
-                file_put_contents($targetFile, $response->getBody());
+                copy($response->getStreamName(), $targetFile);
             } catch (Exception $ex) {
                 throw new Exception(Yii::t('UpdaterModule.libs_UpdatePackage', 'Update download failed! (%error%)', array('%error%' => $ex->getMessage())));
             }
