@@ -1,4 +1,4 @@
 <?php
 return array (
-  'Update download failed! (%error%)' => 'Update download mislukt! (%error%)',
+  'Update download failed! (%error%)' => 'Nieuwe versie ophalen is mislukt! (%error%)',
 );
