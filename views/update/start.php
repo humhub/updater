@@ -56,7 +56,7 @@ use yii\helpers\Url;
             <?= Html::a(Yii::t('UpdaterModule.base', 'Start'), '#', ['id' => 'btnUpdaterStart', 'class' => 'btn btn-success pull-left startButton', 'data-pjax-prevent' => '']); ?>
             <?= Html::a(Yii::t('UpdaterModule.base', 'Abort'), ['/updater/update'], ['class' => 'btn btn-danger pull-right startButton', 'data-pjax-prevent' => '']); ?>
 
-            <?= Html::a(Yii::t('UpdaterModule.base', 'Close'), ['/updater/update'], ['id' => 'btnUpdaterClose', 'data-ui-loader' => '', 'class' => 'btn btn-primary']); ?>
+            <?= Html::a(Yii::t('UpdaterModule.base', 'Close'), ['/updater/update'], ['id' => 'btnUpdaterClose', 'data-ui-loader' => '', 'data-pjax-prevent' => '', 'class' => 'btn btn-primary']); ?>
             <div class="loader-modal loader colorWarning pull-right hidden"><i class="fa fa-warning"></i> Do not interrupt!</div>
             <?php echo \humhub\widgets\LoaderWidget::widget(['id' => 'update-loader', 'cssClass' => 'loader-modal hidden']); ?>
         </div>

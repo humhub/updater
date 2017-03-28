@@ -42,10 +42,31 @@ class UpdateController extends \humhub\modules\admin\components\Controller
             $releaseNotes = nl2br($availableUpdate->releaseNotes) . '<br />';
         }
 
+
+        $allowStart = true;
+        $newUpdaterAvailable = $this->isNewUpdaterModuleAvailable();
+        if ($newUpdaterAvailable) {
+            $allowStart = false;
+        }
+
+        $errorMinimumPhpVersion = false;
+        if (version_compare(phpversion(), '5.6', '<')) {
+            $allowStart = false;
+            $errorMinimumPhpVersion = true;
+        }
+
+        $errorRootFolderNotWritable = !$this->isRootFolderWritable();
+        if ($errorRootFolderNotWritable) {
+            $allowStart = false;
+        }
+
         return $this->render('index', [
                     'versionTo' => $availableUpdate->versionTo,
                     'releaseNotes' => $releaseNotes,
-                    'newUpdaterAvailable' => $this->isNewUpdaterModuleAvailable(),
+                    'newUpdaterAvailable' => $newUpdaterAvailable,
+                    'allowStart' => $allowStart,
+                    'errorMinimumPhpVersion' => $errorMinimumPhpVersion,
+                    'errorRootFolderNotWritable' => $errorRootFolderNotWritable
         ]);
     }
 
@@ -82,6 +103,30 @@ class UpdateController extends \humhub\modules\admin\components\Controller
         }
 
         return false;
+    }
+
+    protected function isRootFolderWritable()
+    {
+        $rootFolder = Yii::getAlias('@webroot');
+
+        if (!is_writable($rootFolder)) {
+            Yii::warning('Not writable: ' . $rootFolder, 'updater');
+            return false;
+        }
+
+        $staticFolder = Yii::getAlias('@webroot/static');
+        if (is_dir($staticFolder) && !is_writeable($staticFolder)) {
+            Yii::warning('Not writable: ' . $staticFolder, 'updater');
+            return false;
+        }
+
+        $vendorFolder = Yii::getAlias('@vendor');
+        if (is_dir($vendorFolder) && !is_writeable($vendorFolder)) {
+            Yii::warning('Not writable: ' . $vendorFolder, 'updater');
+            return false;
+        }
+
+        return true;
     }
 
 }
