@@ -34,7 +34,7 @@ return array (
   'The updater requires write access to <strong>all</strong> files and folders in the application root folder.' => 'Das Update-Modul benötigt einen Schreibzugriff auf <strong>alle</strong> Dateien und Verzeichnisse im Root-Verzeichnis der Anwendung.',
   'There is a new update to %version% available!' => 'Ein Update auf %version% ist verfügbar!',
   'There is a new version of the updater module available. Please update before proceed.' => 'Eine neue Version des Update-Moduls ist verfügbar. Bitte vor dem Fortfahren aktualisieren.',
-  'There is no new HumHub update available!' => 'Es kein HumHub-Update verfügbar!',
+  'There is no new HumHub update available!' => 'Es ist kein HumHub-Update verfügbar!',
   'Update HumHub' => 'Humhub aktualisieren',
   'Update package invalid!' => 'Updatepaket ungültig!',
   'Update successful' => 'Aktualisierung erfolgreich',
