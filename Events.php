@@ -11,7 +11,7 @@ namespace humhub\modules\updater;
 use Yii;
 use yii\helpers\Url;
 
-class Events extends \yii\base\Object
+class Events
 {
 
     public static function onAdminMenuInit($event)
