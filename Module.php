@@ -2,16 +2,26 @@
 
 namespace humhub\modules\updater;
 
+use humhub\models\Setting;
 use Yii;
 use yii\base\Exception;
-use humhub\models\Setting;
+use yii\helpers\Url;
 
 class Module extends \humhub\components\Module
 {
 
     /**
+     * @inheritdoc
+     */
+    public function getConfigUrl()
+    {
+        return Url::to(['/updater/admin']);
+    }
+
+
+    /**
      * Returns the temp path of updater
-     * 
+     *
      * @return type
      */
     public static function getTempPath()
@@ -63,4 +73,9 @@ class Module extends \humhub\components\Module
         return \humhub\libs\CURLHelper::getOptions();
     }
 
+
+    public function getUpdateChannel()
+    {
+        return $this->settings->get('channel', 'stable');
+    }
 }

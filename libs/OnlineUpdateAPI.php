@@ -2,10 +2,10 @@
 
 namespace humhub\modules\updater\libs;
 
-use Yii;
-use yii\helpers\Json;
-use yii\base\Exception;
 use humhub\modules\user\models\Setting;
+use Yii;
+use yii\base\Exception;
+use yii\helpers\Json;
 
 /**
  * OnlineUpdateAPI
@@ -17,7 +17,7 @@ class OnlineUpdateAPI
 
     /**
      * Returns all available updates for a given version
-     * 
+     *
      * @param type $version
      */
     public static function getAvailableUpdate()
@@ -26,7 +26,8 @@ class OnlineUpdateAPI
         $info = [];
         if (class_exists('\humhub\modules\admin\libs\HumHubAPI')) {
             $info = \humhub\modules\admin\libs\HumHubAPI::request('v1/modules/getHumHubUpdates', [
-                        'updaterVersion' => Yii::$app->getModule('updater')->version
+                'updaterVersion' => Yii::$app->getModule('updater')->version,
+                'channel' => Yii::$app->getModule('updater')->getUpdateChannel()
             ]);
         } else {
             // older Versions
