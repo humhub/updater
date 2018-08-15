@@ -11,7 +11,7 @@ return array (
   'Close' => 'Sluit',
   'Could not extract update package!' => 'Kon het update pakket niet uitpakken!',
   'Could not get update info online! (%error%)' => 'Kon geen update informatie ophalen! (%error%)',
-  'Do not use this updater in combination with Git or Composer installations!' => 'Gebruik deze updater niet in combinatie met Fit of Composer installaties!',
+  'Do not use this updater in combination with Git or Composer installations!' => 'Gebruik deze updater niet in combinatie met Git of Composer installaties!',
   'Downloading update package' => 'Het ophalen van het bijwerkpakket',
   'Extracting package files' => 'Uitpakken van de bestanden in het pakket.',
   'Installed PHP version not support!' => 'De geïnstalleerde PHP versie wordt niet ondersteund!',
