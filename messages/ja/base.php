@@ -37,7 +37,7 @@ return array (
   'The updater requires write access to <strong>all</strong> files and folders in the application root folder.' => '',
   'There is a new update to %version% available!' => '最新バージョン %version% が存在します。',
   'There is a new version of the updater module available. Please update before proceed.' => '',
-  'There is no new HumHub update available!' => '',
+  'There is no new HumHub update available!' => 'Humhubの最新版はまだありません。',
   'Update HumHub' => 'HumHubのアップデート',
   'Update package invalid!' => '',
   'Update successful' => 'アップデート成功',
