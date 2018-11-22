@@ -42,5 +42,5 @@ return array (
   'Update package invalid!' => 'Updatepaket ungültig!',
   'Update successful' => 'Aktualisierung erfolgreich',
   'Updater Configuration' => 'Updater-Konfiguration',
-  'Validating package' => 'Paket überprüfen',
+  'Validating package' => 'Überprüfe Paket',
 );
