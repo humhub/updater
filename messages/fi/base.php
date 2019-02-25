@@ -1,7 +1,7 @@
 <?php
 return array (
-  '<strong>Update</strong> HumHub' => '<strong>Järjestelmän</strong> Päivitys',
-  '<strong>Update</strong> to HumHub {version}' => '<strong>Päivitä</strong> järjestelmä versioon: {version}',
+  '<strong>Update</strong> HumHub' => '<strong>Päivitys</strong>',
+  '<strong>Update</strong> to HumHub {version}' => '<strong>Päivitä</strong> versioon: {version}',
   'Abort' => 'Keskeytä',
   'Application folder not writable!' => 'Järjestelmän pääkansio ei ole kirjoitettavissä',
   'Application folder: {folder}' => 'Järjestelmän pääkansio: {folder}',
@@ -38,7 +38,7 @@ return array (
   'There is a new update to %version% available!' => '',
   'There is a new version of the updater module available. Please update before proceed.' => '',
   'There is no new HumHub update available!' => '',
-  'Update HumHub' => '',
+  'Update HumHub' => 'Päivitys',
   'Update package invalid!' => '',
   'Update successful' => '',
   'Updater Configuration' => '',
