@@ -1,5 +1,4 @@
 <?php
-
-return [
-    'Update download failed! (%error%)' => '',
-];
+return array (
+  'Update download failed! (%error%)' => 'Päivityksen lataus epäonnistui! (%error%)',
+);

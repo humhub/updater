@@ -35,7 +35,7 @@ return array (
   'The currently installed PHP version is too old. Please update before proceed.' => 'A jelenleg telepített PHP-verzió túl régi. Kérjük, frissítsd mielőtt továbblépsz!',
   'The update was successfully installed!' => 'A frissítés sikeresen telepítve.',
   'The updater requires write access to <strong>all</strong> files and folders in the application root folder.' => 'A frissítőnek az applikáció gyökérkönyvtárában lévő <strong>összes</strong> fájlhoz írási hozzáférésre van szüksége.',
-  'There is a new update to %version% available!' => 'Új frissítés érhető el a %version% verzióhoz!',
+  'There is a new update to %version% available!' => 'Új frissítés érhető el a(z) %version% verzióhoz!',
   'There is a new version of the updater module available. Please update before proceed.' => 'Elérhető a frissítő modul új verziója. Kérjük, frissítsd mielőtt továbblépsz!',
   'There is no new HumHub update available!' => 'Nincs új HumHub frissítés!',
   'Update HumHub' => 'HumHub frissítése',
