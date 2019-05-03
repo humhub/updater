@@ -1,7 +1,7 @@
 <?php
 return array (
   '<strong>Update</strong> HumHub' => '<strong>アップデート</strong> HumHub',
-  '<strong>Update</strong> to HumHub {version}' => '<strong>アップデート中</strong>  HumHub {version}',
+  '<strong>Update</strong> to HumHub {version}' => '<strong>アップデート</strong>  HumHub {version}',
   'Abort' => '拒否',
   'Application folder not writable!' => 'アプリケーションフォルダに書き込み権限がありません',
   'Application folder: {folder}' => 'アプリケーションフォルダ: {folder}',
