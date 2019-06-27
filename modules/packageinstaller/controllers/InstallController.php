@@ -70,8 +70,15 @@ class InstallController extends \yii\base\Controller
     {
         $this->updatePackage->install();
 
+        // Remove all compiled files from opcode or apc(u) cache.
         if (function_exists('opcache_reset')) {
             @opcache_reset();
+        } elseif (function_exists('apc_clear_cache')) {
+            @apc_clear_cache();
+            @apc_clear_cache('user');
+            @apc_clear_cache('opcode');
+        } elseif (function_exists('apcu_clear_cache')) {
+            @apcu_clear_cache();
         }
 
         return ['status' => 'ok'];
