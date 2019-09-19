@@ -8,8 +8,8 @@
 
 namespace humhub\modules\updater\modules\packageinstaller\controllers;
 
-use Yii;
 use humhub\modules\updater\libs\UpdatePackage;
+use Yii;
 
 /**
  * Installs a update package
@@ -70,15 +70,8 @@ class InstallController extends \yii\base\Controller
     {
         $this->updatePackage->install();
 
-        // Remove all compiled files from opcode or apc(u) cache.
         if (function_exists('opcache_reset')) {
             @opcache_reset();
-        } elseif (function_exists('apc_clear_cache')) {
-            @apc_clear_cache();
-            @apc_clear_cache('user');
-            @apc_clear_cache('opcode');
-        } elseif (function_exists('apcu_clear_cache')) {
-            @apcu_clear_cache();
         }
 
         return ['status' => 'ok'];
@@ -96,16 +89,28 @@ class InstallController extends \yii\base\Controller
         $this->updatePackage->delete();
 
         if (Yii::$app->request->post('theme') == 'true') {
-            if (version_compare(Yii::$app->version, '1.1', '<')) {
-                \humhub\models\Setting::Set('theme', 'HumHub');
-            } else {
-                Yii::$app->settings->set('theme', 'HumHub');
-            }
-            \humhub\libs\DynamicConfig::rewrite();
+            $this->switchToDefaultTheme();
         }
 
         return ['status' => 'ok'];
     }
+
+
+    protected function switchToDefaultTheme()
+    {
+        if (version_compare(Yii::$app->version, '1.1', '<')) {
+            \humhub\models\Setting::Set('theme', 'HumHub');
+        } elseif (version_compare(Yii::$app->version, '1.3.7', '<')) {
+            Yii::$app->settings->set('theme', 'HumHub');
+        } else {
+            $theme = \humhub\modules\ui\view\helpers\ThemeHelper::getThemeByName('HumHub');
+            if ($theme !== null) {
+                $theme->activate();
+            }
+        }
+        \humhub\libs\DynamicConfig::rewrite();
+    }
+
 
     protected function flushCaches()
     {
