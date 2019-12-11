@@ -1,8 +1,13 @@
 Changelog
 =========
 
+2.1.2  (December 11, 2019)
+--------------------------
+- Enh: Improved HumHub 1.4+ compatibility
+
+
 2.1.1  (December 10, 2018)
----------------------
+--------------------------
 - Enh: Improved theme caching for HumHub 1.3.7+
 
 

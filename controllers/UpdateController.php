@@ -61,12 +61,12 @@ class UpdateController extends \humhub\modules\admin\components\Controller
         }
 
         return $this->render('index', [
-                    'versionTo' => $availableUpdate->versionTo,
-                    'releaseNotes' => $releaseNotes,
-                    'newUpdaterAvailable' => $newUpdaterAvailable,
-                    'allowStart' => $allowStart,
-                    'errorMinimumPhpVersion' => $errorMinimumPhpVersion,
-                    'errorRootFolderNotWritable' => $errorRootFolderNotWritable
+            'versionTo' => $availableUpdate->versionTo,
+            'releaseNotes' => $releaseNotes,
+            'newUpdaterAvailable' => $newUpdaterAvailable,
+            'allowStart' => $allowStart,
+            'errorMinimumPhpVersion' => $errorMinimumPhpVersion,
+            'errorRootFolderNotWritable' => $errorRootFolderNotWritable
         ]);
     }
 
@@ -75,8 +75,8 @@ class UpdateController extends \humhub\modules\admin\components\Controller
         $availableUpdate = OnlineUpdateAPI::getAvailableUpdate();
 
         return $this->renderAjax('start', [
-                    'versionTo' => $availableUpdate->versionTo,
-                    'fileName' => $availableUpdate->fileName,
+            'versionTo' => $availableUpdate->versionTo,
+            'fileName' => $availableUpdate->fileName,
         ]);
     }
 
@@ -94,9 +94,15 @@ class UpdateController extends \humhub\modules\admin\components\Controller
     protected function isNewUpdaterModuleAvailable()
     {
         Yii::$app->cache->flush();
+        $modules = null;
 
-        $onlineModuleManager = new \humhub\modules\admin\libs\OnlineModuleManager();
-        $modules = $onlineModuleManager->getModuleUpdates();
+        if (class_exists('\humhub\modules\admin\libs\OnlineModuleManager')) {
+            $onlineModuleManager = new \humhub\modules\admin\libs\OnlineModuleManager();
+            $modules = $onlineModuleManager->getModuleUpdates();
+        } elseif (class_exists('\humhub\modules\marketplace\libs\OnlineModuleManager')) {
+            $onlineModuleManager = new \humhub\modules\marketplace\libs\OnlineModuleManager();
+            $modules = $onlineModuleManager->getModuleUpdates();
+        }
 
         if (isset($modules['updater'])) {
             return true;
