@@ -9,7 +9,7 @@ return array (
   'Changes to HumHub core files may overwritten during update!' => 'Änderungen an HumHub-Core-Dateien können beim Update überschrieben werden!',
   'Channel' => 'Kanal',
   'Cleanup update files' => 'Update-Dateien bereinigen',
-  'Close' => 'Schliessen',
+  'Close' => 'Schließen',
   'Could not extract update package!' => 'Konnte das Updatepaket nicht entpacken!',
   'Could not get update info online! (%error%)' => 'Konnte keine Update-Informationen online erhalten! (%error%)',
   'Do not use this updater in combination with Git or Composer installations!' => 'Benutze diesen Updater nicht in Kombination mit Git oder Composer Installationen!',
