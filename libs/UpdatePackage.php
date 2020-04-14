@@ -152,6 +152,12 @@ class UpdatePackage
             rename($this->getNewFileDirectory() . DIRECTORY_SEPARATOR . 'vendor', Yii::getAlias('@webroot/protected/vendor'));
         }
 
+        // Complete HumHub package provided
+        if (is_dir($this->getNewFileDirectory() . DIRECTORY_SEPARATOR . 'humhub')) {
+            rename(Yii::getAlias('@webroot/protected/humhub'), $this->getBackupPath() . DIRECTORY_SEPARATOR . 'humhub_' . time());
+            rename($this->getNewFileDirectory() . DIRECTORY_SEPARATOR . 'humhub', Yii::getAlias('@webroot/protected/humhub'));
+        }
+
         // Complete static files package provided
         if (is_dir($this->getNewFileDirectory() . DIRECTORY_SEPARATOR . 'static')) {
 
