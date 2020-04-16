@@ -2,6 +2,11 @@ Changelog
 =========
 
 
+2.1.4  (April 16, 2020)
+--------------------------
+- Fix: Self updater update check broken
+ 
+
 2.1.3  (April 14, 2020)
 --------------------------
 - Enh: Allow complete humhub directory replace

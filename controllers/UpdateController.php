@@ -102,6 +102,9 @@ class UpdateController extends \humhub\modules\admin\components\Controller
         } elseif (class_exists('\humhub\modules\marketplace\libs\OnlineModuleManager')) {
             $onlineModuleManager = new \humhub\modules\marketplace\libs\OnlineModuleManager();
             $modules = $onlineModuleManager->getModuleUpdates();
+        } elseif (class_exists('\humhub\modules\marketplace\components\OnlineModuleManager')) {
+            $onlineModuleManager = new \humhub\modules\marketplace\components\OnlineModuleManager();
+            $modules = $onlineModuleManager->getModuleUpdates();
         }
 
         if (isset($modules['updater'])) {
