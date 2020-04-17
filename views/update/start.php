@@ -1,6 +1,5 @@
 <?php
 
-use yii\helpers\Html;
 use yii\helpers\Url;
 ?>
 <div class="modal-dialog modal-dialog animated fadeIn">
@@ -64,7 +63,7 @@ use yii\helpers\Url;
 </div>
 
 
-<script>
+<script <?= \humhub\libs\Html::nonce(); ?>>
 
     $('#errorMessageBox').hide();
     $('#successMessageBox').hide();
