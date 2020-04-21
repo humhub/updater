@@ -26,4 +26,9 @@ class Events
         ));
     }
 
+    public static function onCronRun($event)
+    {
+        Yii::$app->queue->push(new jobs\CleanupJob());
+    }
+
 }
