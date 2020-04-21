@@ -1,6 +1,12 @@
 Changelog
 =========
 
+
+2.1.6  (April 21, 2020)
+--------------------------
+- Fix: Missing import in start view (@ArchBlood)
+ 
+ 
 2.1.5  (April 21, 2020)
 --------------------------
 - Enh: Added cleanup backup job

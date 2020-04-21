@@ -3,7 +3,6 @@
 use yii\helpers\Url;
 use humhub\libs\Html;
 use humhub\widgets\LoaderWidget;
-use yii\helpers\Html as BaseHtml;
 ?>
 <div class="modal-dialog modal-dialog animated fadeIn">
     <div class="modal-content">
@@ -55,8 +54,8 @@ use yii\helpers\Html as BaseHtml;
 
         </div>
         <div class="modal-footer">
-            <?= BaseHtml::a(Yii::t('UpdaterModule.base', 'Start'), '#', ['id' => 'btnUpdaterStart', 'class' => 'btn btn-success pull-left startButton', 'data-pjax-prevent' => '']); ?>
-            <?= BaseHtml::a(Yii::t('UpdaterModule.base', 'Abort'), ['/updater/update'], ['class' => 'btn btn-danger pull-right startButton', 'data-pjax-prevent' => '']); ?>
+            <?= Html::a(Yii::t('UpdaterModule.base', 'Start'), '#', ['id' => 'btnUpdaterStart', 'class' => 'btn btn-success pull-left startButton', 'data-pjax-prevent' => '']); ?>
+            <?= Html::a(Yii::t('UpdaterModule.base', 'Abort'), ['/updater/update'], ['class' => 'btn btn-danger pull-right startButton', 'data-pjax-prevent' => '']); ?>
 
             <?= Html::a(Yii::t('UpdaterModule.base', 'Close'), ['/updater/update'], ['id' => 'btnUpdaterClose', 'data-ui-loader' => '', 'data-pjax-prevent' => '', 'class' => 'btn btn-primary']); ?>
             <div class="loader-modal loader colorWarning pull-right hidden"><i class="fa fa-warning"></i> Do not interrupt!</div>
