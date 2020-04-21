@@ -1,69 +1,72 @@
 <?php
 
 use yii\helpers\Url;
+use humhub\libs\Html;
+use humhub\widgets\LoaderWidget;
+use yii\helpers\Html as BaseHtml;
 ?>
 <div class="modal-dialog modal-dialog animated fadeIn">
     <div class="modal-content">
         <div class="modal-header">
-            <h4 class="modal-title" id="myModalLabel"><?php echo Yii::t('UpdaterModule.base', '<strong>Update</strong> to HumHub {version}', ['version' => $versionTo]); ?></h4>
+            <h4 class="modal-title" id="myModalLabel"><?= Yii::t('UpdaterModule.base', '<strong>Update</strong> to HumHub {version}', ['version' => $versionTo]); ?></h4>
         </div>
         <div class="modal-body">
 
             <div id="startDialog">
                 <div class="alert alert-danger">
-                    <strong><?php echo Yii::t('UpdaterModule.base', 'Please note:'); ?></strong><br />
+                    <strong><?= Yii::t('UpdaterModule.base', 'Please note:'); ?></strong><br />
                     <ul>
-                        <li><?php echo Yii::t('UpdaterModule.base', 'Backup all your files & database before proceed'); ?></li>
-                        <li><?php echo Yii::t('UpdaterModule.base', 'Make sure all files are writable by application'); ?></li>
-                        <li><?php echo Yii::t('UpdaterModule.base', 'Please update installed marketplace modules before and after the update'); ?></li>
-                        <li><?php echo Yii::t('UpdaterModule.base', 'Make sure custom modules or themes are compatible with version %version%', array('%version%' => $versionTo)); ?></li>
-                        <li><?php echo Yii::t('UpdaterModule.base', 'Do not use this updater in combination with Git or Composer installations!'); ?></li>
-                        <li><?php echo Yii::t('UpdaterModule.base', 'Changes to HumHub core files may overwritten during update!'); ?></li>
+                        <li><?= Yii::t('UpdaterModule.base', 'Backup all your files & database before proceed'); ?></li>
+                        <li><?= Yii::t('UpdaterModule.base', 'Make sure all files are writable by application'); ?></li>
+                        <li><?= Yii::t('UpdaterModule.base', 'Please update installed marketplace modules before and after the update'); ?></li>
+                        <li><?= Yii::t('UpdaterModule.base', 'Make sure custom modules or themes are compatible with version %version%', ['%version%' => $versionTo]); ?></li>
+                        <li><?= Yii::t('UpdaterModule.base', 'Do not use this updater in combination with Git or Composer installations!'); ?></li>
+                        <li><?= Yii::t('UpdaterModule.base', 'Changes to HumHub core files may overwritten during update!'); ?></li>
                     </ul>
                 </div>
                 <div class="checkbox">
                     <label>
-                        <input type="checkbox" value="1" checked id="chkBoxResetTheme"> <?php echo Yii::t('UpdaterModule.base', 'Switch to default theme after update (strongly recommended)'); ?>
+                        <input type="checkbox" value="1" checked id="chkBoxResetTheme"> <?= Yii::t('UpdaterModule.base', 'Switch to default theme after update (strongly recommended)'); ?>
                     </label>
                 </div>
             </div>
 
 
             <div class="steps">
-                <p id="step_download"><strong><i></i> <?php echo Yii::t('UpdaterModule.base', 'Downloading update package'); ?></strong></p>
-                <p id="step_extract"><strong><i></i> <?php echo Yii::t('UpdaterModule.base', 'Extracting package files'); ?></strong></p>
-                <p id="step_validate"><strong><i></i> <?php echo Yii::t('UpdaterModule.base', 'Validating package'); ?></strong></p>
-                <p id="step_prepare"><strong><i></i> <?php echo Yii::t('UpdaterModule.base', 'Preparing system'); ?></strong></p>
-                <p id="step_install"><strong><i></i> <?php echo Yii::t('UpdaterModule.base', 'Installing files'); ?></strong></p>
-                <p id="step_migrate"><strong><i></i> <?php echo Yii::t('UpdaterModule.base', 'Migrating database'); ?></strong></p>
-                <p id="step_cleanup"><strong><i></i> <?php echo Yii::t('UpdaterModule.base', 'Cleanup update files'); ?></strong></p>
+                <p id="step_download"><strong><i></i> <?= Yii::t('UpdaterModule.base', 'Downloading update package'); ?></strong></p>
+                <p id="step_extract"><strong><i></i> <?= Yii::t('UpdaterModule.base', 'Extracting package files'); ?></strong></p>
+                <p id="step_validate"><strong><i></i> <?= Yii::t('UpdaterModule.base', 'Validating package'); ?></strong></p>
+                <p id="step_prepare"><strong><i></i> <?= Yii::t('UpdaterModule.base', 'Preparing system'); ?></strong></p>
+                <p id="step_install"><strong><i></i> <?= Yii::t('UpdaterModule.base', 'Installing files'); ?></strong></p>
+                <p id="step_migrate"><strong><i></i> <?= Yii::t('UpdaterModule.base', 'Migrating database'); ?></strong></p>
+                <p id="step_cleanup"><strong><i></i> <?= Yii::t('UpdaterModule.base', 'Cleanup update files'); ?></strong></p>
 
             </div>
             <br />
             <div class="alert alert-danger" id="errorMessageBox">
                 <p><strong>Error!</strong></p>
-                <p id="errorMessage"><?php echo Yii::t('UpdaterModule.base', 'No error message available. Please check logfiles!'); ?></p>
+                <p id="errorMessage"><?= Yii::t('UpdaterModule.base', 'No error message available. Please check logfiles!'); ?></p>
             </div>
             <div class="alert alert-success" id="successMessageBox">
-                <p><strong><i class="fa fa-thumbs-up"></i> <?php echo Yii::t('UpdaterModule.base', 'Update successful'); ?></strong></p>
-                <p><?php echo Yii::t('UpdaterModule.base', 'The update was successfully installed!'); ?></p>
-                <p><?php echo Yii::t('UpdaterModule.base', 'Please update installed modules when new version is available!'); ?></p>
+                <p><strong><i class="fa fa-thumbs-up"></i> <?= Yii::t('UpdaterModule.base', 'Update successful'); ?></strong></p>
+                <p><?= Yii::t('UpdaterModule.base', 'The update was successfully installed!'); ?></p>
+                <p><?= Yii::t('UpdaterModule.base', 'Please update installed modules when new version is available!'); ?></p>
             </div>
 
         </div>
         <div class="modal-footer">
-            <?= Html::a(Yii::t('UpdaterModule.base', 'Start'), '#', ['id' => 'btnUpdaterStart', 'class' => 'btn btn-success pull-left startButton', 'data-pjax-prevent' => '']); ?>
-            <?= Html::a(Yii::t('UpdaterModule.base', 'Abort'), ['/updater/update'], ['class' => 'btn btn-danger pull-right startButton', 'data-pjax-prevent' => '']); ?>
+            <?= BaseHtml::a(Yii::t('UpdaterModule.base', 'Start'), '#', ['id' => 'btnUpdaterStart', 'class' => 'btn btn-success pull-left startButton', 'data-pjax-prevent' => '']); ?>
+            <?= BaseHtml::a(Yii::t('UpdaterModule.base', 'Abort'), ['/updater/update'], ['class' => 'btn btn-danger pull-right startButton', 'data-pjax-prevent' => '']); ?>
 
             <?= Html::a(Yii::t('UpdaterModule.base', 'Close'), ['/updater/update'], ['id' => 'btnUpdaterClose', 'data-ui-loader' => '', 'data-pjax-prevent' => '', 'class' => 'btn btn-primary']); ?>
             <div class="loader-modal loader colorWarning pull-right hidden"><i class="fa fa-warning"></i> Do not interrupt!</div>
-            <?php echo \humhub\widgets\LoaderWidget::widget(['id' => 'update-loader', 'cssClass' => 'loader-modal hidden']); ?>
+            <?= LoaderWidget::widget(['id' => 'update-loader', 'cssClass' => 'loader-modal hidden']); ?>
         </div>
     </div>
 </div>
 
 
-<script <?= \humhub\libs\Html::nonce(); ?>>
+<script <?= Html::nonce(); ?>>
 
     $('#errorMessageBox').hide();
     $('#successMessageBox').hide();
