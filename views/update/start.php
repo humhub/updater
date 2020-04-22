@@ -65,8 +65,14 @@ use humhub\widgets\LoaderWidget;
 </div>
 
 
-<script <?= Html::nonce(); ?>>
+<?php
+$nonce = '';
+if (version_compare(Yii::$app->version, '1.4', '>')) {
+    $nonce = Html::nonce(); 
+}
+?>
 
+<script <?= $nonce; ?>>
     $('#errorMessageBox').hide();
     $('#successMessageBox').hide();
 
