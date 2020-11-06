@@ -1,6 +1,11 @@
 Changelog
 =========
 
+2.1.8  (November 6, 2020)
+--------------------------
+- Fix: Clear assets directory at the end of installation
+
+
 2.1.7  (April 22, 2020)
 --------------------------
 - Fix: 1.3 compatibility support 
