@@ -115,6 +115,7 @@ class InstallController extends \yii\base\Controller
     protected function flushCaches()
     {
         Yii::$app->moduleManager->flushCache();
+        Yii::$app->assetManager->clear();
         Yii::$app->cache->flush();
     }
 
