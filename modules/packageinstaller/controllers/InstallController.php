@@ -87,6 +87,7 @@ class InstallController extends \yii\base\Controller
     public function actionCleanup()
     {
         $this->updatePackage->delete();
+        Yii::$app->assetManager->clear();
 
         if (Yii::$app->request->post('theme') == 'true') {
             $this->switchToDefaultTheme();
@@ -115,7 +116,6 @@ class InstallController extends \yii\base\Controller
     protected function flushCaches()
     {
         Yii::$app->moduleManager->flushCache();
-        Yii::$app->assetManager->clear();
         Yii::$app->cache->flush();
     }
 
