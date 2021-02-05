@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.1.10  (Unreleased)
+--------------------------
+- Enh #24: Show current update channel with link to module configuration
+
 2.1.9  (February 5, 2021)
 --------------------------
 - Fix: Better handle errors when assets directory cannot be cleared (+ retry)
