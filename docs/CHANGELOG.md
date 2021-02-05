@@ -1,6 +1,11 @@
 Changelog
 =========
 
+2.1.9  (February 5, 2021)
+--------------------------
+- Fix: Better handle errors when assets directory cannot be cleared (+ retry)
+
+
 2.1.8  (November 6, 2020)
 --------------------------
 - Fix: Clear assets directory at the end of installation
