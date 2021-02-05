@@ -3,6 +3,7 @@
 namespace humhub\modules\updater;
 
 use humhub\models\Setting;
+use humhub\modules\updater\models\ConfigureForm;
 use Yii;
 use yii\base\Exception;
 use yii\helpers\Url;
@@ -73,9 +74,25 @@ class Module extends \humhub\components\Module
         return \humhub\libs\CURLHelper::getOptions();
     }
 
-
+    /**
+     * Get current update channel value
+     *
+     * @return string
+     */
     public function getUpdateChannel()
     {
         return $this->settings->get('channel', 'stable');
+    }
+
+    /**
+     * Get current update channel title
+     *
+     * @return string
+     */
+    public function getUpdateChannelTitle()
+    {
+        $updateChannel = $this->getUpdateChannel();
+        $updateChannelTitles = ConfigureForm::getChannels();
+        return isset($updateChannelTitles[$updateChannel]) ? $updateChannelTitles[$updateChannel] : $updateChannel;
     }
 }
