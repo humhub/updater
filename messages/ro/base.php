@@ -1,19 +1,23 @@
 <?php
 
 return [
+    'Close' => 'Închide',
     '<strong>Update</strong> HumHub' => '',
     '<strong>Update</strong> to HumHub {version}' => '',
     'Abort' => '',
     'Application folder not writable!' => '',
     'Application folder: {folder}' => '',
     'Backup all your files & database before proceed' => '',
+    'Change the Update Channel in order to be able to upgrade to beta versions.' => '',
     'Changes to HumHub core files may overwritten during update!' => '',
     'Channel' => '',
     'Cleanup update files' => '',
     'Could not extract update package!' => '',
     'Could not get update info online! (%error%)' => '',
+    'Current update channel: {updateChannel}' => '',
     'Do not use this updater in combination with Git or Composer installations!' => '',
     'Downloading update package' => '',
+    'Enable Beta Updates' => '',
     'Extracting package files' => '',
     'Installed PHP version not support!' => '',
     'Installing files' => '',
@@ -43,5 +47,4 @@ return [
     'Update successful' => '',
     'Updater Configuration' => '',
     'Validating package' => '',
-    'Close' => 'Închide',
 ];

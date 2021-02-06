@@ -1,11 +1,6 @@
 <?php
 
 return [
-    'Channel' => '',
-    'Make sure all files are writable! (file)' => '',
-    'Stable and beta versions' => '',
-    'Stable versions only' => '',
-    'Updater Configuration' => '',
     '<strong>Update</strong> HumHub' => '<strong>Aktualizovat </strong> HumHub',
     '<strong>Update</strong> to HumHub {version}' => '<strong>Aktualizovat </strong> na verzi HumHub {version}',
     'Abort' => 'Zrušit',
@@ -44,4 +39,12 @@ return [
     'Update package invalid!' => 'Aktualizační balíček je neplatný!',
     'Update successful' => 'Aktualizace úspěsná ',
     'Validating package' => 'Validace balíčku',
+    'Change the Update Channel in order to be able to upgrade to beta versions.' => '',
+    'Channel' => '',
+    'Current update channel: {updateChannel}' => '',
+    'Enable Beta Updates' => '',
+    'Make sure all files are writable! (file)' => '',
+    'Stable and beta versions' => '',
+    'Stable versions only' => '',
+    'Updater Configuration' => '',
 ];
