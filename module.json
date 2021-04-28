@@ -5,7 +5,7 @@
     "keywords": [
         "core"
     ],
-    "homepage": "https://github.com/humhub/humhub-modules-updater",
+    "homepage": "https://github.com/humhub/updater",
     "humhub": {
         "minVersion": "1.0"
     },
