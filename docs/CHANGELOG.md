@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.2.0  (Unreleased)
+--------------------------
+- Enh: Remove deprecated "Setting" classes
+
 2.1.10  (Unreleased)
 --------------------------
 - Enh #24: Show current update channel with link to module configuration

@@ -7,7 +7,7 @@
     ],
     "homepage": "https://github.com/humhub/updater",
     "humhub": {
-        "minVersion": "1.0"
+        "minVersion": "1.11"
     },
-    "version": "2.1.10"
+    "version": "2.2.0"
 }

@@ -2,10 +2,9 @@
 
 namespace humhub\modules\updater\libs;
 
-use humhub\modules\user\models\Setting;
+use humhub\modules\admin\libs\HumHubAPI;
+use humhub\modules\updater\Module;
 use Yii;
-use yii\base\Exception;
-use yii\helpers\Json;
 
 /**
  * OnlineUpdateAPI
@@ -18,32 +17,17 @@ class OnlineUpdateAPI
     /**
      * Returns all available updates for a given version
      *
-     * @param type $version
+     * @return AvailableUpdate|null $version
      */
     public static function getAvailableUpdate()
     {
+        /* @var Module $module */
+        $module = Yii::$app->getModule('updater');
 
-        $info = [];
-        if (class_exists('\humhub\modules\admin\libs\HumHubAPI')) {
-            $info = \humhub\modules\admin\libs\HumHubAPI::request('v1/modules/getHumHubUpdates', [
-                'updaterVersion' => Yii::$app->getModule('updater')->version,
-                'channel' => Yii::$app->getModule('updater')->getUpdateChannel()
-            ]);
-        } else {
-            // older Versions
-            try {
-                $url = Yii::$app->getModule('admin')->marketplaceApiUrl . "getHumHubUpdates?version=" . Yii::$app->version . "&updaterVersion=" . Yii::$app->getModule('updater')->version . "&installId=" . Setting::Get('installationId', 'admin');
-                $http = new \Zend\Http\Client($url, array(
-                    'adapter' => '\Zend\Http\Client\Adapter\Curl',
-                    'curloptions' => Yii::$app->getModule('updater')->getCurlOptions(),
-                    'timeout' => 30
-                ));
-                $response = $http->send();
-                $info = Json::decode($response->getBody());
-            } catch (Exception $ex) {
-                throw new Exception(Yii::t('UpdaterModule.base', 'Could not get update info online! (%error%)', array('%error%' => $ex->getMessage())));
-            }
-        }
+        $info = HumHubAPI::request('v1/modules/getHumHubUpdates', [
+            'updaterVersion' => $module->version,
+            'channel' => $module->getUpdateChannel()
+        ]);
 
         if (!isset($info['fromVersion'])) {
             return null;
