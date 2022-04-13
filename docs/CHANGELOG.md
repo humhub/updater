@@ -1,9 +1,10 @@
 Changelog
 =========
 
-2.1.10  (Unreleased)
---------------------------
+2.1.10  (April 13, 2022)
+------------------------
 - Enh #24: Show current update channel with link to module configuration
+- Enh: Removed Zend HTTP requirement
 
 2.1.9  (February 5, 2021)
 --------------------------
