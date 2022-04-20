@@ -1,7 +1,7 @@
 Changelog
 =========
 
-2.1.11  (Aprofil 20, 2022)
+2.1.11  (April 20, 2022)
 --------------------------
 - Enh #20: Check minimum PHP version from HumHub config
 
