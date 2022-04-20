@@ -1,8 +1,8 @@
 Changelog
 =========
 
-2.1.11  (Unreleased)
-------------------------
+2.1.11  (Aprofil 20, 2022)
+--------------------------
 - Enh #20: Check minimum PHP version from HumHub config
 
 2.1.10  (April 13, 2022)
