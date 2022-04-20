@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.1.11  (April 20, 2022)
+--------------------------
+- Enh #20: Check minimum PHP version from HumHub config
+
 2.1.10  (April 13, 2022)
 ------------------------
 - Enh #24: Show current update channel with link to module configuration
