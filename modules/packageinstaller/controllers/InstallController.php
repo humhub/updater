@@ -63,7 +63,13 @@ class InstallController extends \yii\base\Controller
 
     public function actionPrepare()
     {
-        return ['status' => 'ok'];
+        $result = $this->updatePackage->checkPhpVersion();
+
+        if ($result === true) {
+            return ['status' => 'ok'];
+        }
+
+        return ['message' => 'Please update PHP up to version "' . $result. '"!'];
     }
 
     public function actionInstallFiles()

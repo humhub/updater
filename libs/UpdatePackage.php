@@ -142,6 +142,38 @@ class UpdatePackage
         return $notWritable;
     }
 
+    /**
+     * Check if new HumHub version supports the current PHP version
+     *
+     * @return bool|string True - on supporting, String as new minimum supported PHP version
+     */
+    public function checkPhpVersion()
+    {
+        $newMinPhpVersion = $this->getNewConfigValue('minSupportedPhpVersion');
+        if ($newMinPhpVersion === null || version_compare(PHP_VERSION, $newMinPhpVersion, '>=')) {
+            return true;
+        }
+
+        return $newMinPhpVersion;
+    }
+
+    private function getNewConfigValue($configVarName, $defaultValue = null)
+    {
+        $changedFiles = $this->getChangedFiles();
+
+        $configFileName = 'protected/humhub/config/common.php';
+        if (isset($changedFiles[$configFileName]['newFileMD5'])) {
+            $newConfigFilePath = $this->getNewFileDirectory() . DIRECTORY_SEPARATOR . $changedFiles[$configFileName]['newFileMD5'];
+            if (file_exists($newConfigFilePath)) {
+                if (preg_match('/[\'"]' . preg_quote($configVarName) . '[\'"]\s+=>\s+[\'"](.+?)[\'"]/', file_get_contents($newConfigFilePath), $match)) {
+                    return $match[1];
+                }
+            }
+        }
+
+        return $defaultValue;
+    }
+
     public function install()
     {
         $warnings = array();
