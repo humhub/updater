@@ -2,6 +2,7 @@
 
 namespace humhub\modules\updater\libs;
 
+use humhub\widgets\Link;
 use Yii;
 use yii\base\Exception;
 use yii\helpers\Json;
@@ -155,6 +156,31 @@ class UpdatePackage
         }
 
         return $newMinPhpVersion;
+    }
+
+    /**
+     * Check for restricted modules
+     *
+     * @return string|true TRUE - if no restriction, String - error message
+     */
+    public function checkRestrictedModules()
+    {
+        // Conditions when modules should be restricted:
+        $restrictedModules = [
+            'enterprise' => ['HumHubVersion', '>=', '1.10']
+        ];
+
+        foreach ($restrictedModules as $moduleId => $restriction) {
+            if (Yii::$app->getModule($moduleId) &&
+                $restriction[0] === 'HumHubVersion' &&
+                version_compare($this->getNewConfigValue('version'), $restriction[2], $restriction[1])) {
+                return Yii::t('UpdaterModule.base', 'This version is not supported with the legecy Enterprise Edition. Please contact support! {email}', [
+                    'email' => Link::to('hello@humhub.com', 'mailto:hello@humhub.com'),
+                ]);
+            }
+        }
+
+        return true;
     }
 
     private function getNewConfigValue($configVarName, $defaultValue = null)
