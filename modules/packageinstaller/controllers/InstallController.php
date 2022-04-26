@@ -70,7 +70,7 @@ class InstallController extends \yii\base\Controller
 
         $result = $this->updatePackage->checkRestrictedModules();
         if ($result !== true) {
-            return ['message' => $result];
+            return ['message' => implode('<br>', $result)];
         }
 
         return ['status' => 'ok'];
