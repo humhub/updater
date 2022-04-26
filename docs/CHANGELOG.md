@@ -1,8 +1,8 @@
 Changelog
 =========
 
-2.1.12  (Unreleased)
---------------------------
+2.1.12  (April 26, 2022)
+------------------------
 - Enh #21: Check for old 'enterprise' module
 
 2.1.11  (April 20, 2022)
