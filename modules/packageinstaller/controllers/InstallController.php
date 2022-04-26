@@ -64,12 +64,17 @@ class InstallController extends \yii\base\Controller
     public function actionPrepare()
     {
         $result = $this->updatePackage->checkPhpVersion();
-
-        if ($result === true) {
-            return ['status' => 'ok'];
+        if ($result !== true) {
+            return ['message' => Yii::t('UpdaterModule.base', 'Your installed PHP version is too old. The new minimum required PHP version is: {version}', ['version' => $result])];
         }
 
-        return ['message' => Yii::t('UpdaterModule.base', 'Your installed PHP version is too old. The new minimum required PHP version is: {version}', ['version' => $result])];
+        $result = $this->updatePackage->checkRestrictedModules();
+        if ($result !== true) {
+            return ['message' => implode('<br>', $result)];
+        }
+
+        return ['status' => 'ok'];
+
     }
 
     public function actionInstallFiles()

@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.1.12  (Unreleased)
+--------------------------
+- Enh #21: Check for old 'enterprise' module
+
 2.1.11  (April 20, 2022)
 --------------------------
 - Enh #20: Check minimum PHP version from HumHub config

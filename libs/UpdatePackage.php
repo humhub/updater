@@ -2,6 +2,7 @@
 
 namespace humhub\modules\updater\libs;
 
+use humhub\widgets\Link;
 use Yii;
 use yii\base\Exception;
 use yii\helpers\Json;
@@ -48,6 +49,30 @@ class UpdatePackage
         }
 
         $this->fileName = $fileName;
+    }
+
+    /**
+     * Get config for restrictions depending on installed modules
+     *
+     * @return array Key - Module Id, Value - array of restrictions where key is type of possible restriction:
+     *         1. 'HumHubVersion'
+     *            'condition' - Sign to compare new installing HumHub version with allowed version for the modules, example: '>='
+     *            'version' - Allowed version, example: '1.10'
+     *            'message' - Error message in case of the restriction is applied
+     */
+    private function getModuleRestrictions(): array
+    {
+        return [
+            'enterprise' => [
+                'HumHubVersion' => [
+                    'condition' => '>=',
+                    'version' => '1.10',
+                    'message' => Yii::t('UpdaterModule.base', 'This HumHub version no longer supports the deprecated Enterprise Module. Please contact our support: {email}', [
+                        'email' => Link::to('hello@humhub.com', 'mailto:hello@humhub.com'),
+                    ])
+                ]
+            ]
+        ];
     }
 
     /**
@@ -155,6 +180,32 @@ class UpdatePackage
         }
 
         return $newMinPhpVersion;
+    }
+
+    /**
+     * Check for restricted modules
+     *
+     * @return true|array TRUE - if no restriction, Array - error messages
+     */
+    public function checkRestrictedModules()
+    {
+        $errors = [];
+        foreach ($this->getModuleRestrictions() as $moduleId => $restrictions) {
+            if (!Yii::$app->getModule($moduleId)) {
+                continue;
+            }
+            foreach ($restrictions as $type => $restriction) {
+                switch ($type) {
+                    case 'HumHubVersion':
+                        if (version_compare($this->getNewConfigValue('version'), $restriction['version'], $restriction['condition'])) {
+                            $errors[] = $restriction['message'];
+                        }
+                        break;
+                }
+            }
+        }
+
+        return empty($errors) ? true : $errors;
     }
 
     private function getNewConfigValue($configVarName, $defaultValue = null)
