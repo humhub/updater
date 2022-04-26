@@ -67,7 +67,7 @@ class UpdatePackage
                 'HumHubVersion' => [
                     'condition' => '>=',
                     'version' => '1.10',
-                    'message' => Yii::t('UpdaterModule.base', 'This version is not supported with the legacy Enterprise Edition. Please contact support! {email}', [
+                    'message' => Yii::t('UpdaterModule.base', 'This HumHub version no longer supports the deprecated Enterprise Module. Please contact our support: {email}', [
                         'email' => Link::to('hello@humhub.com', 'mailto:hello@humhub.com'),
                     ])
                 ]
