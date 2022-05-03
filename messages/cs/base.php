@@ -43,8 +43,10 @@ return [
     'Channel' => '',
     'Current update channel: {updateChannel}' => '',
     'Enable Beta Updates' => '',
-    'Make sure all files are writable! (file)' => '',
+    'Make sure all files are writable! ({files})' => '',
     'Stable and beta versions' => '',
     'Stable versions only' => '',
+    'This HumHub version no longer supports the deprecated Enterprise Module. Please contact our support: {email}' => '',
     'Updater Configuration' => '',
+    'Your installed PHP version is too old. The new minimum required PHP version is: {version}' => '',
 ];
