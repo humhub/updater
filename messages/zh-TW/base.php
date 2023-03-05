@@ -46,6 +46,6 @@ return array (
   'Update package invalid!' => '',
   'Update successful' => '升級成功',
   'Updater Configuration' => '',
-  'Validating package' => '',
+  'Validating package' => '驗證安裝包',
   'Your installed PHP version is too old. The new minimum required PHP version is: {version}' => '',
 );
