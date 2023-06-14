@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.2.0  (Unreleased)
+------------------------
+- Enh #34: Remove deprecated `setModalLoader()` usage
+
 2.1.12  (April 26, 2022)
 ------------------------
 - Enh #21: Check for old 'enterprise' module
