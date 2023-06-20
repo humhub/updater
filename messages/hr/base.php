@@ -19,7 +19,6 @@ return [
     'Installed PHP version not support!' => 'Instalirana PHP inačica ne podržava!',
     'Installing files' => 'Instaliranje datoteka',
     'Make sure all files are writable by application' => 'Provjerite jesu li u sve datoteke omogućeno zapisivanje od aplikacije',
-    'Make sure all files are writable! (file)' => 'Provjerite mogu li sve datoteke biti upisane! (file)',
     'Make sure custom modules or themes are compatible with version %version%' => 'Provjerite jesu li prilagođeni moduli ili tema kompatibilni s verzijom %version%',
     'Migrating database' => 'Migracija baze podataka',
     'New updater version available!' => 'Dostupna je nova verzija updatera!',
@@ -47,4 +46,7 @@ return [
     'Change the Update Channel in order to be able to upgrade to beta versions.' => '',
     'Current update channel: {updateChannel}' => '',
     'Enable Beta Updates' => '',
+    'Make sure all files are writable! ({files})' => '',
+    'This HumHub version no longer supports the deprecated Enterprise Module. Please contact our support: {email}' => '',
+    'Your installed PHP version is too old. The new minimum required PHP version is: {version}' => '',
 ];

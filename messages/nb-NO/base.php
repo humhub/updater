@@ -25,7 +25,7 @@ return [
     'Installed PHP version not support!' => '',
     'Installing files' => '',
     'Make sure all files are writable by application' => '',
-    'Make sure all files are writable! (file)' => '',
+    'Make sure all files are writable! ({files})' => '',
     'Make sure custom modules or themes are compatible with version %version%' => '',
     'Migrating database' => '',
     'New updater version available!' => '',
@@ -44,7 +44,9 @@ return [
     'There is a new update to %version% available!' => '',
     'There is a new version of the updater module available. Please update before proceed.' => '',
     'There is no new HumHub update available!' => '',
+    'This HumHub version no longer supports the deprecated Enterprise Module. Please contact our support: {email}' => '',
     'Update HumHub' => '',
     'Update package invalid!' => '',
     'Updater Configuration' => '',
+    'Your installed PHP version is too old. The new minimum required PHP version is: {version}' => '',
 ];

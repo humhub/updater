@@ -55,7 +55,7 @@ class InstallController extends \yii\base\Controller
             $fileList = implode(', ', $notWritable);
             $files = (strlen($fileList) > 255) ? substr($fileList, 0, 255) . '...' : $fileList;
 
-            throw new \Exception(Yii::t('UpdaterModule.base', 'Make sure all files are writable! (' . $files . ')'));
+            throw new \Exception(Yii::t('UpdaterModule.base', 'Make sure all files are writable! ({files})', ['files' => $files]));
         }
 
         return ['status' => 'ok'];
@@ -63,7 +63,18 @@ class InstallController extends \yii\base\Controller
 
     public function actionPrepare()
     {
+        $result = $this->updatePackage->checkPhpVersion();
+        if ($result !== true) {
+            return ['message' => Yii::t('UpdaterModule.base', 'Your installed PHP version is too old. The new minimum required PHP version is: {version}', ['version' => $result])];
+        }
+
+        $result = $this->updatePackage->checkRestrictedModules();
+        if ($result !== true) {
+            return ['message' => implode('<br>', $result)];
+        }
+
         return ['status' => 'ok'];
+
     }
 
     public function actionInstallFiles()

@@ -5,9 +5,18 @@ Changelog
 --------------------------
 - Enh: Remove deprecated "Setting" classes
 
-2.1.10  (Unreleased)
+2.1.12  (April 26, 2022)
+------------------------
+- Enh #21: Check for old 'enterprise' module
+
+2.1.11  (April 20, 2022)
 --------------------------
+- Enh #20: Check minimum PHP version from HumHub config
+
+2.1.10  (April 13, 2022)
+------------------------
 - Enh #24: Show current update channel with link to module configuration
+- Enh: Removed Zend HTTP requirement
 
 2.1.9  (February 5, 2021)
 --------------------------

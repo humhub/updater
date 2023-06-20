@@ -19,7 +19,6 @@ return [
     'Installed PHP version not support!' => 'Versão do PHP não suportada!',
     'Installing files' => 'Instalando arquivos',
     'Make sure all files are writable by application' => 'Verifique se todos os arquivos são graváveis pelo aplicativo',
-    'Make sure all files are writable! (file)' => 'Certifique-se de que todos os arquivos sejam graváveis! (Arquivo)',
     'Make sure custom modules or themes are compatible with version %version%' => 'Verifique se os módulos ou temas personalizados são compatíveis com a versão %version%',
     'Migrating database' => 'Migrando banco de dados',
     'New updater version available!' => 'Nova versão do atualizador disponível!',
@@ -47,4 +46,7 @@ return [
     'Change the Update Channel in order to be able to upgrade to beta versions.' => '',
     'Current update channel: {updateChannel}' => '',
     'Enable Beta Updates' => '',
+    'Make sure all files are writable! ({files})' => '',
+    'This HumHub version no longer supports the deprecated Enterprise Module. Please contact our support: {email}' => '',
+    'Your installed PHP version is too old. The new minimum required PHP version is: {version}' => '',
 ];
