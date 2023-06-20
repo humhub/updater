@@ -2,7 +2,6 @@
 
 use yii\helpers\Url;
 use humhub\libs\Html;
-use humhub\widgets\LoaderWidget;
 ?>
 <div class="modal-dialog modal-dialog animated fadeIn">
     <div class="modal-content">
@@ -51,15 +50,13 @@ use humhub\widgets\LoaderWidget;
                 <p><?= Yii::t('UpdaterModule.base', 'The update was successfully installed!'); ?></p>
                 <p><?= Yii::t('UpdaterModule.base', 'Please update installed modules when new version is available!'); ?></p>
             </div>
-
+            <div class="interruptWarning colorWarning pull-right hidden"><i class="fa fa-warning"></i> <?= Yii::t('UpdaterModule.base', 'Do not interrupt!') ?></div>
         </div>
         <div class="modal-footer">
             <?= Html::a(Yii::t('UpdaterModule.base', 'Start'), '#', ['id' => 'btnUpdaterStart', 'class' => 'btn btn-success pull-left startButton', 'data-pjax-prevent' => '']); ?>
             <?= Html::a(Yii::t('UpdaterModule.base', 'Abort'), ['/updater/update'], ['class' => 'btn btn-danger pull-right startButton', 'data-pjax-prevent' => '']); ?>
 
             <?= Html::a(Yii::t('UpdaterModule.base', 'Close'), ['/updater/update'], ['id' => 'btnUpdaterClose', 'data-ui-loader' => '', 'data-pjax-prevent' => '', 'class' => 'btn btn-primary']); ?>
-            <div class="loader-modal loader colorWarning pull-right hidden"><i class="fa fa-warning"></i> Do not interrupt!</div>
-            <?= LoaderWidget::widget(['id' => 'update-loader', 'cssClass' => 'loader-modal hidden']); ?>
         </div>
     </div>
 </div>
@@ -81,7 +78,8 @@ if (version_compare(Yii::$app->version, '1.4', '>')) {
         $('#startDialog').hide();
         $('.startButton').hide();
 
-        setModalLoader();
+        humhub.require('ui.modal').footerLoader();
+        $('.interruptWarning').removeClass('hidden');
         step_download();
     });
 
@@ -304,4 +302,3 @@ if (version_compare(Yii::$app->version, '1.4', '>')) {
         return true;
     }
 </script>
-
