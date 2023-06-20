@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.2.0  (Unreleased)
+--------------------------
+- Enh: Remove deprecated "Setting" classes
+
 2.1.12  (April 26, 2022)
 ------------------------
 - Enh #21: Check for old 'enterprise' module
