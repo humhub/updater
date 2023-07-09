@@ -5,6 +5,7 @@ Changelog
 ------------------------
 - Enh #34: Remove deprecated `setModalLoader()` usage
 - Enh #29: Remove deprecated "Setting" classes
+- Fix #36: Fix URL to available updates on Marketplace
 
 2.1.12  (April 26, 2022)
 ------------------------

@@ -14,7 +14,7 @@ use yii\helpers\Html;
         <?php if ($newUpdaterAvailable): ?>
             <br />
             <div class="alert alert-danger">
-                <?= Html::a('Update', ['/marketplace/update'], ['class' => 'btn btn-danger pull-right']); ?>
+                <?= Html::a('Update', ['/marketplace/browse'], ['class' => 'btn btn-danger pull-right']); ?>
                 <strong><?php echo Yii::t('UpdaterModule.base', 'New updater version available!'); ?></strong><br />
                 <?php echo Yii::t('UpdaterModule.base', 'There is a new version of the updater module available. Please update before proceed.'); ?>
             </div>
