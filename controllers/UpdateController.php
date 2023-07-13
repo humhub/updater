@@ -2,16 +2,16 @@
 
 namespace humhub\modules\updater\controllers;
 
-use Yii;
-use yii\helpers\Url;
+use humhub\modules\admin\components\Controller;
 use humhub\modules\updater\libs\OnlineUpdateAPI;
+use Yii;
 
 /**
  * UpdateController
  *
  * @author luke
  */
-class UpdateController extends \humhub\modules\admin\components\Controller
+class UpdateController extends Controller
 {
 
     public function init()
@@ -35,14 +35,6 @@ class UpdateController extends \humhub\modules\admin\components\Controller
             return $this->render('index_noupdate');
         }
 
-        $releaseNotes = \humhub\widgets\MarkdownView::widget(['markdown' => $availableUpdate->releaseNotes]);
-
-        // Fix older release notes
-        if (strpos($releaseNotes, '<li>') === false) {
-            $releaseNotes = nl2br($availableUpdate->releaseNotes) . '<br />';
-        }
-
-
         $allowStart = true;
         $newUpdaterAvailable = $this->isNewUpdaterModuleAvailable();
         if ($newUpdaterAvailable) {
@@ -62,7 +54,7 @@ class UpdateController extends \humhub\modules\admin\components\Controller
 
         return $this->render('index', [
             'versionTo' => $availableUpdate->versionTo,
-            'releaseNotes' => $releaseNotes,
+            'releaseNotes' => $availableUpdate->releaseNotes,
             'newUpdaterAvailable' => $newUpdaterAvailable,
             'allowStart' => $allowStart,
             'errorMinimumPhpVersion' => $errorMinimumPhpVersion,
