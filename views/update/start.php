@@ -61,15 +61,7 @@ use humhub\libs\Html;
     </div>
 </div>
 
-
-<?php
-$nonce = '';
-if (version_compare(Yii::$app->version, '1.4', '>')) {
-    $nonce = Html::nonce(); 
-}
-?>
-
-<script <?= $nonce; ?>>
+<script <?= Html::nonce() ?>>
     $('#errorMessageBox').hide();
     $('#successMessageBox').hide();
 
