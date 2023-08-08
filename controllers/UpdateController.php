@@ -3,6 +3,7 @@
 namespace humhub\modules\updater\controllers;
 
 use humhub\modules\admin\components\Controller;
+use humhub\modules\marketplace\components\OnlineModuleManager;
 use humhub\modules\updater\libs\OnlineUpdateAPI;
 use Yii;
 
@@ -17,14 +18,6 @@ class UpdateController extends Controller
     public function init()
     {
         set_time_limit(0);
-
-        // Fix: Handle admin layout file change in (v1.0.0-beta.3 -> v1.0.0-beta.4)
-        if ($this->subLayout == '@humhub/modules/admin/views/_layout') {
-            if (!file_exists(Yii::getAlias($this->subLayout) . '.php')) {
-                $this->subLayout = '@humhub/modules/admin/views/layouts/main';
-            }
-        }
-
         parent::init();
     }
 
@@ -86,18 +79,9 @@ class UpdateController extends Controller
     protected function isNewUpdaterModuleAvailable()
     {
         Yii::$app->cache->flush();
-        $modules = null;
 
-        if (class_exists('\humhub\modules\admin\libs\OnlineModuleManager')) {
-            $onlineModuleManager = new \humhub\modules\admin\libs\OnlineModuleManager();
-            $modules = $onlineModuleManager->getModuleUpdates();
-        } elseif (class_exists('\humhub\modules\marketplace\libs\OnlineModuleManager')) {
-            $onlineModuleManager = new \humhub\modules\marketplace\libs\OnlineModuleManager();
-            $modules = $onlineModuleManager->getModuleUpdates();
-        } elseif (class_exists('\humhub\modules\marketplace\components\OnlineModuleManager')) {
-            $onlineModuleManager = new \humhub\modules\marketplace\components\OnlineModuleManager();
-            $modules = $onlineModuleManager->getModuleUpdates();
-        }
+        $onlineModuleManager = new OnlineModuleManager();
+        $modules = $onlineModuleManager->getModuleUpdates();
 
         if (isset($modules['updater'])) {
             return true;
