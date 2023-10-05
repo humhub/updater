@@ -1,7 +1,7 @@
 Changelog
 =========
 
-2.2.0  (Unreleased)
+2.2.0  (October 5, 2023)
 ------------------------
 - Enh #34: Remove deprecated `setModalLoader()` usage
 - Enh #29: Remove deprecated "Setting" classes
