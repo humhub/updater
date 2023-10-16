@@ -1,8 +1,8 @@
 Changelog
 =========
 
-2.2.1  (Unreleased)
-------------------------
+2.2.1  (October 16, 2023)
+-------------------------
 - Fix #108: Fix endless loader after update
 
 2.2.0  (October 5, 2023)
