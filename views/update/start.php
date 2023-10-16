@@ -283,8 +283,8 @@ if (version_compare(Yii::$app->version, '1.4', '>')) {
             success: function (json) {
                 if (checkError(json)) {
                     finishStep('cleanup');
+                    humhub.require('ui.loader').reset(humhub.require('ui.modal').global.getFooter());
                     $('#btnUpdaterClose').show();
-                    $('.loader-modal').hide();
                     $('#successMessageBox').show();
                 }
             },

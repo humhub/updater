@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.2.1  (Unreleased)
+------------------------
+- Fix #108: Fix endless loader after update
+
 2.2.0  (October 5, 2023)
 ------------------------
 - Enh #34: Remove deprecated `setModalLoader()` usage
