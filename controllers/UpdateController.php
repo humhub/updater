@@ -30,6 +30,8 @@ class UpdateController extends \humhub\modules\admin\components\Controller
 
     public function actionIndex()
     {
+        return $this->redirect(['/marketplace/browse']);
+
         $availableUpdate = OnlineUpdateAPI::getAvailableUpdate();
         if ($availableUpdate === null) {
             return $this->render('index_noupdate');
