@@ -1,8 +1,8 @@
 Changelog
 =========
 
-2.1.13  (Unreleased)
-------------------------
+2.1.13  (December 14, 2023)
+---------------------------
 - Fix #42: Redirect to marketplace
 
 2.1.12  (April 26, 2022)
