@@ -30,7 +30,9 @@ class UpdateController extends \humhub\modules\admin\components\Controller
 
     public function actionIndex()
     {
-        return $this->redirect(['/marketplace/browse']);
+        if (version_compare(Yii::$app->version, '1.15', '>=')) {
+            return $this->redirect(['/marketplace/browse']);
+        }
 
         $availableUpdate = OnlineUpdateAPI::getAvailableUpdate();
         if ($availableUpdate === null) {
