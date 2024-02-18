@@ -1,5 +1,4 @@
 <?php
-
-return [
-    'Update download failed! (%error%)' => '',
-];
+return array (
+  'Update download failed! (%error%)' => 'Preuzimanje ažuriranja nije uspjelo! (%error%)',
+);
