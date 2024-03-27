@@ -110,16 +110,11 @@ class InstallController extends \yii\base\Controller
 
     protected function switchToDefaultTheme()
     {
-        if (version_compare(Yii::$app->version, '1.1', '<')) {
-            \humhub\models\Setting::Set('theme', 'HumHub');
-        } elseif (version_compare(Yii::$app->version, '1.3.7', '<')) {
-            Yii::$app->settings->set('theme', 'HumHub');
-        } else {
-            $theme = \humhub\modules\ui\view\helpers\ThemeHelper::getThemeByName('HumHub');
-            if ($theme !== null) {
-                $theme->activate();
-            }
+        $theme = \humhub\modules\ui\view\helpers\ThemeHelper::getThemeByName('HumHub');
+        if ($theme !== null) {
+            $theme->activate();
         }
+
         \humhub\libs\DynamicConfig::rewrite();
     }
 
