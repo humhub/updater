@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.2.2 (Unreleased)
+-------------------------
+- Fix #44: Hide a footer loader and an interrupt warning on process error
+
 2.2.1  (October 16, 2023)
 -------------------------
 - Fix #108: Fix endless loader after update

@@ -2,6 +2,9 @@
 
 use yii\helpers\Url;
 use humhub\libs\Html;
+
+/* @var string $versionTo */
+/* @var string $fileName */
 ?>
 <div class="modal-dialog modal-dialog animated fadeIn">
     <div class="modal-content">
@@ -69,12 +72,12 @@ if (version_compare(Yii::$app->version, '1.4', '>')) {
 }
 ?>
 
-<script <?= $nonce; ?>>
+<script <?= $nonce ?>>
     $('#errorMessageBox').hide();
     $('#successMessageBox').hide();
 
     $('#btnUpdaterClose').hide();
-    $("#btnUpdaterStart").click(function () {
+    $('#btnUpdaterStart').click(function () {
         $('#startDialog').hide();
         $('.startButton').hide();
 
@@ -86,50 +89,36 @@ if (version_compare(Yii::$app->version, '1.4', '>')) {
     $('.steps').find('p').hide();
 
     function showStep(id) {
-        $('#step_' + id).show();
-        $('#step_' + id).find('i').addClass('colorWarning');
-        $('#step_' + id).find('i').addClass('fa');
-        $('#step_' + id).find('i').addClass('fa-circle');
-        $('#step_' + id).find('i').addClass('pulse');
-        $('#step_' + id).find('i').addClass('animated');
-        $('#step_' + id).find('i').addClass('infinite');
+        $('#step_' + id).show().find('i')
+            .addClass('colorWarning fa fa-circle pulse animated infinite');
     }
 
     function finishStep(id) {
-        $('#step_' + id).find('i').removeClass('colorWarning');
-        $('#step_' + id).find('i').removeClass('fa-circle');
-        $('#step_' + id).find('i').removeClass('fa-circle');
-        $('#step_' + id).find('i').removeClass('infinite');
-        $('#step_' + id).find('i').removeClass('pulse');
-        $('#step_' + id).find('i').addClass('swing');
-        $('#step_' + id).find('i').addClass('fa-check-circle');
-        $('#step_' + id).find('i').addClass('colorSuccess');
+        $('#step_' + id).find('i')
+            .removeClass('colorWarning fa-circle infinite pulse')
+            .addClass('swing fa-check-circle colorSuccess');
     }
-
 
     function showError(response) {
         $('#btnUpdaterClose').show();
         $('.loader-modal').hide();
         $('#errorMessageBox').show();
 
-        message = response;
-        if (isJsonString(response)) {
-            json = JSON.parse(response);
-            message = json.message;
-        }
+        var message = isJsonString(response) ? JSON.parse(response).message : response;
 
-        if (message != "") {
+        if (message !== '') {
             $('#errorMessage').html(message);
         }
+
+        stopFooterLoader();
     }
 
     function checkError(result) {
-        if (result.status == 'ok') {
+        if (result.status === 'ok') {
             return true;
         }
         showError(result.message);
     }
-
 
     function step_download() {
         showStep('download');
@@ -138,9 +127,9 @@ if (version_compare(Yii::$app->version, '1.4', '>')) {
             method: 'POST',
             dataType: 'json',
             data: {
-                'fileName': '<?= $fileName; ?>',
+                'fileName': '<?= $fileName ?>',
             },
-            url: "<?= Url::to(['download']); ?>",
+            url: '<?= Url::to(['download']) ?>',
             success: function (json) {
                 if (checkError(json)) {
                     finishStep('download');
@@ -160,9 +149,9 @@ if (version_compare(Yii::$app->version, '1.4', '>')) {
             method: 'POST',
             dataType: 'json',
             data: {
-                'fileName': '<?= $fileName; ?>',
+                'fileName': '<?= $fileName ?>',
             },
-            url: "<?= Url::to(['/package-installer/install/extract']); ?>",
+            url: '<?= Url::to(['/package-installer/install/extract']) ?>',
             success: function (json) {
                 if (checkError(json)) {
                     finishStep('extract');
@@ -182,9 +171,9 @@ if (version_compare(Yii::$app->version, '1.4', '>')) {
             method: 'POST',
             dataType: 'json',
             data: {
-                'fileName': '<?= $fileName; ?>',
+                'fileName': '<?= $fileName ?>',
             },
-            url: "<?= Url::to(['/package-installer/install/validate']); ?>",
+            url: '<?= Url::to(['/package-installer/install/validate']) ?>',
             success: function (json) {
                 if (checkError(json)) {
                     finishStep('validate');
@@ -207,10 +196,10 @@ if (version_compare(Yii::$app->version, '1.4', '>')) {
             method: 'POST',
             dataType: 'json',
             data: {
-                'fileName': '<?= $fileName; ?>',
+                'fileName': '<?= $fileName ?>',
                 'theme': resetTheme,
             },
-            url: "<?= Url::to(['/package-installer/install/prepare']); ?>",
+            url: '<?= Url::to(['/package-installer/install/prepare']) ?>',
             success: function (json) {
                 if (checkError(json)) {
                     finishStep('prepare');
@@ -223,7 +212,6 @@ if (version_compare(Yii::$app->version, '1.4', '>')) {
         });
     }
 
-
     function step_install() {
         showStep('install');
         $.ajax({
@@ -231,9 +219,9 @@ if (version_compare(Yii::$app->version, '1.4', '>')) {
             method: 'POST',
             dataType: 'json',
             data: {
-                'fileName': '<?= $fileName; ?>',
+                'fileName': '<?= $fileName ?>',
             },
-            url: "<?= Url::to(['/package-installer/install/install-files']); ?>",
+            url: '<?= Url::to(['/package-installer/install/install-files']) ?>',
             success: function (json) {
                 if (checkError(json)) {
                     finishStep('install');
@@ -253,9 +241,9 @@ if (version_compare(Yii::$app->version, '1.4', '>')) {
             method: 'POST',
             dataType: 'json',
             data: {
-                'fileName': '<?= $fileName; ?>',
+                'fileName': '<?= $fileName ?>',
             },
-            url: "<?= Url::to(['/package-installer/install/migrate']); ?>",
+            url: '<?= Url::to(['/package-installer/install/migrate']) ?>',
             success: function (json) {
                 if (checkError(json)) {
                     finishStep('migrate');
@@ -276,15 +264,14 @@ if (version_compare(Yii::$app->version, '1.4', '>')) {
             method: 'POST',
             dataType: 'json',
             data: {
-                'fileName': '<?= $fileName; ?>',
+                'fileName': '<?= $fileName ?>',
                 'theme': resetTheme,
             },
-            url: "<?= Url::to(['/package-installer/install/cleanup']); ?>",
+            url: '<?= Url::to(['/package-installer/install/cleanup']) ?>',
             success: function (json) {
                 if (checkError(json)) {
                     finishStep('cleanup');
-                    humhub.require('ui.loader').reset(humhub.require('ui.modal').global.getFooter());
-                    $('#btnUpdaterClose').show();
+                    stopFooterLoader();
                     $('#successMessageBox').show();
                 }
             },
@@ -293,6 +280,7 @@ if (version_compare(Yii::$app->version, '1.4', '>')) {
             },
         });
     }
+
     function isJsonString(str) {
         try {
             JSON.parse(str);
@@ -300,5 +288,11 @@ if (version_compare(Yii::$app->version, '1.4', '>')) {
             return false;
         }
         return true;
+    }
+
+    function stopFooterLoader() {
+        humhub.require('ui.loader').reset(humhub.require('ui.modal').global.getFooter());
+        $('.interruptWarning').hide();
+        $('#btnUpdaterClose').show();
     }
 </script>
