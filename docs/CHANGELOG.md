@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.3.0 (Unreleased)
+-------------------------
+- Fix #48: Update module resources path
+
 2.2.2 (Unreleased)
 -------------------------
 - Fix #44: Hide a footer loader and an interrupt warning on process error
