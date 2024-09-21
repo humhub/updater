@@ -44,7 +44,7 @@ return array (
   'This HumHub version no longer supports the deprecated Enterprise Module. Please contact our support: {email}' => '',
   'Update HumHub' => '',
   'Update package invalid!' => '',
-  'Update successful' => '',
+  'Update successful' => 'Eguneraketa arrakastatsua',
   'Updater Configuration' => '',
   'Validating package' => '',
   'Your installed PHP version is too old. The new minimum required PHP version is: {version}' => '',
