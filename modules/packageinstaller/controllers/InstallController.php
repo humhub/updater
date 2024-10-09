@@ -18,7 +18,6 @@ use Yii;
  */
 class InstallController extends \yii\base\Controller
 {
-
     /**
      * @var \humhub\modules\updater\libs\UpdatePackage
      */
