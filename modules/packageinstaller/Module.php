@@ -17,11 +17,11 @@ use Yii;
  */
 class Module extends \yii\base\Module
 {
-
     public static function onApplicationInit()
     {
         Yii::$app->setModule(
-                'package-installer', ['class' => 'humhub\modules\updater\modules\packageinstaller\Module']
+            'package-installer',
+            ['class' => 'humhub\modules\updater\modules\packageinstaller\Module'],
         );
     }
 

@@ -14,4 +14,3 @@ return [
         ['class' => '\humhub\commands\CronController', 'event'  => 'daily', 'callback' => ['humhub\modules\updater\Events', 'onCronRun']],
     ],
 ];
-?>

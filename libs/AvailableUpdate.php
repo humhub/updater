@@ -17,7 +17,6 @@ use Yii;
  */
 class AvailableUpdate
 {
-
     public $releaseNotes;
     public $versionFrom;
     public $fileName;
@@ -40,7 +39,7 @@ class AvailableUpdate
                 if (class_exists('\yii\httpclient\Client')) {
                     $fh = fopen($targetFile, 'w');
                     $client = new \yii\httpclient\Client([
-                        'transport' => 'yii\httpclient\CurlTransport'
+                        'transport' => 'yii\httpclient\CurlTransport',
                     ]);
                     $response = $client->createRequest()
                         ->setMethod('GET')
@@ -55,18 +54,18 @@ class AvailableUpdate
                     }
                 } else {
                     // Older Versions
-                    $http = new \Zend\Http\Client($this->downloadUrl, array(
+                    $http = new \Zend\Http\Client($this->downloadUrl, [
                         'adapter' => '\Zend\Http\Client\Adapter\Curl',
                         'curloptions' => Yii::$app->getModule('updater')->getCurlOptions(),
-                        'timeout' => 300
-                    ));
+                        'timeout' => 300,
+                    ]);
                     $http->setStream();
                     $response = $http->send();
                     copy($response->getStreamName(), $targetFile);
                 }
 
             } catch (\Exception $ex) {
-                throw new \Exception(Yii::t('UpdaterModule.libs_UpdatePackage', 'Update download failed! (%error%)', array('%error%' => $ex->getMessage())));
+                throw new \Exception(Yii::t('UpdaterModule.libs_UpdatePackage', 'Update download failed! (%error%)', ['%error%' => $ex->getMessage()]));
             }
         }
 

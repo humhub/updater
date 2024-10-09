@@ -13,7 +13,6 @@ use Yii;
  */
 class UpdateController extends Controller
 {
-
     public function init()
     {
         set_time_limit(0);
@@ -58,7 +57,7 @@ class UpdateController extends Controller
             'newUpdaterAvailable' => $newUpdaterAvailable,
             'allowStart' => $allowStart,
             'errorMinimumPhpVersion' => $errorMinimumPhpVersion,
-            'errorRootFolderNotWritable' => $errorRootFolderNotWritable
+            'errorRootFolderNotWritable' => $errorRootFolderNotWritable,
         ]);
     }
 

@@ -13,7 +13,6 @@ use Yii;
  */
 class OnlineUpdateAPI
 {
-
     /**
      * Returns all available updates for a given version
      *
@@ -26,7 +25,7 @@ class OnlineUpdateAPI
 
         $info = HumHubAPI::request('v1/modules/getHumHubUpdates', [
             'updaterVersion' => $module->version,
-            'channel' => $module->getUpdateChannel()
+            'channel' => $module->getUpdateChannel(),
         ]);
 
         if (!isset($info['fromVersion'])) {

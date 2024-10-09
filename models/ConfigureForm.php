@@ -11,7 +11,6 @@ use Yii;
 
 class ConfigureForm extends \yii\base\Model
 {
-
     public $channel;
 
     /**
