@@ -1,5 +1,5 @@
 <?php
-return array (
+return [
   '<strong>Update</strong> HumHub' => '<strong>Aktualizovat </strong> HumHub',
   '<strong>Update</strong> to HumHub {version}' => '<strong>Aktualizovat </strong> na verzi HumHub {version}',
   'Abort' => 'Zrušit',
@@ -43,9 +43,10 @@ return array (
   'There is no new HumHub update available!' => 'Není k dispozici žádná nová aktualizace HumHub!',
   'This HumHub version no longer supports the deprecated Enterprise Module. Please contact our support: {email}' => 'Tato verze HumHub již nepodporuje zastaralý Enterprise Module. Kontaktujte prosím naši podporu: {email}',
   'Update HumHub' => 'Aktualizovat HumHub',
+  'Update download failed! (%error%)' => 'Aktualizace stahování se nezdařila! (%error%)',
   'Update package invalid!' => 'Aktualizační balíček je neplatný!',
   'Update successful' => 'Aktualizace úspěsná',
   'Updater Configuration' => 'Konfigurace aktualizace',
   'Validating package' => 'Validace balíčku',
   'Your installed PHP version is too old. The new minimum required PHP version is: {version}' => 'Vaše nainstalovaná verze PHP je příliš stará. Nová minimální požadovaná verze PHP je: {version}',
-);
+];

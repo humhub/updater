@@ -65,7 +65,7 @@ class AvailableUpdate
                 }
 
             } catch (\Exception $ex) {
-                throw new \Exception(Yii::t('UpdaterModule.libs_UpdatePackage', 'Update download failed! (%error%)', ['%error%' => $ex->getMessage()]));
+                throw new \Exception(Yii::t('UpdaterModule.base', 'Update download failed! (%error%)', ['%error%' => $ex->getMessage()]));
             }
         }
 

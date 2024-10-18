@@ -5,6 +5,7 @@ Changelog
 -------------------------
 - Fix #44: Hide a footer loader and an interrupt warning on process error
 - Enh #50: Use PHP CS Fixer
+- Enh #51: Reduce translation message categories
 
 2.2.1  (October 16, 2023)
 -------------------------

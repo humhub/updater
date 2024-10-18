@@ -1,5 +1,5 @@
 <?php
-return array (
+return [
   '<strong>Update</strong> HumHub' => '<strong>Zaktualizuj</strong> HumHub',
   '<strong>Update</strong> to HumHub {version}' => '<strong>Aktualizuj</strong> do HumHub {version}',
   'Abort' => 'Przerwij',
@@ -43,9 +43,10 @@ return array (
   'There is no new HumHub update available!' => 'Brak nowych aktualizacji HumHub!',
   'This HumHub version no longer supports the deprecated Enterprise Module. Please contact our support: {email}' => 'To wydanie HumHub nie wspiera już modułu Enterprise. Proszę skontaktuj się z pomocą techniczną: {email}',
   'Update HumHub' => 'Zaktualizuj HumHub',
+  'Update download failed! (%error%)' => 'Błąd pobierania aktualizacji! (%error%)',
   'Update package invalid!' => 'Nieprawidłowa paczka aktualizacji!',
   'Update successful' => 'Aktualizacja ukończona pomyślnie',
   'Updater Configuration' => 'Konfiguracja Aktualizatora',
   'Validating package' => 'Sprawdzanie poprawności pakietu',
   'Your installed PHP version is too old. The new minimum required PHP version is: {version}' => 'PHP na tym serwerze jest za stared. Obecnie potrzebujesz co najmniej PHP w wydaniu: {version}',
-);
+];
