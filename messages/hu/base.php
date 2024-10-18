@@ -1,5 +1,5 @@
 <?php
-return array (
+return [
   '<strong>Update</strong> HumHub' => 'HumHub <strong>frissítése</strong>',
   '<strong>Update</strong> to HumHub {version}' => '<strong>Frissítés</strong> a HumHub következő verziójára: {version}',
   'Abort' => 'Megszakítás',
@@ -44,9 +44,10 @@ frissíthessen.',
   'There is no new HumHub update available!' => 'Nincs új HumHub frissítés!',
   'This HumHub version no longer supports the deprecated Enterprise Module. Please contact our support: {email}' => 'Ez a HumHub verzió már nem támogatja az elavult vállalati modult. Kérjük, fordulj ügyfélszolgálatunkhoz: {email}',
   'Update HumHub' => 'HumHub frissítése',
+  'Update download failed! (%error%)' => 'A frissítés letöltése sikertelen! (%error%)',
   'Update package invalid!' => 'Érvénytelen frissítő csomag.',
   'Update successful' => 'A frissítés sikeresen befejeződött',
   'Updater Configuration' => 'Frissítő konfigurálása',
   'Validating package' => 'Csomag érvényesítése',
   'Your installed PHP version is too old. The new minimum required PHP version is: {version}' => 'A telepített PHP verzió túl régi. Az új minimálisan szükséges PHP verzió: {version}',
-);
+];

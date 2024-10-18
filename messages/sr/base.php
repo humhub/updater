@@ -1,5 +1,5 @@
 <?php
-return array (
+return [
   '<strong>Update</strong> HumHub' => '<strong>Ažuriraj</strong> HumHub',
   '<strong>Update</strong> to HumHub {version}' => '<strong>Ažuriraj</strong> na HumHub {version}',
   'Abort' => 'Prekini',
@@ -43,9 +43,10 @@ return array (
   'There is no new HumHub update available!' => 'Nema novog ažuriranja za HumHub!',
   'This HumHub version no longer supports the deprecated Enterprise Module. Please contact our support: {email}' => '',
   'Update HumHub' => 'Ažuriraj HumHuB',
+  'Update download failed! (%error%)' => 'Preuzimanje ažuriranja nije uspjelo! (%error%)',
   'Update package invalid!' => 'Ažuriranje paketa nije važeće!',
   'Update successful' => 'Ažuriranje uspješno',
   'Updater Configuration' => 'Konfiguracija nadogradnje',
   'Validating package' => 'Potvrđujem pakete',
   'Your installed PHP version is too old. The new minimum required PHP version is: {version}' => '',
-);
+];
