@@ -1,7 +1,7 @@
 Changelog
 =========
 
-2.2.2 (Unreleased)
+2.2.2 (November 13, 2024)
 -------------------------
 - Fix #44: Hide a footer loader and an interrupt warning on process error
 - Enh #50: Use PHP CS Fixer
