@@ -45,7 +45,7 @@ return [
   'Update HumHub' => '',
   'Update download failed! (%error%)' => '',
   'Update package invalid!' => '',
-  'Update successful' => '',
+  'Update successful' => 'Uppdateringen lyckades',
   'Updater Configuration' => '',
   'Validating package' => '',
   'Your installed PHP version is too old. The new minimum required PHP version is: {version}' => '',
