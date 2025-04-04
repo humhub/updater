@@ -75,7 +75,7 @@ class UpdatePackage
                 'HumHubVersion' => [
                     'condition' => '>=',
                     'version' => '1.18',
-                    'message' => Yii::t('UpdaterModule.base', 'This HumHub version no longer supports the deprecated Theme Builder Module. Please contact our support: {email}', [
+                    'message' => Yii::t('UpdaterModule.base', 'This HumHub version no longer supports the deprecated Theme Builder Module. Please save your custom colors before uninstalling it. If needed, contact our support: {email}', [
                         'email' => Link::to('hello@humhub.com', 'mailto:hello@humhub.com'),
                     ]),
                 ],
