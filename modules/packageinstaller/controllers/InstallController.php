@@ -72,6 +72,11 @@ class InstallController extends \yii\base\Controller
             return ['message' => implode('<br>', $result)];
         }
 
+        $result = $this->updatePackage->checkThemesAreSupported();
+        if ($result !== true) {
+            return ['message' => Yii::t('UpdaterModule.base', 'Themes other than the HumHub default theme are not supported for this update. Please switch to the HumHub default theme first.')];
+        }
+
         return ['status' => 'ok'];
 
     }

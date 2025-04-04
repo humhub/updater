@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.3.0 (Unreleased)
+-------------------------
+- Enh: For 1.18, force switch to default theme and add special notes
+
 2.2.2 (November 13, 2024)
 -------------------------
 - Fix #44: Hide a footer loader and an interrupt warning on process error

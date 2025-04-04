@@ -71,6 +71,15 @@ class UpdatePackage
                     ]),
                 ],
             ],
+            'theme-builder' => [
+                'HumHubVersion' => [
+                    'condition' => '>=',
+                    'version' => '1.18',
+                    'message' => Yii::t('UpdaterModule.base', 'This HumHub version no longer supports the deprecated Theme Builder Module. Please contact our support: {email}', [
+                        'email' => Link::to('hello@humhub.com', 'mailto:hello@humhub.com'),
+                    ]),
+                ],
+            ],
         ];
     }
 
@@ -205,6 +214,35 @@ class UpdatePackage
         }
 
         return empty($errors) ? true : $errors;
+    }
+
+
+    /**
+     * Check if Themes other than the HumHub default one are supported by the new HumHub version
+     *
+     * @return bool TRUE - if themes are supported, FALSE - if not
+     */
+    public function checkThemesAreSupported(): bool
+    {
+        $unsupportedThemesHumHubVersions = [
+            1.18,
+        ];
+
+        $newVersion = $this->getNewConfigValue('version');
+
+        foreach ($unsupportedThemesHumHubVersions as $unsupportedVersion) {
+            $parts = explode('.', $unsupportedVersion);
+            $parts[count($parts) - 1]++;
+            $nextVersion = implode('.', $parts);
+
+            if (
+                version_compare($newVersion, $unsupportedVersion, '>=')
+                && version_compare($newVersion, $nextVersion, '<')
+            ) {
+                return false;
+            }
+        }
+        return false;
     }
 
     private function getNewConfigValue($configVarName, $defaultValue = null)
@@ -352,8 +390,8 @@ class UpdatePackage
     /**
      * Delete a file
      *
-     * @todo Also delete parent directories - when empty
      * @param type $file
+     * @todo Also delete parent directories - when empty
      */
     private function deleteFile($file)
     {

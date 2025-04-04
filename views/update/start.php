@@ -25,7 +25,7 @@ use humhub\libs\Html;
                         <li><?= Yii::t('UpdaterModule.base', 'Changes to HumHub core files may overwritten during update!'); ?></li>
                     </ul>
                 </div>
-                <div class="checkbox">
+                <div class="checkbox"<?= Yii::$app->view->theme->name === 'HumHub' ? ' style="display: none;"' : '' ?>>
                     <label>
                         <input type="checkbox" value="1" checked id="chkBoxResetTheme"> <?= Yii::t('UpdaterModule.base', 'Switch to default theme after update (strongly recommended)'); ?>
                     </label>
@@ -68,7 +68,7 @@ use humhub\libs\Html;
 <?php
 $nonce = '';
 if (version_compare(Yii::$app->version, '1.4', '>')) {
-    $nonce = Html::nonce(); 
+    $nonce = Html::nonce();
 }
 ?>
 
