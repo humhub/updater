@@ -3,7 +3,7 @@ Changelog
 
 2.3.0 (Unreleased)
 -------------------------
-- Enh: For 1.18, force switch to default theme and add special notes
+- Enh #54: For 1.18, force switch to default theme and add special notes
 
 2.2.2 (November 13, 2024)
 -------------------------
