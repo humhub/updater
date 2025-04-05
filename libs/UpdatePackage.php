@@ -225,24 +225,23 @@ class UpdatePackage
     public function checkThemesAreSupported(): bool
     {
         $unsupportedThemesHumHubVersions = [
-            1.18,
+            '1.18',
         ];
 
         $newVersion = $this->getNewConfigValue('version');
 
+        // False if the current version is older than the unsupported one
+        // And if the new version is equal or newer than the unsupported one
         foreach ($unsupportedThemesHumHubVersions as $unsupportedVersion) {
-            $parts = explode('.', $unsupportedVersion);
-            $parts[count($parts) - 1]++;
-            $nextVersion = implode('.', $parts);
-
             if (
-                version_compare($newVersion, $unsupportedVersion, '>=')
-                && version_compare($newVersion, $nextVersion, '<')
+                version_compare(Yii::$app->version, $unsupportedVersion, '<')
+                && version_compare($newVersion, $unsupportedVersion, '>=')
             ) {
                 return false;
             }
         }
-        return false;
+
+        return true;
     }
 
     private function getNewConfigValue($configVarName, $defaultValue = null)
