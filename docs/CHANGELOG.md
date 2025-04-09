@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.3.0 (Unreleased)
+-------------------------
+- Enh #55: For 1.18, Add a warning about the migration which will switch to the default theme and disable Theme Builder module
+
 2.2.2 (November 13, 2024)
 -------------------------
 - Fix #44: Hide a footer loader and an interrupt warning on process error

@@ -66,8 +66,7 @@ class UpdateController extends Controller
         $availableUpdate = OnlineUpdateAPI::getAvailableUpdate();
 
         return $this->renderAjax('start', [
-            'versionTo' => $availableUpdate->versionTo,
-            'fileName' => $availableUpdate->fileName,
+            'availableUpdate' => $availableUpdate,
         ]);
     }
 

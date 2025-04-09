@@ -8,6 +8,7 @@
 
 namespace humhub\modules\updater\libs;
 
+use humhub\widgets\Button;
 use Yii;
 
 /**
@@ -74,4 +75,36 @@ class AvailableUpdate
         }
     }
 
+    public function getWarningMessage(): ?string
+    {
+        $warningMessages = [
+            '1.18' =>
+                Yii::t('UpdaterModule.base', 'IMPORTANT NOTES ABOUT UPDATING TO VERSION 1.18:') . '<br><br>' .
+                Yii::t('UpdaterModule.base', 'All themes will be disabled, <code>.bs3.old</code> will be added to their names, and the default HumHub theme will be enabled.') .
+                (Yii::$app->getModule('theme-builder') ? '<br><br>' . Yii::t('UpdaterModule.base', 'The Theme Builder module will be uninstalled.') : '') . '<br><br>' .
+                Yii::t('UpdaterModule.base', 'Please read the {MigrationGuideLink}', ['MigrationGuideLink' => Button::asLink(Yii::t('UpdaterModule.base', 'Migration Guide'), 'https://docs.humhub.org/docs/theme/migrate')->options(['target' => '_blank'])]),
+        ];
+
+        foreach ($warningMessages as $warningVersion => $warningMessage) {
+            if (
+                version_compare($this->versionFrom, $warningVersion, '<')
+                && version_compare($this->versionTo, $warningVersion, '>=')
+            ) {
+                return $warningMessage;
+            }
+        }
+
+        return null;
+    }
+
+    public function hideSwitchDefaultThemeCheckbox(): bool
+    {
+        $targetVersionsToHide = [
+            '1.18' => true,
+        ];
+
+        return
+            Yii::$app->view->theme->name === 'HumHub'
+            || ($targetVersionsToHide[$this->versionTo] ?? false);
+    }
 }
