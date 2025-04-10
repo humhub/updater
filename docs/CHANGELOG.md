@@ -1,8 +1,8 @@
 Changelog
 =========
 
-2.3.0 (Unreleased)
--------------------------
+2.3.0 (April 10, 2025)
+----------------------
 - Enh #55: For 1.18, Add a warning about the migration which will switch to the default theme and disable Theme Builder module
 
 2.2.2 (November 13, 2024)
