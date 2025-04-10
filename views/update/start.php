@@ -1,31 +1,41 @@
 <?php
 
-use yii\helpers\Url;
 use humhub\libs\Html;
+use humhub\modules\updater\libs\AvailableUpdate;
+use yii\helpers\Url;
 
-/* @var string $versionTo */
-/* @var string $fileName */
+/* @var AvailableUpdate $availableUpdate */
+
+$warningMessage = $availableUpdate->getWarningMessage();
 ?>
+
 <div class="modal-dialog modal-dialog animated fadeIn">
     <div class="modal-content">
         <div class="modal-header">
-            <h4 class="modal-title" id="myModalLabel"><?= Yii::t('UpdaterModule.base', '<strong>Update</strong> to HumHub {version}', ['version' => $versionTo]); ?></h4>
+            <h4 class="modal-title" id="myModalLabel"><?= Yii::t('UpdaterModule.base', '<strong>Update</strong> to HumHub {version}', ['version' => $availableUpdate->versionTo]); ?></h4>
         </div>
         <div class="modal-body">
 
             <div id="startDialog">
+
+                <?php if ($warningMessage): ?>
+                    <div class="alert alert-warning">
+                        <strong><?= $warningMessage ?></strong>
+                    </div>
+                <?php endif; ?>
+
                 <div class="alert alert-danger">
                     <strong><?= Yii::t('UpdaterModule.base', 'Please note:'); ?></strong><br />
                     <ul>
                         <li><?= Yii::t('UpdaterModule.base', 'Backup all your files & database before proceed'); ?></li>
                         <li><?= Yii::t('UpdaterModule.base', 'Make sure all files are writable by application'); ?></li>
                         <li><?= Yii::t('UpdaterModule.base', 'Please update installed marketplace modules before and after the update'); ?></li>
-                        <li><?= Yii::t('UpdaterModule.base', 'Make sure custom modules or themes are compatible with version %version%', ['%version%' => $versionTo]); ?></li>
+                        <li><?= Yii::t('UpdaterModule.base', 'Make sure custom modules or themes are compatible with version %version%', ['%version%' => $availableUpdate->versionTo]); ?></li>
                         <li><?= Yii::t('UpdaterModule.base', 'Do not use this updater in combination with Git or Composer installations!'); ?></li>
                         <li><?= Yii::t('UpdaterModule.base', 'Changes to HumHub core files may overwritten during update!'); ?></li>
                     </ul>
                 </div>
-                <div class="checkbox">
+                <div class="checkbox"<?= $availableUpdate->hideSwitchDefaultThemeCheckbox() ? ' style="display: none;"' : '' ?>>
                     <label>
                         <input type="checkbox" value="1" checked id="chkBoxResetTheme"> <?= Yii::t('UpdaterModule.base', 'Switch to default theme after update (strongly recommended)'); ?>
                     </label>
@@ -68,7 +78,7 @@ use humhub\libs\Html;
 <?php
 $nonce = '';
 if (version_compare(Yii::$app->version, '1.4', '>')) {
-    $nonce = Html::nonce(); 
+    $nonce = Html::nonce();
 }
 ?>
 
@@ -127,7 +137,7 @@ if (version_compare(Yii::$app->version, '1.4', '>')) {
             method: 'POST',
             dataType: 'json',
             data: {
-                'fileName': '<?= $fileName ?>',
+                'fileName': '<?= $availableUpdate->fileName ?>',
             },
             url: '<?= Url::to(['download']) ?>',
             success: function (json) {
@@ -149,7 +159,7 @@ if (version_compare(Yii::$app->version, '1.4', '>')) {
             method: 'POST',
             dataType: 'json',
             data: {
-                'fileName': '<?= $fileName ?>',
+                'fileName': '<?= $availableUpdate->fileName ?>',
             },
             url: '<?= Url::to(['/package-installer/install/extract']) ?>',
             success: function (json) {
@@ -171,7 +181,7 @@ if (version_compare(Yii::$app->version, '1.4', '>')) {
             method: 'POST',
             dataType: 'json',
             data: {
-                'fileName': '<?= $fileName ?>',
+                'fileName': '<?= $availableUpdate->fileName ?>',
             },
             url: '<?= Url::to(['/package-installer/install/validate']) ?>',
             success: function (json) {
@@ -196,7 +206,7 @@ if (version_compare(Yii::$app->version, '1.4', '>')) {
             method: 'POST',
             dataType: 'json',
             data: {
-                'fileName': '<?= $fileName ?>',
+                'fileName': '<?= $availableUpdate->fileName ?>',
                 'theme': resetTheme,
             },
             url: '<?= Url::to(['/package-installer/install/prepare']) ?>',
@@ -219,7 +229,7 @@ if (version_compare(Yii::$app->version, '1.4', '>')) {
             method: 'POST',
             dataType: 'json',
             data: {
-                'fileName': '<?= $fileName ?>',
+                'fileName': '<?= $availableUpdate->fileName ?>',
             },
             url: '<?= Url::to(['/package-installer/install/install-files']) ?>',
             success: function (json) {
@@ -241,7 +251,7 @@ if (version_compare(Yii::$app->version, '1.4', '>')) {
             method: 'POST',
             dataType: 'json',
             data: {
-                'fileName': '<?= $fileName ?>',
+                'fileName': '<?= $availableUpdate->fileName ?>',
             },
             url: '<?= Url::to(['/package-installer/install/migrate']) ?>',
             success: function (json) {
@@ -264,7 +274,7 @@ if (version_compare(Yii::$app->version, '1.4', '>')) {
             method: 'POST',
             dataType: 'json',
             data: {
-                'fileName': '<?= $fileName ?>',
+                'fileName': '<?= $availableUpdate->fileName ?>',
                 'theme': resetTheme,
             },
             url: '<?= Url::to(['/package-installer/install/cleanup']) ?>',

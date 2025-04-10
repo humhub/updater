@@ -34,7 +34,7 @@ use yii\helpers\Html;
                 <?= Html::a('Requirements', 'http://docs.humhub.org/admin-requirements.html', ['class' => 'btn btn-danger pull-right', 'target' => '_blank']) ?>
                 <strong><?= Yii::t('UpdaterModule.base', 'Installed PHP version not support!') ?></strong><br />
                 <?= Yii::t('UpdaterModule.base', 'The currently installed PHP version is too old. Please update before proceed.') ?>
-            </div>      
+            </div>
         <?php endif; ?>
 
         <?php if ($errorRootFolderNotWritable): ?>
@@ -44,7 +44,7 @@ use yii\helpers\Html;
                 <strong><?= Yii::t('UpdaterModule.base', 'Application folder not writable!') ?></strong><br />
                 <?= Yii::t('UpdaterModule.base', 'The updater requires write access to <strong>all</strong> files and folders in the application root folder.') ?><br />
                 <?= Yii::t('UpdaterModule.base', 'Application folder: {folder}', ['folder' => Yii::getAlias('@webroot')]) ?>
-            </div>      
+            </div>
         <?php endif; ?>
 
 
