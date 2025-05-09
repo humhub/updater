@@ -6,8 +6,9 @@
  */
 
 use humhub\modules\updater\models\ConfigureForm;
-use yii\bootstrap\ActiveForm;
+use humhub\widgets\form\ActiveForm;
 use yii\helpers\Html;
+
 ?>
 <div class="panel panel-default">
     <div class="panel-heading"><?= Yii::t('UpdaterModule.base', 'Updater Configuration'); ?></div>
@@ -16,7 +17,7 @@ use yii\helpers\Html;
 
         <?= $form->field($model, 'channel')->dropDownList(ConfigureForm::getChannels()); ?>
 
-        <div class="form-group">
+        <div class="mb-3">
             <?= Html::submitButton(Yii::t('base', 'Save'), ['class' => 'btn btn-primary', 'data-ui-loader' => '']) ?>
         </div>
 

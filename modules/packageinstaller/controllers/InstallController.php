@@ -8,6 +8,10 @@
 
 namespace humhub\modules\updater\modules\packageinstaller\controllers;
 
+use humhub\commands\MigrateController;
+use humhub\helpers\ThemeHelper;
+use humhub\libs\DynamicConfig;
+use humhub\models\Setting;
 use humhub\modules\updater\libs\UpdatePackage;
 use Yii;
 
@@ -89,7 +93,7 @@ class InstallController extends \yii\base\Controller
 
     public function actionMigrate()
     {
-        $migration = \humhub\commands\MigrateController::webMigrateAll();
+        $migration = MigrateController::webMigrateAll();
         $this->flushCaches();
         return ['status' => 'ok'];
     }
@@ -110,16 +114,16 @@ class InstallController extends \yii\base\Controller
     protected function switchToDefaultTheme()
     {
         if (version_compare(Yii::$app->version, '1.1', '<')) {
-            \humhub\models\Setting::Set('theme', 'HumHub');
+            Setting::Set('theme', 'HumHub');
         } elseif (version_compare(Yii::$app->version, '1.3.7', '<')) {
             Yii::$app->settings->set('theme', 'HumHub');
         } else {
-            $theme = \humhub\modules\ui\view\helpers\ThemeHelper::getThemeByName('HumHub');
+            $theme = ThemeHelper::getThemeByName('HumHub');
             if ($theme !== null) {
                 $theme->activate();
             }
         }
-        \humhub\libs\DynamicConfig::rewrite();
+        DynamicConfig::rewrite();
     }
 
 

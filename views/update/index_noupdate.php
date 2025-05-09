@@ -1,6 +1,9 @@
 <?php
 
 /** @var \humhub\modules\updater\Module $module */
+
+use humhub\helpers\Html;
+
 $module = Yii::$app->getModule('updater');
 
 
@@ -18,7 +21,7 @@ $module = Yii::$app->getModule('updater');
         <?php if ($module->getUpdateChannel() === 'stable'): ?>
 
             <div class="alert alert-success">
-                <?= \humhub\libs\Html::a(Yii::t('UpdaterModule.base', 'Updater Configuration'), \yii\helpers\Url::to(['/updater/admin']), ['class' => 'btn btn-success pull-right']); ?>
+                <?= Html::a(Yii::t('UpdaterModule.base', 'Updater Configuration'), \yii\helpers\Url::to(['/updater/admin']), ['class' => 'btn btn-success float-end']); ?>
 
                 <strong><?= Yii::t('UpdaterModule.base', 'Enable Beta Updates'); ?></strong><br/>
 
