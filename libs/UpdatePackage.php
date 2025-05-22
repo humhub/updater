@@ -2,7 +2,7 @@
 
 namespace humhub\modules\updater\libs;
 
-use humhub\widgets\Link;
+use humhub\widgets\bootstrap\Link;
 use Yii;
 use yii\base\Exception;
 use yii\helpers\Json;

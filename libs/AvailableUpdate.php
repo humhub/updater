@@ -8,7 +8,7 @@
 
 namespace humhub\modules\updater\libs;
 
-use humhub\widgets\Button;
+use humhub\widgets\bootstrap\Button;
 use Yii;
 
 /**
