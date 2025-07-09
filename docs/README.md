@@ -1,4 +1,4 @@
-# HumHub Updater
+Ï# HumHub Updater
 
 This module allows you to update the software via a web interface, making the updating process fast and easy, especially for smaller updates. Please keep in mind, that, for major updates and bigger communities, the documentation should be consulted in any case. Especially when custom Modules and Themes are being used. 
 
