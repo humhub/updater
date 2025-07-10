@@ -120,8 +120,8 @@ class InstallController extends \yii\base\Controller
             }
         }
 
-        // TODO: remove when humhub minVersion is 1.17.3 or higher
-        if (version_compare(Yii::$app->version, '1.17.3', '<')) {
+        // TODO: remove when humhub minVersion is 1.18 or higher
+        if (version_compare(Yii::$app->version, '1.18', '<')) {
             \humhub\libs\DynamicConfig::rewrite();
         }
     }
