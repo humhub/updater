@@ -119,7 +119,11 @@ class InstallController extends \yii\base\Controller
                 $theme->activate();
             }
         }
-        \humhub\libs\DynamicConfig::rewrite();
+
+        // TODO: remove when humhub minVersion is 1.18 or higher
+        if (version_compare(Yii::$app->version, '1.18', '<')) {
+            \humhub\libs\DynamicConfig::rewrite();
+        }
     }
 
 
