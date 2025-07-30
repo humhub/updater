@@ -2,6 +2,7 @@
 
 namespace humhub\modules\updater\controllers;
 
+use humhub\components\Module;
 use humhub\modules\admin\components\Controller;
 use humhub\modules\updater\libs\OnlineUpdateAPI;
 use Yii;
@@ -51,6 +52,11 @@ class UpdateController extends Controller
             $allowStart = false;
         }
 
+        $restrictedMaxVersionModules = $this->getModulesRestrictedByMaxVersion($availableUpdate->versionTo);
+        if ($restrictedMaxVersionModules !== []) {
+            $allowStart = false;
+        }
+
         return $this->render('index', [
             'versionTo' => $availableUpdate->versionTo,
             'releaseNotes' => $availableUpdate->releaseNotes,
@@ -58,6 +64,7 @@ class UpdateController extends Controller
             'allowStart' => $allowStart,
             'errorMinimumPhpVersion' => $errorMinimumPhpVersion,
             'errorRootFolderNotWritable' => $errorRootFolderNotWritable,
+            'restrictedMaxVersionModules' => $restrictedMaxVersionModules,
         ]);
     }
 
@@ -126,6 +133,29 @@ class UpdateController extends Controller
         }
 
         return true;
+    }
+
+    protected function getModulesRestrictedByMaxVersion(string $newCoreVersion): array
+    {
+        $newCoreVersion = ltrim($newCoreVersion, 'v');
+
+        /* @var \humhub\modules\marketplace\Module $marketplaceModule */
+        $marketplaceModule = Yii::$app->getModule('marketplace');
+
+        $restrictedModules = [];
+
+        /* @var Module[] $installedModules */
+        $installedModules = Yii::$app->moduleManager->getModules();
+        foreach ($installedModules as $installedModule) {
+            //$maxVersion = $installedModule->getHumHubInfo()['maxVersion'] ?? null;
+            $installedModuleInfo = $marketplaceModule->onlineModuleManager->getModuleInfo($installedModule->id);
+            $maxVersion = $installedModuleInfo['allVersions'][$installedModule->version]['maxHumhubVersion'] ?? null;
+            if ($maxVersion && version_compare($newCoreVersion, $maxVersion, '>')) {
+                $restrictedModules[$installedModule->name] = $maxVersion;
+            }
+        }
+
+        return $restrictedModules;
     }
 
 }
