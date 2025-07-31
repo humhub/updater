@@ -137,20 +137,26 @@ class UpdateController extends Controller
 
     protected function getModulesRestrictedByMaxVersion(string $newCoreVersion): array
     {
-        $newCoreVersion = ltrim($newCoreVersion, 'v');
+        /* @var Module[] $installedModules */
+        $installedModules = Yii::$app->moduleManager->getModules();
+        if ($installedModules === []) {
+            return [];
+        }
 
         /* @var \humhub\modules\marketplace\Module $marketplaceModule */
         $marketplaceModule = Yii::$app->getModule('marketplace');
+        $onlineModules = $marketplaceModule->onlineModuleManager->getModules();
+        if (!is_array($onlineModules) || $onlineModules === []) {
+            return [];
+        }
+
+        // Extract major version like `1.18`
+        $newCoreVersion = preg_replace('/^[a-z]+(\d+\.\d+).*$/i', '$1', $newCoreVersion);
 
         $restrictedModules = [];
-
-        /* @var Module[] $installedModules */
-        $installedModules = Yii::$app->moduleManager->getModules();
         foreach ($installedModules as $installedModule) {
-            //$maxVersion = $installedModule->getHumHubInfo()['maxVersion'] ?? null;
-            $installedModuleInfo = $marketplaceModule->onlineModuleManager->getModuleInfo($installedModule->id);
-            $maxVersion = $installedModuleInfo['allVersions'][$installedModule->version]['maxHumhubVersion'] ?? null;
-            if ($maxVersion && version_compare($newCoreVersion, $maxVersion, '>')) {
+            $maxVersion = $onlineModules[$installedModule->id]['latestMaxHumHubVersion'] ?? null;
+            if (!empty($maxVersion) && version_compare($newCoreVersion, $maxVersion, '>')) {
                 $restrictedModules[$installedModule->name] = $maxVersion;
             }
         }
