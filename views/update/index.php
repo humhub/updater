@@ -51,8 +51,8 @@ use yii\helpers\Html;
         <?php if ($restrictedMaxVersionModules !== []): ?>
             <br>
             <div class="alert alert-danger">
-                <strong><?= Yii::t('UpdaterModule.base', 'Incompatible module version!') ?></strong><br>
-                <?= Yii::t('UpdaterModule.base', 'The installed modules have a restriction with max HumHub version:') ?>
+                <strong><?= Yii::t('UpdaterModule.base', 'Update Blocked – Incompatible Module(s)') ?></strong><br>
+                <?= Yii::t('UpdaterModule.base', 'The following module(s) do not yet offer a compatible version for the new HumHub version. To proceed with the update, you must uninstall these modules.') ?>
                 <ul>
                 <?php foreach ($restrictedMaxVersionModules as $moduleName => $maxVersion) : ?>
                     <li><?= $moduleName ?> - <?= $maxVersion ?></li>
