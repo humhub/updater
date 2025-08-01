@@ -50,8 +50,8 @@ $warningMessage = $availableUpdate->getWarningMessage();
                 <p id="step_prepare"><strong><i></i> <?= Yii::t('UpdaterModule.base', 'Preparing system'); ?></strong></p>
                 <p id="step_install"><strong><i></i> <?= Yii::t('UpdaterModule.base', 'Installing files'); ?></strong></p>
                 <p id="step_migrate"><strong><i></i> <?= Yii::t('UpdaterModule.base', 'Migrating database'); ?></strong></p>
+                <p id="step_modules"><strong><i></i> <?= Yii::t('UpdaterModule.base', 'Update modules'); ?></strong></p>
                 <p id="step_cleanup"><strong><i></i> <?= Yii::t('UpdaterModule.base', 'Cleanup update files'); ?></strong></p>
-
             </div>
             <br />
             <div class="alert alert-danger" id="errorMessageBox">
@@ -257,6 +257,28 @@ if (version_compare(Yii::$app->version, '1.4', '>')) {
             success: function (json) {
                 if (checkError(json)) {
                     finishStep('migrate');
+                    step_modules();
+                }
+            },
+            error: function (result) {
+                showError(result.responseText);
+            },
+        });
+    }
+
+    function step_modules() {
+        showStep('modules');
+        $.ajax({
+            cache: false,
+            method: 'POST',
+            dataType: 'json',
+            data: {
+                'fileName': '<?= $availableUpdate->fileName ?>',
+            },
+            url: '<?= Url::to(['/package-installer/install/modules']) ?>',
+            success: function (json) {
+                if (checkError(json)) {
+                    finishStep('modules');
                     step_cleanup();
                 }
             },
