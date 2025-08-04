@@ -9,7 +9,6 @@
 namespace humhub\modules\updater\modules\packageinstaller\controllers;
 
 use Exception;
-use humhub\modules\marketplace\Module;
 use humhub\modules\marketplace\services\ModuleService;
 use humhub\modules\updater\libs\UpdatePackage;
 use Yii;
@@ -97,26 +96,15 @@ class InstallController extends \yii\base\Controller
         return ['status' => 'ok'];
     }
 
-    public function actionModules()
+    public function actionModule()
     {
-        /* @var Module $marketplaceModule */
-        $marketplaceModule = Yii::$app->getModule('marketplace');
-
-        $updateModules = $marketplaceModule->onlineModuleManager->getAvailableUpdateModules();
-
-        $errorModules = [];
-        foreach ($updateModules as $updateModule) {
-            try {
-                (new ModuleService($updateModule->id))->update();
-            } catch (Exception $e) {
-                $errorModules[] = $updateModule->getName();
-            }
-        }
-
-        if ($errorModules !== []) {
-            return ['message' => Yii::t('UpdaterModule.base', 'The module(s) {modules} have some errors on updating, please try to update manually.', [
-                'modules' => '"' . implode('", "', $errorModules) . '"',
-            ])];
+        try {
+            (new ModuleService(Yii::$app->request->post('moduleId')))->update();
+        } catch (Exception $e) {
+            return [
+                'status' => 'error',
+                'message' => $e->getMessage(),
+            ];
         }
 
         return ['status' => 'ok'];
