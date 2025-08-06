@@ -315,6 +315,11 @@ if (version_compare(Yii::$app->version, '1.4', '>')) {
             .removeAttr('id')
             .attr('data-step-module-id', module.id)
             .find('i').addClass('colorWarning fa fa-circle pulse animated infinite');
+
+        const modal = document.getElementById('globalModal');
+        if (modal) {
+            modal.scrollTop = modal.scrollHeight;
+        }
     }
 
     function finishModuleStep(moduleId) {
