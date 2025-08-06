@@ -1,7 +1,7 @@
 Changelog
 =========
 
-2.3.1 (Unreleased)
+2.3.1 (August 6, 2025)
 ----------------------
 - Enh #57: Restrict deprecated `DynamicConfig::rewrite()` usage
 - Enh #58: Restrict update by max core version of at least one installed module + Update modules
