@@ -5,6 +5,7 @@ use humhub\modules\updater\libs\AvailableUpdate;
 use yii\helpers\Url;
 
 /* @var AvailableUpdate $availableUpdate */
+/* @var array $updateModules */
 
 $warningMessage = $availableUpdate->getWarningMessage();
 ?>
@@ -50,8 +51,8 @@ $warningMessage = $availableUpdate->getWarningMessage();
                 <p id="step_prepare"><strong><i></i> <?= Yii::t('UpdaterModule.base', 'Preparing system'); ?></strong></p>
                 <p id="step_install"><strong><i></i> <?= Yii::t('UpdaterModule.base', 'Installing files'); ?></strong></p>
                 <p id="step_migrate"><strong><i></i> <?= Yii::t('UpdaterModule.base', 'Migrating database'); ?></strong></p>
+                <p id="step_modules"><strong><i></i> <?= Yii::t('UpdaterModule.base', 'Update module: {moduleName}'); ?></strong></p>
                 <p id="step_cleanup"><strong><i></i> <?= Yii::t('UpdaterModule.base', 'Cleanup update files'); ?></strong></p>
-
             </div>
             <br />
             <div class="alert alert-danger" id="errorMessageBox">
@@ -257,7 +258,11 @@ if (version_compare(Yii::$app->version, '1.4', '>')) {
             success: function (json) {
                 if (checkError(json)) {
                     finishStep('migrate');
-                    step_cleanup();
+                    <?php if ($updateModules === []) : ?>
+                        step_cleanup();
+                    <?php else : ?>
+                        step_module(0);
+                    <?php endif; ?>
                 }
             },
             error: function (result) {
@@ -265,6 +270,68 @@ if (version_compare(Yii::$app->version, '1.4', '>')) {
             },
         });
     }
+
+    <?php if ($updateModules !== []) : ?>
+    var modules = <?= json_encode($updateModules) ?>;
+
+    function step_module(index) {
+        if (typeof(modules[index]) === 'undefined') {
+            step_cleanup();
+            return;
+        }
+
+        const module = modules[index];
+        showModuleStep(module);
+
+        $.ajax({
+            cache: false,
+            method: 'POST',
+            dataType: 'json',
+            data: {
+                moduleId: module.id,
+                fileName: '<?= $availableUpdate->fileName ?>',
+            },
+            url: '<?= Url::to(['/package-installer/install/module']) ?>',
+            success: function (json) {
+                if (json.status === 'ok') {
+                    finishModuleStep(module.id);
+                } else {
+                    showModuleError(module.id, json.message);
+                }
+                step_module(index + 1);
+            },
+            error: function (result) {
+                showModuleError(module.id, result.responseText);
+                step_module(index + 1);
+            },
+        });
+    }
+
+    function showModuleStep(module) {
+        const moduleHtml = $('#step_modules').clone();
+        $('#step_cleanup').before(moduleHtml);
+        moduleHtml.show()
+            .html(moduleHtml.html().replace('{moduleName}', module.name))
+            .removeAttr('id')
+            .attr('data-step-module-id', module.id)
+            .find('i').addClass('colorWarning fa fa-circle pulse animated infinite');
+
+        const modal = document.getElementById('globalModal');
+        if (modal) {
+            modal.scrollTop = modal.scrollHeight;
+        }
+    }
+
+    function finishModuleStep(moduleId) {
+        $('[data-step-module-id="' + moduleId + '"').find('i')
+            .removeClass('colorWarning fa-circle infinite pulse')
+            .addClass('swing fa-check-circle colorSuccess');
+    }
+
+    function showModuleError(moduleId, error) {
+        $('[data-step-module-id="' + moduleId + '"').after('<p class="alert alert-warning mb-1" style="margin-bottom:10px">' + error + '</p>');
+    }
+    <?php endif; ?>
 
     function step_cleanup() {
         resetTheme = $('#chkBoxResetTheme').prop('checked');

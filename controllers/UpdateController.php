@@ -2,6 +2,7 @@
 
 namespace humhub\modules\updater\controllers;
 
+use humhub\components\Module;
 use humhub\modules\admin\components\Controller;
 use humhub\modules\updater\libs\OnlineUpdateAPI;
 use Yii;
@@ -51,6 +52,11 @@ class UpdateController extends Controller
             $allowStart = false;
         }
 
+        $restrictedMaxVersionModules = $this->getModulesRestrictedByMaxVersion($availableUpdate->versionTo);
+        if ($restrictedMaxVersionModules !== []) {
+            $allowStart = false;
+        }
+
         return $this->render('index', [
             'versionTo' => $availableUpdate->versionTo,
             'releaseNotes' => $availableUpdate->releaseNotes,
@@ -58,6 +64,7 @@ class UpdateController extends Controller
             'allowStart' => $allowStart,
             'errorMinimumPhpVersion' => $errorMinimumPhpVersion,
             'errorRootFolderNotWritable' => $errorRootFolderNotWritable,
+            'restrictedMaxVersionModules' => $restrictedMaxVersionModules,
         ]);
     }
 
@@ -65,8 +72,16 @@ class UpdateController extends Controller
     {
         $availableUpdate = OnlineUpdateAPI::getAvailableUpdate();
 
+        /* @var \humhub\modules\marketplace\Module $marketplaceModule */
+        $marketplaceModule = Yii::$app->getModule('marketplace');
+        $updateModules = $marketplaceModule->onlineModuleManager->getAvailableUpdateModules();
+
         return $this->renderAjax('start', [
             'availableUpdate' => $availableUpdate,
+            'updateModules' => array_values(array_map(fn($updateModule) => [
+                'id' => $updateModule->id,
+                'name' => $updateModule->getName(),
+            ], $updateModules)),
         ]);
     }
 
@@ -126,6 +141,35 @@ class UpdateController extends Controller
         }
 
         return true;
+    }
+
+    protected function getModulesRestrictedByMaxVersion(string $newCoreVersion): array
+    {
+        /* @var Module[] $installedModules */
+        $installedModules = Yii::$app->moduleManager->getModules();
+        if ($installedModules === []) {
+            return [];
+        }
+
+        /* @var \humhub\modules\marketplace\Module $marketplaceModule */
+        $marketplaceModule = Yii::$app->getModule('marketplace');
+        $onlineModules = $marketplaceModule->onlineModuleManager->getModules();
+        if (!is_array($onlineModules) || $onlineModules === []) {
+            return [];
+        }
+
+        // Extract major version like `1.18`
+        $newCoreVersion = preg_replace('/^[a-z]+(\d+\.\d+).*$/i', '$1', $newCoreVersion);
+
+        $restrictedModules = [];
+        foreach ($installedModules as $installedModule) {
+            $maxVersion = $onlineModules[$installedModule->id]['latestMaxHumHubVersion'] ?? null;
+            if (!empty($maxVersion) && version_compare($newCoreVersion, $maxVersion, '>')) {
+                $restrictedModules[$installedModule->name] = $maxVersion;
+            }
+        }
+
+        return $restrictedModules;
     }
 
 }

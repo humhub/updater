@@ -8,6 +8,7 @@ use yii\helpers\Html;
 /* @var bool $newUpdaterAvailable */
 /* @var bool $errorMinimumPhpVersion */
 /* @var bool $errorRootFolderNotWritable */
+/* @var array $restrictedMaxVersionModules */
 /* @var bool $allowStart */
 ?>
 <div class="panel panel-default">
@@ -44,6 +45,19 @@ use yii\helpers\Html;
                 <strong><?= Yii::t('UpdaterModule.base', 'Application folder not writable!') ?></strong><br />
                 <?= Yii::t('UpdaterModule.base', 'The updater requires write access to <strong>all</strong> files and folders in the application root folder.') ?><br />
                 <?= Yii::t('UpdaterModule.base', 'Application folder: {folder}', ['folder' => Yii::getAlias('@webroot')]) ?>
+            </div>
+        <?php endif; ?>
+
+        <?php if ($restrictedMaxVersionModules !== []): ?>
+            <br>
+            <div class="alert alert-danger">
+                <strong><?= Yii::t('UpdaterModule.base', 'Update Blocked – Incompatible Module(s)') ?></strong><br>
+                <?= Yii::t('UpdaterModule.base', 'The following module(s) do not yet offer a compatible version for the new HumHub version. To proceed with the update, you must uninstall these modules.') ?>
+                <ul>
+                <?php foreach ($restrictedMaxVersionModules as $moduleName => $maxVersion) : ?>
+                    <li><?= $moduleName ?> - <?= $maxVersion ?></li>
+                <?php endforeach; ?>
+                </ul>
             </div>
         <?php endif; ?>
 
