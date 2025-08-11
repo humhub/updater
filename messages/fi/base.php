@@ -53,6 +53,9 @@ return [
     'Migration Guide' => '',
     'Please read the {MigrationGuideLink}' => '',
     'The Theme Builder module will be uninstalled.' => '',
+    'The following module(s) do not yet offer a compatible version for the new HumHub version. To proceed with the update, you must uninstall these modules.' => '',
     'This HumHub version no longer supports the deprecated Enterprise Module. Please contact our support: {email}' => '',
+    'Update Blocked – Incompatible Module(s)' => '',
+    'Update module: {moduleName}' => '',
     'Your installed PHP version is too old. The new minimum required PHP version is: {version}' => '',
 ];
