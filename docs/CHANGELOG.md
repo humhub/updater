@@ -5,6 +5,11 @@ Changelog
 -------------------------
 - Enh #56: Migration to Bootstrap 5 for HumHub 1.18
 
+2.3.1 (August 6, 2025)
+----------------------
+- Enh #57: Restrict deprecated `DynamicConfig::rewrite()` usage
+- Enh #58: Restrict update by max core version of at least one installed module + Update modules
+
 2.3.0 (April 10, 2025)
 ----------------------
 - Enh #55: For 1.18, Add a warning about the migration which will switch to the default theme and disable Theme Builder module

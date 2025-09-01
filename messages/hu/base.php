@@ -56,4 +56,7 @@ frissíthessen.',
     'Migration Guide' => '',
     'Please read the {MigrationGuideLink}' => '',
     'The Theme Builder module will be uninstalled.' => '',
+    'The following module(s) do not yet offer a compatible version for the new HumHub version. To proceed with the update, you must uninstall these modules.' => '',
+    'Update Blocked – Incompatible Module(s)' => '',
+    'Update module: {moduleName}' => '',
 ];

@@ -10,8 +10,9 @@ namespace humhub\modules\updater\modules\packageinstaller\controllers;
 
 use humhub\commands\MigrateController;
 use humhub\helpers\ThemeHelper;
-use humhub\libs\DynamicConfig;
 use humhub\models\Setting;
+use Exception;
+use humhub\modules\marketplace\services\ModuleService;
 use humhub\modules\updater\libs\UpdatePackage;
 use Yii;
 
@@ -58,7 +59,7 @@ class InstallController extends \yii\base\Controller
             $fileList = implode(', ', $notWritable);
             $files = (strlen($fileList) > 255) ? substr($fileList, 0, 255) . '...' : $fileList;
 
-            throw new \Exception(Yii::t('UpdaterModule.base', 'Make sure all files are writable! ({files})', ['files' => $files]));
+            throw new Exception(Yii::t('UpdaterModule.base', 'Make sure all files are writable! ({files})', ['files' => $files]));
         }
 
         return ['status' => 'ok'];
@@ -98,6 +99,20 @@ class InstallController extends \yii\base\Controller
         return ['status' => 'ok'];
     }
 
+    public function actionModule()
+    {
+        try {
+            (new ModuleService(Yii::$app->request->post('moduleId')))->update();
+        } catch (Exception $e) {
+            return [
+                'status' => 'error',
+                'message' => $e->getMessage(),
+            ];
+        }
+
+        return ['status' => 'ok'];
+    }
+
     public function actionCleanup()
     {
         $this->updatePackage->delete();
@@ -109,7 +124,6 @@ class InstallController extends \yii\base\Controller
 
         return ['status' => 'ok'];
     }
-
 
     protected function switchToDefaultTheme()
     {
@@ -123,7 +137,11 @@ class InstallController extends \yii\base\Controller
                 $theme->activate();
             }
         }
-        DynamicConfig::rewrite();
+
+        // TODO: remove when humhub minVersion is 1.18 or higher
+        if (version_compare(Yii::$app->version, '1.18', '<')) {
+            \humhub\libs\DynamicConfig::rewrite();
+        }
     }
 
 
@@ -134,7 +152,7 @@ class InstallController extends \yii\base\Controller
 
         try {
             Yii::$app->assetManager->clear();
-        } catch (\Exception $ex) {
+        } catch (Exception $ex) {
             Yii::error('Could not clear assetManager: ' . $ex->getMessage(), 'updater');
         }
 
