@@ -1,7 +1,11 @@
 <?php
 
-use humhub\libs\Html;
+use humhub\helpers\Html;
+use humhub\modules\ui\icon\widgets\Icon;
 use humhub\modules\updater\libs\AvailableUpdate;
+use humhub\widgets\bootstrap\Alert;
+use humhub\widgets\modal\Modal;
+use humhub\widgets\modal\ModalButton;
 use yii\helpers\Url;
 
 /* @var AvailableUpdate $availableUpdate */
@@ -10,80 +14,77 @@ use yii\helpers\Url;
 $warningMessage = $availableUpdate->getWarningMessage();
 ?>
 
-<div class="modal-dialog modal-dialog animated fadeIn">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h4 class="modal-title" id="myModalLabel"><?= Yii::t('UpdaterModule.base', '<strong>Update</strong> to HumHub {version}', ['version' => $availableUpdate->versionTo]); ?></h4>
+<?php Modal::beginDialog([
+    'title' => Yii::t('UpdaterModule.base', '<strong>Update</strong> to HumHub {version}', ['version' => $availableUpdate->versionTo]),
+    'footer' =>
+        ModalButton::success(Yii::t('UpdaterModule.base', 'Start'))
+            ->id('btnUpdaterStart')
+            ->cssClass('startButton')
+            ->pjax(false) .
+        ModalButton::danger(Yii::t('UpdaterModule.base', 'Abort'))
+            ->link(['/updater/update'])
+            ->cssClass('startButton')
+            ->pjax(false) .
+        ModalButton::light(Yii::t('UpdaterModule.base', 'Close'))
+            ->link(['/updater/update'])
+            ->id('btnUpdaterClose')
+            ->pjax(false),
+]) ?>
+
+    <div id="startDialog">
+
+        <?php if ($warningMessage): ?>
+            <?= Alert::warning('<strong>' . $warningMessage . '</strong>')->closeButton(false) ?>
+        <?php endif ?>
+
+        <div class="alert alert-danger">
+            <strong><?= Yii::t('UpdaterModule.base', 'Please note:') ?></strong><br>
+            <ul>
+                <li><?= Yii::t('UpdaterModule.base', 'Backup all your files & database before proceed') ?></li>
+                <li><?= Yii::t('UpdaterModule.base', 'Make sure all files are writable by application') ?></li>
+                <li><?= Yii::t('UpdaterModule.base', 'Please update installed marketplace modules before and after the update') ?></li>
+                <li><?= Yii::t('UpdaterModule.base', 'Make sure custom modules or themes are compatible with version %version%', ['%version%' => $availableUpdate->versionTo]) ?></li>
+                <li><?= Yii::t('UpdaterModule.base', 'Do not use this updater in combination with Git or Composer installations!') ?></li>
+                <li><?= Yii::t('UpdaterModule.base', 'Changes to HumHub core files may overwritten during update!') ?></li>
+            </ul>
         </div>
-        <div class="modal-body">
-
-            <div id="startDialog">
-
-                <?php if ($warningMessage): ?>
-                    <div class="alert alert-warning">
-                        <strong><?= $warningMessage ?></strong>
-                    </div>
-                <?php endif; ?>
-
-                <div class="alert alert-danger">
-                    <strong><?= Yii::t('UpdaterModule.base', 'Please note:'); ?></strong><br />
-                    <ul>
-                        <li><?= Yii::t('UpdaterModule.base', 'Backup all your files & database before proceed'); ?></li>
-                        <li><?= Yii::t('UpdaterModule.base', 'Make sure all files are writable by application'); ?></li>
-                        <li><?= Yii::t('UpdaterModule.base', 'Please update installed marketplace modules before and after the update'); ?></li>
-                        <li><?= Yii::t('UpdaterModule.base', 'Make sure custom modules or themes are compatible with version %version%', ['%version%' => $availableUpdate->versionTo]); ?></li>
-                        <li><?= Yii::t('UpdaterModule.base', 'Do not use this updater in combination with Git or Composer installations!'); ?></li>
-                        <li><?= Yii::t('UpdaterModule.base', 'Changes to HumHub core files may overwritten during update!'); ?></li>
-                    </ul>
-                </div>
-                <div class="checkbox"<?= $availableUpdate->hideSwitchDefaultThemeCheckbox() ? ' style="display: none;"' : '' ?>>
-                    <label>
-                        <input type="checkbox" value="1" checked id="chkBoxResetTheme"> <?= Yii::t('UpdaterModule.base', 'Switch to default theme after update (strongly recommended)'); ?>
-                    </label>
-                </div>
-            </div>
-
-
-            <div class="steps">
-                <p id="step_download"><strong><i></i> <?= Yii::t('UpdaterModule.base', 'Downloading update package'); ?></strong></p>
-                <p id="step_extract"><strong><i></i> <?= Yii::t('UpdaterModule.base', 'Extracting package files'); ?></strong></p>
-                <p id="step_validate"><strong><i></i> <?= Yii::t('UpdaterModule.base', 'Validating package'); ?></strong></p>
-                <p id="step_prepare"><strong><i></i> <?= Yii::t('UpdaterModule.base', 'Preparing system'); ?></strong></p>
-                <p id="step_install"><strong><i></i> <?= Yii::t('UpdaterModule.base', 'Installing files'); ?></strong></p>
-                <p id="step_migrate"><strong><i></i> <?= Yii::t('UpdaterModule.base', 'Migrating database'); ?></strong></p>
-                <p id="step_modules"><strong><i></i> <?= Yii::t('UpdaterModule.base', 'Update module: {moduleName}'); ?></strong></p>
-                <p id="step_cleanup"><strong><i></i> <?= Yii::t('UpdaterModule.base', 'Cleanup update files'); ?></strong></p>
-            </div>
-            <br />
-            <div class="alert alert-danger" id="errorMessageBox">
-                <p><strong>Error!</strong></p>
-                <p id="errorMessage"><?= Yii::t('UpdaterModule.base', 'No error message available. Please check logfiles!'); ?></p>
-            </div>
-            <div class="alert alert-success" id="successMessageBox">
-                <p><strong><i class="fa fa-thumbs-up"></i> <?= Yii::t('UpdaterModule.base', 'Update successful'); ?></strong></p>
-                <p><?= Yii::t('UpdaterModule.base', 'The update was successfully installed!'); ?></p>
-                <p><?= Yii::t('UpdaterModule.base', 'Please update installed modules when new version is available!'); ?></p>
-            </div>
-            <div class="interruptWarning colorWarning pull-right hidden"><i class="fa fa-warning"></i> <?= Yii::t('UpdaterModule.base', 'Do not interrupt!') ?></div>
-        </div>
-        <div class="modal-footer">
-            <?= Html::a(Yii::t('UpdaterModule.base', 'Start'), '#', ['id' => 'btnUpdaterStart', 'class' => 'btn btn-success pull-left startButton', 'data-pjax-prevent' => '']); ?>
-            <?= Html::a(Yii::t('UpdaterModule.base', 'Abort'), ['/updater/update'], ['class' => 'btn btn-danger pull-right startButton', 'data-pjax-prevent' => '']); ?>
-
-            <?= Html::a(Yii::t('UpdaterModule.base', 'Close'), ['/updater/update'], ['id' => 'btnUpdaterClose', 'data-ui-loader' => '', 'data-pjax-prevent' => '', 'class' => 'btn btn-primary']); ?>
+        <div class="checkbox"<?= $availableUpdate->hideSwitchDefaultThemeCheckbox() ? ' class="d-none"' : '' ?>>
+            <label>
+                <input type="checkbox" value="1" checked id="chkBoxResetTheme">
+                <?= Yii::t('UpdaterModule.base', 'Switch to default theme after update (strongly recommended)') ?>
+            </label>
         </div>
     </div>
-</div>
 
+    <div class="steps">
+        <p id="step_download"><strong><i></i> <?= Yii::t('UpdaterModule.base', 'Downloading update package') ?></strong></p>
+        <p id="step_extract"><strong><i></i> <?= Yii::t('UpdaterModule.base', 'Extracting package files') ?></strong></p>
+        <p id="step_validate"><strong><i></i> <?= Yii::t('UpdaterModule.base', 'Validating package') ?></strong></p>
+        <p id="step_prepare"><strong><i></i> <?= Yii::t('UpdaterModule.base', 'Preparing system') ?></strong></p>
+        <p id="step_install"><strong><i></i> <?= Yii::t('UpdaterModule.base', 'Installing files') ?></strong></p>
+        <p id="step_migrate"><strong><i></i> <?= Yii::t('UpdaterModule.base', 'Migrating database') ?></strong></p>
+        <p id="step_modules"><strong><i></i> <?= Yii::t('UpdaterModule.base', 'Update module: {moduleName}') ?></strong></p>
+        <p id="step_cleanup"><strong><i></i> <?= Yii::t('UpdaterModule.base', 'Cleanup update files') ?></strong></p>
+    </div>
+    <br>
+    <div class="alert alert-danger" id="errorMessageBox">
+        <p><strong>Error!</strong></p>
+        <p id="errorMessage"><?= Yii::t('UpdaterModule.base', 'No error message available. Please check logfiles!') ?></p>
+    </div>
+    <div class="alert alert-success" id="successMessageBox">
+        <p><strong>
+            <?= Icon::get('thumbs-up') . ' ' . Yii::t('UpdaterModule.base', 'Update successful') ?>
+        </strong></p>
+        <p><?= Yii::t('UpdaterModule.base', 'The update was successfully installed!') ?></p>
+        <p><?= Yii::t('UpdaterModule.base', 'Please update installed modules when new version is available!') ?></p>
+    </div>
+    <div class="interruptWarning text-warning float-end d-none">
+        <?= Icon::get('warning') . ' ' . Yii::t('UpdaterModule.base', 'Do not interrupt!') ?>
+    </div>
 
-<?php
-$nonce = '';
-if (version_compare(Yii::$app->version, '1.4', '>')) {
-    $nonce = Html::nonce();
-}
-?>
+<?php Modal::endDialog() ?>
 
-<script <?= $nonce ?>>
+<script <?= Html::nonce() ?>>
     $('#errorMessageBox').hide();
     $('#successMessageBox').hide();
 
@@ -93,7 +94,7 @@ if (version_compare(Yii::$app->version, '1.4', '>')) {
         $('.startButton').hide();
 
         humhub.require('ui.modal').footerLoader();
-        $('.interruptWarning').removeClass('hidden');
+        $('.interruptWarning').show();
         step_download();
     });
 
@@ -101,13 +102,13 @@ if (version_compare(Yii::$app->version, '1.4', '>')) {
 
     function showStep(id) {
         $('#step_' + id).show().find('i')
-            .addClass('colorWarning fa fa-circle pulse animated infinite');
+            .addClass('text-warning fa fa-circle pulse animated infinite');
     }
 
     function finishStep(id) {
         $('#step_' + id).find('i')
-            .removeClass('colorWarning fa-circle infinite pulse')
-            .addClass('swing fa-check-circle colorSuccess');
+            .removeClass('text-warning fa-circle infinite pulse')
+            .addClass('swing fa-check-circle text-success');
     }
 
     function showError(response) {
@@ -262,7 +263,7 @@ if (version_compare(Yii::$app->version, '1.4', '>')) {
                         step_cleanup();
                     <?php else : ?>
                         step_module(0);
-                    <?php endif; ?>
+                    <?php endif ?>
                 }
             },
             error: function (result) {
@@ -331,7 +332,7 @@ if (version_compare(Yii::$app->version, '1.4', '>')) {
     function showModuleError(moduleId, error) {
         $('[data-step-module-id="' + moduleId + '"').after('<p class="alert alert-warning mb-1" style="margin-bottom:10px">' + error + '</p>');
     }
-    <?php endif; ?>
+    <?php endif ?>
 
     function step_cleanup() {
         resetTheme = $('#chkBoxResetTheme').prop('checked');

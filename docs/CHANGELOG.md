@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.4.0 (unreleased)
+-------------------------
+- Enh #56: Migration to Bootstrap 5 for HumHub 1.18
+
 2.3.1 (August 6, 2025)
 ----------------------
 - Enh #57: Restrict deprecated `DynamicConfig::rewrite()` usage

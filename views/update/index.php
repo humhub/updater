@@ -1,7 +1,10 @@
 <?php
 
 use humhub\modules\content\widgets\richtext\RichText;
-use yii\helpers\Html;
+use humhub\widgets\bootstrap\Alert;
+use humhub\widgets\bootstrap\Button;
+use humhub\widgets\bootstrap\Link;
+use humhub\widgets\modal\ModalButton;
 
 /* @var string $releaseNotes */
 /* @var string $versionTo */
@@ -14,39 +17,47 @@ use yii\helpers\Html;
 <div class="panel panel-default">
     <div class="panel-heading"><?= Yii::t('UpdaterModule.base', '<strong>Update</strong> HumHub') ?></div>
     <div class="panel-body">
-        <div class="alert alert-success">
-            <?= Yii::t('UpdaterModule.base', 'There is a new update to %version% available!', array('%version%' => '<strong>' . $versionTo . '</strong>')) ?>
-        </div>
+        <?= Alert::success(Yii::t('UpdaterModule.base', 'There is a new update to %version% available!', [
+            '%version%' => '<strong>' . $versionTo . '</strong>',
+        ]))->closeButton(false) ?>
 
         <?= RichText::output($releaseNotes) ?>
 
         <?php if ($newUpdaterAvailable): ?>
-            <br />
+            <br>
             <div class="alert alert-danger">
-                <?= Html::a('Update', ['/marketplace/browse'], ['class' => 'btn btn-danger pull-right']) ?>
-                <strong><?= Yii::t('UpdaterModule.base', 'New updater version available!') ?></strong><br />
+                <?= Button::danger(Yii::t('UpdaterModule.base', 'Update'))
+                    ->link(['/marketplace/browse'])
+                    ->right() ?>
+                <strong><?= Yii::t('UpdaterModule.base', 'New updater version available!') ?></strong><br>
                 <?= Yii::t('UpdaterModule.base', 'There is a new version of the updater module available. Please update before proceed.') ?>
             </div>
-        <?php endif; ?>
+        <?php endif ?>
 
         <?php if ($errorMinimumPhpVersion): ?>
-            <br />
+            <br>
             <div class="alert alert-danger">
-                <?= Html::a('Requirements', 'http://docs.humhub.org/admin-requirements.html', ['class' => 'btn btn-danger pull-right', 'target' => '_blank']) ?>
-                <strong><?= Yii::t('UpdaterModule.base', 'Installed PHP version not support!') ?></strong><br />
+                <?= Link::danger(Yii::t('UpdaterModule.base', 'Requirements'))
+                    ->link('http://docs.humhub.org/admin-requirements.html')
+                    ->blank()
+                    ->right() ?>
+                <strong><?= Yii::t('UpdaterModule.base', 'Installed PHP version not support!') ?></strong><br>
                 <?= Yii::t('UpdaterModule.base', 'The currently installed PHP version is too old. Please update before proceed.') ?>
             </div>
-        <?php endif; ?>
+        <?php endif ?>
 
         <?php if ($errorRootFolderNotWritable): ?>
-            <br />
+            <br>
             <div class="alert alert-danger">
-                <?= Html::a('Manual upgrade', 'http://docs.humhub.org/admin-updating.html', ['class' => 'btn btn-danger pull-right', 'target' => '_blank']) ?>
-                <strong><?= Yii::t('UpdaterModule.base', 'Application folder not writable!') ?></strong><br />
-                <?= Yii::t('UpdaterModule.base', 'The updater requires write access to <strong>all</strong> files and folders in the application root folder.') ?><br />
+                <?= Link::danger(Yii::t('UpdaterModule.base', 'Manual upgrade'))
+                    ->link('http://docs.humhub.org/admin-updating.html')
+                    ->blank()
+                    ->right() ?>
+                <strong><?= Yii::t('UpdaterModule.base', 'Application folder not writable!') ?></strong><br>
+                <?= Yii::t('UpdaterModule.base', 'The updater requires write access to <strong>all</strong> files and folders in the application root folder.') ?><br>
                 <?= Yii::t('UpdaterModule.base', 'Application folder: {folder}', ['folder' => Yii::getAlias('@webroot')]) ?>
             </div>
-        <?php endif; ?>
+        <?php endif ?>
 
         <?php if ($restrictedMaxVersionModules !== []): ?>
             <br>
@@ -56,15 +67,14 @@ use yii\helpers\Html;
                 <ul>
                 <?php foreach ($restrictedMaxVersionModules as $moduleName => $maxVersion) : ?>
                     <li><?= $moduleName ?> - <?= $maxVersion ?></li>
-                <?php endforeach; ?>
+                <?php endforeach ?>
                 </ul>
             </div>
-        <?php endif; ?>
-
+        <?php endif ?>
 
         <?php if ($allowStart): ?>
-            <br />
-            <?= Html::a(Yii::t('UpdaterModule.base', "Start update"), ["start"], ['class' => 'btn btn-success', 'data-target' => '#globalModal', 'data-backdrop' => 'static', 'data-keyboard' => 'false', 'data-ui-loader' => '']) ?>
-        <?php endif; ?>
+            <br>
+            <?= ModalButton::success(Yii::t('UpdaterModule.base', 'Start update'))->load(['start']) ?>
+        <?php endif ?>
     </div>
 </div>
