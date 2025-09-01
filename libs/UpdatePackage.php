@@ -2,7 +2,7 @@
 
 namespace humhub\modules\updater\libs;
 
-use humhub\widgets\Link;
+use humhub\widgets\bootstrap\Link;
 use Yii;
 use yii\base\Exception;
 use yii\helpers\Json;
@@ -15,7 +15,6 @@ use yii\helpers\FileHelper;
  */
 class UpdatePackage
 {
-
     /**
      * @var string the download package file name
      */
@@ -23,7 +22,7 @@ class UpdatePackage
 
     /**
      * Constructor
-     * 
+     *
      * @param string $fileName
      * @throws Exception
      */
@@ -69,15 +68,15 @@ class UpdatePackage
                     'version' => '1.10',
                     'message' => Yii::t('UpdaterModule.base', 'This HumHub version no longer supports the deprecated Enterprise Module. Please contact our support: {email}', [
                         'email' => Link::to('hello@humhub.com', 'mailto:hello@humhub.com'),
-                    ])
-                ]
-            ]
+                    ]),
+                ],
+            ],
         ];
     }
 
     /**
      * Returns the package directory
-     * 
+     *
      * @return string
      * @throws Exception
      */
@@ -96,7 +95,7 @@ class UpdatePackage
 
     /**
      * Returns the package directory which contains all changed files
-     * 
+     *
      * @return string
      * @throws Exception
      */
@@ -117,7 +116,7 @@ class UpdatePackage
 
         $zip = new \ZipArchive();
         $res = $zip->open($targetFile);
-        if ($res === TRUE) {
+        if ($res === true) {
             $zip->extractTo(Yii::$app->getModule('updater')->getTempPath());
             $zip->close();
         } else {
@@ -130,7 +129,7 @@ class UpdatePackage
      */
     public function checkFilePermissions()
     {
-        $notWritable = array();
+        $notWritable = [];
         $changedFiles = $this->getChangedFiles();
         foreach ($changedFiles as $fileName => $info) {
             $realFilePath = Yii::getAlias('@webroot') . DIRECTORY_SEPARATOR . $fileName;
@@ -227,7 +226,7 @@ class UpdatePackage
 
     public function install()
     {
-        $warnings = array();
+        $warnings = [];
 
         // Complete vendor package provided
         if (is_dir($this->getNewFileDirectory() . DIRECTORY_SEPARATOR . 'vendor')) {
@@ -297,8 +296,8 @@ class UpdatePackage
     /**
      * Checks if given file is writeable, can be created or deleted
      * If the parent directory doesn't exists yet - check it can be created
-     * 
-     * @param String $f 
+     *
+     * @param String $f
      */
     private function isWritable($f)
     {
@@ -324,7 +323,7 @@ class UpdatePackage
 
     /**
      * Installs a file
-     * 
+     *
      * @param String $file
      */
     private function installFile($source, $target)
@@ -351,8 +350,8 @@ class UpdatePackage
     }
 
     /**
-     * Delete a file 
-     * 
+     * Delete a file
+     *
      * @todo Also delete parent directories - when empty
      * @param type $file
      */

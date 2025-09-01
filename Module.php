@@ -10,7 +10,6 @@ use yii\helpers\Url;
 
 class Module extends \humhub\components\Module
 {
-
     /**
      * @inheritdoc
      */
@@ -46,13 +45,13 @@ class Module extends \humhub\components\Module
     {
         // Compatiblity for older versions
         if (!class_exists('humhub\libs\CURLHelper')) {
-            $options = array(
+            $options = [
                 CURLOPT_SSL_VERIFYPEER => (Yii::$app->getModule('admin')->marketplaceApiValidateSsl) ? true : false,
                 CURLOPT_SSL_VERIFYHOST => (Yii::$app->getModule('admin')->marketplaceApiValidateSsl) ? 2 : 0,
                 CURLOPT_REDIR_PROTOCOLS => CURLPROTO_HTTP | CURLPROTO_HTTPS,
                 CURLOPT_PROTOCOLS => CURLPROTO_HTTP | CURLPROTO_HTTPS,
-                CURLOPT_CAINFO => Yii::getAlias('@humhub/config/cacert.pem')
-            );
+                CURLOPT_CAINFO => Yii::getAlias('@humhub/config/cacert.pem'),
+            ];
 
             if (Setting::Get('enabled', 'proxy')) {
                 $options[CURLOPT_PROXY] = Setting::Get('server', 'proxy');

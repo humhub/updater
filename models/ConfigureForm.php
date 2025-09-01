@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @link https://www.humhub.org/
  * @copyright Copyright (c) 2018 HumHub GmbH & Co. KG
@@ -11,7 +12,6 @@ use Yii;
 
 class ConfigureForm extends \yii\base\Model
 {
-
     public $channel;
 
     /**

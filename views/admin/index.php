@@ -6,21 +6,19 @@
  */
 
 use humhub\modules\updater\models\ConfigureForm;
-use yii\bootstrap\ActiveForm;
-use yii\helpers\Html;
+use humhub\widgets\bootstrap\Button;
+use humhub\widgets\form\ActiveForm;
+
 ?>
 <div class="panel panel-default">
-    <div class="panel-heading"><?= Yii::t('UpdaterModule.base', 'Updater Configuration'); ?></div>
+    <div class="panel-heading"><?= Yii::t('UpdaterModule.base', 'Updater Configuration') ?></div>
     <div class="panel-body">
-        <?php $form = ActiveForm::begin(['id' => 'configure-form', 'enableClientValidation' => false, 'enableClientScript' => false]); ?>
+        <?php $form = ActiveForm::begin(['id' => 'configure-form', 'enableClientValidation' => false, 'enableClientScript' => false]) ?>
 
-        <?= $form->field($model, 'channel')->dropDownList(ConfigureForm::getChannels()); ?>
+        <?= $form->field($model, 'channel')->dropDownList(ConfigureForm::getChannels()) ?>
 
-        <div class="form-group">
-            <?= Html::submitButton(Yii::t('base', 'Save'), ['class' => 'btn btn-primary', 'data-ui-loader' => '']) ?>
-        </div>
+        <?= Button::save()->submit() ?>
 
-        <?php ActiveForm::end(); ?>
-
+        <?php ActiveForm::end() ?>
     </div>
 </div>

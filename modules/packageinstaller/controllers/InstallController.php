@@ -8,6 +8,11 @@
 
 namespace humhub\modules\updater\modules\packageinstaller\controllers;
 
+use humhub\commands\MigrateController;
+use humhub\helpers\ThemeHelper;
+use humhub\models\Setting;
+use Exception;
+use humhub\modules\marketplace\services\ModuleService;
 use humhub\modules\updater\libs\UpdatePackage;
 use Yii;
 
@@ -18,7 +23,6 @@ use Yii;
  */
 class InstallController extends \yii\base\Controller
 {
-
     /**
      * @var \humhub\modules\updater\libs\UpdatePackage
      */
@@ -55,7 +59,7 @@ class InstallController extends \yii\base\Controller
             $fileList = implode(', ', $notWritable);
             $files = (strlen($fileList) > 255) ? substr($fileList, 0, 255) . '...' : $fileList;
 
-            throw new \Exception(Yii::t('UpdaterModule.base', 'Make sure all files are writable! ({files})', ['files' => $files]));
+            throw new Exception(Yii::t('UpdaterModule.base', 'Make sure all files are writable! ({files})', ['files' => $files]));
         }
 
         return ['status' => 'ok'];
@@ -90,8 +94,22 @@ class InstallController extends \yii\base\Controller
 
     public function actionMigrate()
     {
-        $migration = \humhub\commands\MigrateController::webMigrateAll();
+        $migration = MigrateController::webMigrateAll();
         $this->flushCaches();
+        return ['status' => 'ok'];
+    }
+
+    public function actionModule()
+    {
+        try {
+            (new ModuleService(Yii::$app->request->post('moduleId')))->update();
+        } catch (Exception $e) {
+            return [
+                'status' => 'error',
+                'message' => $e->getMessage(),
+            ];
+        }
+
         return ['status' => 'ok'];
     }
 
@@ -107,20 +125,23 @@ class InstallController extends \yii\base\Controller
         return ['status' => 'ok'];
     }
 
-
     protected function switchToDefaultTheme()
     {
         if (version_compare(Yii::$app->version, '1.1', '<')) {
-            \humhub\models\Setting::Set('theme', 'HumHub');
+            Setting::Set('theme', 'HumHub');
         } elseif (version_compare(Yii::$app->version, '1.3.7', '<')) {
             Yii::$app->settings->set('theme', 'HumHub');
         } else {
-            $theme = \humhub\modules\ui\view\helpers\ThemeHelper::getThemeByName('HumHub');
+            $theme = ThemeHelper::getThemeByName('HumHub');
             if ($theme !== null) {
                 $theme->activate();
             }
         }
-        \humhub\libs\DynamicConfig::rewrite();
+
+        // TODO: remove when humhub minVersion is 1.18 or higher
+        if (version_compare(Yii::$app->version, '1.18', '<')) {
+            \humhub\libs\DynamicConfig::rewrite();
+        }
     }
 
 
@@ -131,7 +152,7 @@ class InstallController extends \yii\base\Controller
 
         try {
             Yii::$app->assetManager->clear();
-        } catch (\Exception $ex) {
+        } catch (Exception $ex) {
             Yii::error('Could not clear assetManager: ' . $ex->getMessage(), 'updater');
         }
 

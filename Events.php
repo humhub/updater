@@ -8,22 +8,25 @@
 
 namespace humhub\modules\updater;
 
+use humhub\helpers\ControllerHelper;
+use humhub\modules\admin\widgets\AdminMenu;
+use humhub\modules\ui\menu\MenuLink;
 use Yii;
-use yii\helpers\Url;
 
 class Events
 {
-
     public static function onAdminMenuInit($event)
     {
-        $event->sender->addItem(array(
+        /* @var AdminMenu $menu */
+        $menu = $event->sender;
+
+        $menu->addEntry(new MenuLink([
             'label' => Yii::t('UpdaterModule.base', 'Update HumHub'),
-            'url' => Url::to(['/updater/update']),
-            'icon' => '<i class="fa fa-cloud-download"></i>',
-            'group' => 'manage',
+            'url' => ['/updater/update'],
+            'icon' => 'cloud-download',
             'sortOrder' => 90000,
-            'isActive' => (Yii::$app->controller->module && Yii::$app->controller->module->id == 'updater')
-        ));
+            'isActive' => ControllerHelper::isActivePath('updater'),
+        ]));
     }
 
     public static function onCronRun($event)
