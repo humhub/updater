@@ -72,6 +72,10 @@ class InstallController extends \yii\base\Controller
             return ['message' => Yii::t('UpdaterModule.base', 'Your installed PHP version is too old. The new minimum required PHP version is: {version}', ['version' => $result])];
         }
 
+        // Make sure the Installation State is set to installed
+        // This is important when upgrading from v1.17 to v1.18
+        Yii::$app->settings->set('humhub\components\InstallationState', 3);
+
         $result = $this->updatePackage->checkRestrictedModules();
         if ($result !== true) {
             return ['message' => implode('<br>', $result)];
