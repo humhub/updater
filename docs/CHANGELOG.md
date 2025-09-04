@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.3.2 (Unreleased)
+----------------------
+- Fix #60: Update modules
+
 2.3.1 (August 6, 2025)
 ----------------------
 - Enh #57: Restrict deprecated `DynamicConfig::rewrite()` usage
