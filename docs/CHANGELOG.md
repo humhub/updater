@@ -1,9 +1,9 @@
 Changelog
 =========
 
-2.3.2 (Unreleased)
-----------------------
-- Fix #60: Update modules
+2.3.2 (September 4, 2025)
+-------------------------
+- Fix #60: Fix auto update modules
 
 2.3.1 (August 6, 2025)
 ----------------------
