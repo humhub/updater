@@ -95,9 +95,19 @@ class InstallController extends \yii\base\Controller
 
     public function actionMigrate()
     {
-        $migration = \humhub\commands\MigrateController::webMigrateAll();
+        \humhub\commands\MigrateController::webMigrateAll();
         $this->flushCaches();
-        return ['status' => 'ok'];
+
+        /* @var \humhub\modules\marketplace\Module $marketplaceModule */
+        $marketplaceModule = Yii::$app->getModule('marketplace');
+
+        return [
+            'status' => 'ok',
+            'modules' => array_values(array_map(fn($updateModule) => [
+                'id' => $updateModule->id,
+                'name' => $updateModule->getName(),
+            ], $marketplaceModule->onlineModuleManager->getAvailableUpdateModules())),
+        ];
     }
 
     public function actionModule()

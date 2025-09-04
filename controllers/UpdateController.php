@@ -70,18 +70,8 @@ class UpdateController extends Controller
 
     public function actionStart()
     {
-        $availableUpdate = OnlineUpdateAPI::getAvailableUpdate();
-
-        /* @var \humhub\modules\marketplace\Module $marketplaceModule */
-        $marketplaceModule = Yii::$app->getModule('marketplace');
-        $updateModules = $marketplaceModule->onlineModuleManager->getAvailableUpdateModules();
-
         return $this->renderAjax('start', [
-            'availableUpdate' => $availableUpdate,
-            'updateModules' => array_values(array_map(fn($updateModule) => [
-                'id' => $updateModule->id,
-                'name' => $updateModule->getName(),
-            ], $updateModules)),
+            'availableUpdate' => OnlineUpdateAPI::getAvailableUpdate(),
         ]);
     }
 
