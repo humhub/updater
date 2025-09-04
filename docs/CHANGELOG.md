@@ -1,10 +1,18 @@
 Changelog
 =========
 
+2.4.1 (Unreleased)
+-------------------------
+- Fix #60: Fix auto update modules
+
 2.4.0 (September 1, 2025)
 -------------------------
 - Fix #48: Update module resources path
 - Enh #56: Migration to Bootstrap 5 for HumHub 1.18
+
+2.3.2 (September 4, 2025)
+-------------------------
+- Fix #60: Fix auto update modules
 
 2.3.1 (August 6, 2025)
 ----------------------
