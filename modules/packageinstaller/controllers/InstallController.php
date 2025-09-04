@@ -8,12 +8,12 @@
 
 namespace humhub\modules\updater\modules\packageinstaller\controllers;
 
-use humhub\commands\MigrateController;
+use Exception;
 use humhub\helpers\ThemeHelper;
 use humhub\models\Setting;
-use Exception;
 use humhub\modules\marketplace\services\ModuleService;
 use humhub\modules\updater\libs\UpdatePackage;
+use humhub\services\MigrationService;
 use Yii;
 
 /**
@@ -98,9 +98,19 @@ class InstallController extends \yii\base\Controller
 
     public function actionMigrate()
     {
-        $migration = MigrateController::webMigrateAll();
+        MigrationService::create()->migrateUp();
         $this->flushCaches();
-        return ['status' => 'ok'];
+
+        /* @var \humhub\modules\marketplace\Module $marketplaceModule */
+        $marketplaceModule = Yii::$app->getModule('marketplace');
+
+        return [
+            'status' => 'ok',
+            'modules' => array_values(array_map(fn($updateModule) => [
+                'id' => $updateModule->id,
+                'name' => $updateModule->getName(),
+            ], $marketplaceModule->onlineModuleManager->getAvailableUpdateModules())),
+        ];
     }
 
     public function actionModule()

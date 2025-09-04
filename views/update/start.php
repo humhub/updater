@@ -9,7 +9,6 @@ use humhub\widgets\modal\ModalButton;
 use yii\helpers\Url;
 
 /* @var AvailableUpdate $availableUpdate */
-/* @var array $updateModules */
 
 $warningMessage = $availableUpdate->getWarningMessage();
 ?>
@@ -246,6 +245,8 @@ $warningMessage = $availableUpdate->getWarningMessage();
         });
     }
 
+    var modules = [];
+
     function step_migrate() {
         showStep('migrate');
         $.ajax({
@@ -259,11 +260,10 @@ $warningMessage = $availableUpdate->getWarningMessage();
             success: function (json) {
                 if (checkError(json)) {
                     finishStep('migrate');
-                    <?php if ($updateModules === []) : ?>
-                        step_cleanup();
-                    <?php else : ?>
-                        step_module(0);
-                    <?php endif ?>
+                    if (Array.isArray(json.modules) && json.modules.length > 0) {
+                        modules = json.modules;
+                    }
+                    step_module(0);
                 }
             },
             error: function (result) {
@@ -271,9 +271,6 @@ $warningMessage = $availableUpdate->getWarningMessage();
             },
         });
     }
-
-    <?php if ($updateModules !== []) : ?>
-    var modules = <?= json_encode($updateModules) ?>;
 
     function step_module(index) {
         if (typeof(modules[index]) === 'undefined') {
@@ -332,7 +329,6 @@ $warningMessage = $availableUpdate->getWarningMessage();
     function showModuleError(moduleId, error) {
         $('[data-step-module-id="' + moduleId + '"').after('<p class="alert alert-warning mb-1" style="margin-bottom:10px">' + error + '</p>');
     }
-    <?php endif ?>
 
     function step_cleanup() {
         resetTheme = $('#chkBoxResetTheme').prop('checked');
