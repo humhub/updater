@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'Close' => 'Zapri',
     '<strong>Update</strong> HumHub' => '',
     '<strong>Update</strong> to HumHub {version}' => '',
     'Abort' => '',
@@ -12,7 +13,6 @@ return [
     'Changes to HumHub core files may overwritten during update!' => '',
     'Channel' => '',
     'Cleanup update files' => '',
-    'Close' => '',
     'Could not extract update package!' => '',
     'Current update channel: {updateChannel}' => '',
     'Do not interrupt!' => '',
@@ -26,6 +26,7 @@ return [
     'Make sure all files are writable by application' => '',
     'Make sure all files are writable! ({files})' => '',
     'Make sure custom modules or themes are compatible with version %version%' => '',
+    'Manual upgrade' => '',
     'Migrating database' => '',
     'Migration Guide' => '',
     'New updater version available!' => '',
@@ -35,6 +36,7 @@ return [
     'Please update installed marketplace modules before and after the update' => '',
     'Please update installed modules when new version is available!' => '',
     'Preparing system' => '',
+    'Requirements' => '',
     'Stable and beta versions' => '',
     'Stable versions only' => '',
     'Start' => '',
@@ -49,6 +51,7 @@ return [
     'There is a new version of the updater module available. Please update before proceed.' => '',
     'There is no new HumHub update available!' => '',
     'This HumHub version no longer supports the deprecated Enterprise Module. Please contact our support: {email}' => '',
+    'Update' => '',
     'Update Blocked – Incompatible Module(s)' => '',
     'Update HumHub' => '',
     'Update download failed! (%error%)' => '',

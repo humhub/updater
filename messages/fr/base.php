@@ -55,7 +55,10 @@ return [
     'Updater Configuration' => 'Configuration de la mise à jour',
     'Validating package' => 'Validation du paquet',
     'Your installed PHP version is too old. The new minimum required PHP version is: {version}' => 'Votre version de PHP est trop ancienne. La nouvelle version minimale de PHP requise est : {version}',
+    'Manual upgrade' => '',
+    'Requirements' => '',
     'The following module(s) do not yet offer a compatible version for the new HumHub version. To proceed with the update, you must uninstall these modules.' => '',
+    'Update' => '',
     'Update Blocked – Incompatible Module(s)' => '',
     'Update module: {moduleName}' => '',
 ];

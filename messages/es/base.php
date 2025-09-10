@@ -52,10 +52,13 @@ return [
     'Your installed PHP version is too old. The new minimum required PHP version is: {version}' => 'La versión de PHP que tienes instalada es demasiado antigua. La versión mínima de PHP requerida es la {version}',
     'All themes will be disabled, <code>.bs3.old</code> will be added to their names, and the default HumHub theme will be enabled.' => '',
     'IMPORTANT NOTES ABOUT UPDATING TO VERSION 1.18:' => '',
+    'Manual upgrade' => '',
     'Migration Guide' => '',
     'Please read the {MigrationGuideLink}' => '',
+    'Requirements' => '',
     'The Theme Builder module will be uninstalled.' => '',
     'The following module(s) do not yet offer a compatible version for the new HumHub version. To proceed with the update, you must uninstall these modules.' => '',
+    'Update' => '',
     'Update Blocked – Incompatible Module(s)' => '',
     'Update module: {moduleName}' => '',
 ];
