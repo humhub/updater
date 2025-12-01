@@ -2,7 +2,6 @@
 
 namespace humhub\modules\updater;
 
-use humhub\models\Setting;
 use humhub\modules\updater\models\ConfigureForm;
 use Yii;
 use yii\base\Exception;
@@ -53,17 +52,17 @@ class Module extends \humhub\components\Module
                 CURLOPT_CAINFO => Yii::getAlias('@humhub/config/cacert.pem'),
             ];
 
-            if (Setting::Get('enabled', 'proxy')) {
-                $options[CURLOPT_PROXY] = Setting::Get('server', 'proxy');
-                $options[CURLOPT_PROXYPORT] = Setting::Get('port', 'proxy');
+            if (Yii::$app->settings->get('proxyEnabled')) {
+                $options[CURLOPT_PROXY] = Yii::$app->settings->get('proxyServer');
+                $options[CURLOPT_PROXYPORT] = Yii::$app->settings->get('proxyPort');
                 if (defined('CURLOPT_PROXYUSERNAME')) {
-                    $options[CURLOPT_PROXYUSERNAME] = Setting::Get('user', 'proxy');
+                    $options[CURLOPT_PROXYUSERNAME] = Yii::$app->settings->get('proxyUser');
                 }
                 if (defined('CURLOPT_PROXYPASSWORD')) {
-                    $options[CURLOPT_PROXYPASSWORD] = Setting::Get('pass', 'proxy');
+                    $options[CURLOPT_PROXYPASSWORD] = Yii::$app->settings->get('proxyPassword');
                 }
                 if (defined('CURLOPT_NOPROXY')) {
-                    $options[CURLOPT_NOPROXY] = Setting::Get('noproxy', 'proxy');
+                    $options[CURLOPT_NOPROXY] = Yii::$app->settings->get('proxyNoproxy');
                 }
             }
 
