@@ -33,7 +33,7 @@ class CleanupJob extends ActiveJob
                 if ($backupDate + $this->backupKeepTime < time()) {
                     try {
                         FileHelper::removeDirectory($backupFolder . DIRECTORY_SEPARATOR . $backup);
-                    } catch (ErrorException $e) {
+                    } catch (ErrorException) {
                         Yii::error("Could not delete outdated backup: " . $backupFolder, 'updater');
                     }
                 }

@@ -91,6 +91,6 @@ class Module extends \humhub\components\Module
     {
         $updateChannel = $this->getUpdateChannel();
         $updateChannelTitles = ConfigureForm::getChannels();
-        return isset($updateChannelTitles[$updateChannel]) ? $updateChannelTitles[$updateChannel] : $updateChannel;
+        return $updateChannelTitles[$updateChannel] ?? $updateChannel;
     }
 }

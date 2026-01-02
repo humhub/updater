@@ -1,0 +1,76 @@
+name: Rector
+
+on:
+  workflow_call:
+    inputs:
+      php-version:
+        required: false
+        type: string
+        default: '8.2'
+
+jobs:
+  rector:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout HumHub Core
+        uses: actions/checkout@v4
+        with:
+          repository: humhub/humhub
+          path: humhub
+          fetch-depth: 0
+
+      - name: Checkout Module
+        uses: actions/checkout@v4
+        with:
+          path: module
+          fetch-depth: 0
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ inputs.php-version }}
+          tools: composer
+
+      - name: Install dependencies
+        run: |
+            cd humhub
+            composer install --no-interaction --no-progress --prefer-dist
+            cd ../module
+            composer update --no-interaction --no-progress --prefer-dist
+            cd ..
+
+      - name: Run Rector
+        run: |
+            cd module
+            composer rector -- ../humhub .
+            cd ..
+
+      - name: Check diff vs base branch
+        run: |
+          cd module
+          git fetch origin ${{ github.event.repository.default_branch }}
+          git diff --stat origin/${{ github.event.repository.default_branch }} || true
+
+      - name: Stage Rector changes
+        run: |
+          cd module
+          git add -A
+          git reset -- composer.lock
+          cd ..
+
+      - name: Set PR token
+        run: echo "PR_TOKEN=${{ secrets.GH_TOKEN != '' && secrets.GH_TOKEN || secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ env.PR_TOKEN }}
+          path: module
+          branch: rector/auto-update
+          title: "chore: automated Rector updates"
+          body: "Automated Rector run (weekly)"
+          delete-branch: true

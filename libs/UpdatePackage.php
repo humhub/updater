@@ -215,7 +215,7 @@ class UpdatePackage
         if (isset($changedFiles[$configFileName]['newFileMD5'])) {
             $newConfigFilePath = $this->getNewFileDirectory() . DIRECTORY_SEPARATOR . $changedFiles[$configFileName]['newFileMD5'];
             if (file_exists($newConfigFilePath)) {
-                if (preg_match('/[\'"]' . preg_quote($configVarName) . '[\'"]\s+=>\s+[\'"](.+?)[\'"]/', file_get_contents($newConfigFilePath), $match)) {
+                if (preg_match('/[\'"]' . preg_quote((string) $configVarName) . '[\'"]\s+=>\s+[\'"](.+?)[\'"]/', file_get_contents($newConfigFilePath), $match)) {
                     return $match[1];
                 }
             }
@@ -329,7 +329,7 @@ class UpdatePackage
     private function installFile($source, $target)
     {
 
-        $directory = dirname($target);
+        $directory = dirname((string) $target);
         if (!is_dir($directory)) {
             if (!@mkdir($directory, 0777, true)) {
                 Yii::error("InstallFile - Could not create folder: " . $directory);
@@ -385,7 +385,7 @@ class UpdatePackage
 
         try {
             FileHelper::removeDirectory($this->getDirectory(), ['traverseSymlinks' => true]);
-        } catch (\Exception $ex) {
+        } catch (\Exception) {
             Yii::error('Could not remove directory: ' . $this->getDirectory(), 'updater');
         }
     }
