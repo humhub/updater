@@ -119,13 +119,13 @@ class UpdateController extends Controller
         }
 
         $staticFolder = Yii::getAlias('@webroot/static');
-        if (is_dir($staticFolder) && !is_writeable($staticFolder)) {
+        if (is_dir($staticFolder) && !is_writable($staticFolder)) {
             Yii::warning('Not writable: ' . $staticFolder, 'updater');
             return false;
         }
 
         $vendorFolder = Yii::getAlias('@vendor');
-        if (is_dir($vendorFolder) && !is_writeable($vendorFolder)) {
+        if (is_dir($vendorFolder) && !is_writable($vendorFolder)) {
             Yii::warning('Not writable: ' . $vendorFolder, 'updater');
             return false;
         }
