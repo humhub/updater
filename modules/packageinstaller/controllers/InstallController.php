@@ -10,7 +10,6 @@ namespace humhub\modules\updater\modules\packageinstaller\controllers;
 
 use Exception;
 use humhub\helpers\ThemeHelper;
-use humhub\models\Setting;
 use humhub\modules\marketplace\services\ModuleService;
 use humhub\modules\updater\libs\UpdatePackage;
 use humhub\services\MigrationService;
@@ -141,23 +140,11 @@ class InstallController extends \yii\base\Controller
 
     protected function switchToDefaultTheme()
     {
-        if (version_compare(Yii::$app->version, '1.1', '<')) {
-            Setting::Set('theme', 'HumHub');
-        } elseif (version_compare(Yii::$app->version, '1.3.7', '<')) {
-            Yii::$app->settings->set('theme', 'HumHub');
-        } else {
-            $theme = ThemeHelper::getThemeByName('HumHub');
-            if ($theme !== null) {
-                $theme->activate();
-            }
-        }
-
-        // TODO: remove when humhub minVersion is 1.18 or higher
-        if (version_compare(Yii::$app->version, '1.18', '<')) {
-            \humhub\libs\DynamicConfig::rewrite();
+        $theme = ThemeHelper::getThemeByName('HumHub');
+        if ($theme !== null) {
+            $theme->activate();
         }
     }
-
 
     protected function flushCaches()
     {

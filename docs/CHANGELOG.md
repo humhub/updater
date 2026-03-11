@@ -5,6 +5,7 @@ Changelog
 -------------------------
 - Fix #60: Fix auto update modules
 - Fix #62: Fix deprecated proxy module settings method
+- Enh #66: Remove deprecations
 
 2.4.0 (September 1, 2025)
 -------------------------
