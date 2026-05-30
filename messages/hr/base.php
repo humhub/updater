@@ -52,7 +52,7 @@ return [
   'This HumHub version no longer supports the deprecated Enterprise Module. Please contact our support: {email}' => '',
   'Update' => 'Ažuriranje',
   'Update Blocked – Incompatible Module(s)' => '',
-  'Update HumHub' => 'Ažuriraj HumHuB',
+  'Update HumHub' => 'Ažuriraj HumHub',
   'Update download failed! (%error%)' => 'Preuzimanje ažuriranja nije uspjelo! (%error%)',
   'Update module: {moduleName}' => '',
   'Update package invalid!' => 'Ažuriranje paketa nije važeće!',
