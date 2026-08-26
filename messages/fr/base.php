@@ -54,7 +54,7 @@ return [
   'Update Blocked – Incompatible Module(s)' => 'Mise à jour bloquée - Module(s) incompatible',
   'Update HumHub' => 'Mettre à jour HumHub',
   'Update download failed! (%error%)' => 'Le téléchargement de la mise à jour a échoué (%error%)',
-  'Update module: {moduleName}' => 'Mettez à jour le module : {moduleName}',
+  'Update module: {moduleName}' => 'Mise à jour du module : {moduleName}',
   'Update package invalid!' => 'Paquet de mise à jour invalide.',
   'Update successful' => 'Mise à jour réussie',
   'Updater Configuration' => 'Configuration de la mise à jour',
