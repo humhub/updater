@@ -43,7 +43,7 @@ return [
   'Switch to default theme after update (strongly recommended)' => 'Basculer vers le thème par défaut après la mise à jour (vivement recommandé)',
   'The Theme Builder module will be uninstalled.' => 'Le module Theme Builder sera désinstallé.',
   'The currently installed PHP version is too old. Please update before proceed.' => 'La version de PHP actuellement installée est trop ancienne. Veuillez effectuer une mise à jour avant de continuer.',
-  'The following module(s) do not yet offer a compatible version for the new HumHub version. To proceed with the update, you must uninstall these modules.' => '',
+  'The following module(s) do not yet offer a compatible version for the new HumHub version. To proceed with the update, you must uninstall these modules.' => 'Le(s) module(s) suivant(s) ne proposent pas encore de version compatible avec la nouvelle version de HumHub. Pour procéder à la mise à jour, vous devez désinstaller ces modules.',
   'The update was successfully installed!' => 'La mise à jour a été installée avec succès.',
   'The updater requires write access to <strong>all</strong> files and folders in the application root folder.' => 'L\'outil de mise à jour nécessite un droit d\'écriture sur <strong>tous</strong> les fichiers et dossiers du dossier racine de l\'application.',
   'There is a new update to %version% available!' => 'Une nouvelle mise à jour vers la version %version% est disponible.',
