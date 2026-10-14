@@ -131,6 +131,9 @@ $warningMessage = $availableUpdate->getWarningMessage();
         showError(result.message);
     }
 
+    // Secret token of the package installer, provided by the download step
+    var installToken = null;
+
     function step_download() {
         showStep('download');
         $.ajax({
@@ -143,6 +146,7 @@ $warningMessage = $availableUpdate->getWarningMessage();
             url: '<?= Url::to(['download']) ?>',
             success: function (json) {
                 if (checkError(json)) {
+                    installToken = json.token;
                     finishStep('download');
                     step_extract();
                 }
@@ -161,6 +165,7 @@ $warningMessage = $availableUpdate->getWarningMessage();
             dataType: 'json',
             data: {
                 'fileName': '<?= $availableUpdate->fileName ?>',
+                'token': installToken,
             },
             url: '<?= Url::to(['/package-installer/install/extract']) ?>',
             success: function (json) {
@@ -183,6 +188,7 @@ $warningMessage = $availableUpdate->getWarningMessage();
             dataType: 'json',
             data: {
                 'fileName': '<?= $availableUpdate->fileName ?>',
+                'token': installToken,
             },
             url: '<?= Url::to(['/package-installer/install/validate']) ?>',
             success: function (json) {
@@ -208,6 +214,7 @@ $warningMessage = $availableUpdate->getWarningMessage();
             dataType: 'json',
             data: {
                 'fileName': '<?= $availableUpdate->fileName ?>',
+                'token': installToken,
                 'theme': resetTheme,
             },
             url: '<?= Url::to(['/package-installer/install/prepare']) ?>',
@@ -231,6 +238,7 @@ $warningMessage = $availableUpdate->getWarningMessage();
             dataType: 'json',
             data: {
                 'fileName': '<?= $availableUpdate->fileName ?>',
+                'token': installToken,
             },
             url: '<?= Url::to(['/package-installer/install/install-files']) ?>',
             success: function (json) {
@@ -255,6 +263,7 @@ $warningMessage = $availableUpdate->getWarningMessage();
             dataType: 'json',
             data: {
                 'fileName': '<?= $availableUpdate->fileName ?>',
+                'token': installToken,
             },
             url: '<?= Url::to(['/package-installer/install/migrate']) ?>',
             success: function (json) {
@@ -288,6 +297,7 @@ $warningMessage = $availableUpdate->getWarningMessage();
             data: {
                 moduleId: module.id,
                 fileName: '<?= $availableUpdate->fileName ?>',
+                token: installToken,
             },
             url: '<?= Url::to(['/package-installer/install/module']) ?>',
             success: function (json) {
@@ -339,6 +349,7 @@ $warningMessage = $availableUpdate->getWarningMessage();
             dataType: 'json',
             data: {
                 'fileName': '<?= $availableUpdate->fileName ?>',
+                'token': installToken,
                 'theme': resetTheme,
             },
             url: '<?= Url::to(['/package-installer/install/cleanup']) ?>',

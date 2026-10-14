@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.4.3 (Unreleased)
+------------------
+- Fix #69: Require a secret token for the package installer steps
+
 2.4.2 (July 21, 2026)
 ---------------------
 - Enh #67: Remove directories left empty after update file deletions (`static` moved into `protected/humhub` with HumHub 1.19, humhub/humhub#8102)

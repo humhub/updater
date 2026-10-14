@@ -14,6 +14,8 @@ use humhub\modules\marketplace\services\ModuleService;
 use humhub\modules\updater\libs\UpdatePackage;
 use humhub\services\MigrationService;
 use Yii;
+use yii\web\ForbiddenHttpException;
+use yii\web\MethodNotAllowedHttpException;
 
 /**
  * Installs a update package
@@ -33,14 +35,32 @@ class InstallController extends \yii\base\Controller
     public function beforeAction($action)
     {
         set_time_limit(0);
-        $this->flushCaches();
 
         Yii::$app->response->format = 'json';
 
-        $fileName = Yii::$app->request->post('fileName');
-        $this->updatePackage = new UpdatePackage($fileName);
+        if (!Yii::$app->request->isPost) {
+            throw new MethodNotAllowedHttpException();
+        }
 
-        // Load update package
+        // This controller is also used while the application files are being replaced, so a regular login check
+        // is not reliable. The secret token is created for the admin while downloading the package instead.
+        $fileName = Yii::$app->request->post('fileName');
+        if (!is_string($fileName)) {
+            throw new ForbiddenHttpException();
+        }
+
+        try {
+            $this->updatePackage = new UpdatePackage($fileName);
+        } catch (Exception) {
+            throw new ForbiddenHttpException();
+        }
+
+        if (!$this->updatePackage->verifyToken(Yii::$app->request->post('token'))) {
+            throw new ForbiddenHttpException();
+        }
+
+        $this->flushCaches();
+
         return parent::beforeAction($action);
     }
 
