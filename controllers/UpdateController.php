@@ -7,6 +7,7 @@ use humhub\modules\admin\components\Controller;
 use humhub\modules\updater\libs\OnlineUpdateAPI;
 use humhub\modules\updater\libs\UpdatePackage;
 use Yii;
+use yii\web\NotFoundHttpException;
 
 /**
  * UpdateController
@@ -71,8 +72,13 @@ class UpdateController extends Controller
 
     public function actionStart()
     {
+        $availableUpdate = OnlineUpdateAPI::getAvailableUpdate();
+        if ($availableUpdate === null) {
+            throw new NotFoundHttpException(Yii::t('UpdaterModule.base', 'No update available!'));
+        }
+
         return $this->renderAjax('start', [
-            'availableUpdate' => OnlineUpdateAPI::getAvailableUpdate(),
+            'availableUpdate' => $availableUpdate,
         ]);
     }
 
@@ -82,6 +88,10 @@ class UpdateController extends Controller
         Yii::$app->response->format = 'json';
 
         $availableUpdate = OnlineUpdateAPI::getAvailableUpdate();
+        if ($availableUpdate === null) {
+            throw new NotFoundHttpException(Yii::t('UpdaterModule.base', 'No update available!'));
+        }
+
         $availableUpdate->download();
 
         // Required by all following steps of the package installer
