@@ -91,6 +91,14 @@ class UpdatePackage
         return hash_equals((string) file_get_contents($file), $token);
     }
 
+    /**
+     * Checks if a token was created for this package (the token file exists).
+     */
+    public function hasToken(): bool
+    {
+        return is_file($this->getTokenFile());
+    }
+
     private function getTokenFile(): string
     {
         return $this->getTempPath() . DIRECTORY_SEPARATOR . $this->fileName . '.token';
