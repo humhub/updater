@@ -14,6 +14,8 @@ use humhub\modules\marketplace\services\ModuleService;
 use humhub\modules\updater\libs\UpdatePackage;
 use humhub\services\MigrationService;
 use Yii;
+use yii\web\ForbiddenHttpException;
+use yii\web\MethodNotAllowedHttpException;
 
 /**
  * Installs a update package
@@ -33,15 +35,55 @@ class InstallController extends \yii\base\Controller
     public function beforeAction($action)
     {
         set_time_limit(0);
-        $this->flushCaches();
 
         Yii::$app->response->format = 'json';
 
-        $fileName = Yii::$app->request->post('fileName');
-        $this->updatePackage = new UpdatePackage($fileName);
+        if (!Yii::$app->request->isPost) {
+            throw new MethodNotAllowedHttpException();
+        }
 
-        // Load update package
+        // This controller is also used while the application files are being replaced, so a regular login check
+        // is not reliable. The secret token is created for the admin while downloading the package instead.
+        $fileName = Yii::$app->request->post('fileName');
+        if (!is_string($fileName)) {
+            throw new ForbiddenHttpException();
+        }
+
+        try {
+            $this->updatePackage = new UpdatePackage($fileName);
+        } catch (Exception) {
+            throw new ForbiddenHttpException();
+        }
+
+        if (!$this->updatePackage->verifyToken(Yii::$app->request->post('token'))
+            && !$this->isTokenlessStepAllowed($action)) {
+            throw new ForbiddenHttpException();
+        }
+
+        $this->flushCaches();
+
         return parent::beforeAction($action);
+    }
+
+    /**
+     * Fallback for the self-update transition from older Updater versions (HumHub < 1.18).
+     *
+     * If the Updater module updates itself during the "module" step, the already loaded old UI (which has no
+     * knowledge of the token and never created a token file) still sends the remaining "module" and "cleanup"
+     * requests without a token. Only these two steps are accepted in that case, and only if no token file exists
+     * for the package (otherwise the token stays mandatory for all steps), for a logged-in system administrator
+     * with a valid CSRF token.
+     *
+     * @param \yii\base\Action $action
+     * @return bool
+     */
+    protected function isTokenlessStepAllowed($action): bool
+    {
+        return in_array($action->id, ['module', 'cleanup'], true)
+            && !$this->updatePackage->hasToken()
+            && !Yii::$app->user->isGuest
+            && Yii::$app->user->isAdmin()
+            && Yii::$app->request->validateCsrfToken();
     }
 
     public function actionExtract()

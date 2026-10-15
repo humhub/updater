@@ -51,6 +51,60 @@ class UpdatePackage
     }
 
     /**
+     * Creates a new secret install token, which is required by all steps of the package installer.
+     * The token is stored in a file (not in the database), because the application is replaced and migrated
+     * while the package is installed.
+     *
+     * @return string
+     * @throws Exception
+     */
+    public function createToken(): string
+    {
+        $token = Yii::$app->security->generateRandomString(40);
+        $file = $this->getTokenFile();
+
+        if (file_put_contents($file, $token, LOCK_EX) === false) {
+            throw new Exception('Could not create update package token!');
+        }
+        @chmod($file, 0600);
+
+        return $token;
+    }
+
+    /**
+     * Checks the given install token against the token created while downloading the package.
+     *
+     * @param mixed $token
+     * @return bool
+     */
+    public function verifyToken($token): bool
+    {
+        if (!is_string($token) || $token === '') {
+            return false;
+        }
+
+        $file = $this->getTokenFile();
+        if (!is_file($file)) {
+            return false;
+        }
+
+        return hash_equals((string) file_get_contents($file), $token);
+    }
+
+    /**
+     * Checks if a token was created for this package (the token file exists).
+     */
+    public function hasToken(): bool
+    {
+        return is_file($this->getTokenFile());
+    }
+
+    private function getTokenFile(): string
+    {
+        return $this->getTempPath() . DIRECTORY_SEPARATOR . $this->fileName . '.token';
+    }
+
+    /**
      * Get config for restrictions depending on installed modules
      *
      * @return array Key - Module Id, Value - array of restrictions where key is type of possible restriction:
@@ -404,6 +458,7 @@ class UpdatePackage
         }
 
         $this->deleteFile($packageFile);
+        @unlink($this->getTokenFile());
 
         try {
             FileHelper::removeDirectory($this->getDirectory(), ['traverseSymlinks' => true]);

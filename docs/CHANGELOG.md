@@ -4,6 +4,7 @@ Changelog
 2.4.3 (Unreleased)
 ------------------
 - Fix #68: Update start and download return 404 instead of a 500 error if no update is available
+- Fix #69: Require a secret token for the package installer steps
 
 2.4.2 (July 21, 2026)
 ---------------------

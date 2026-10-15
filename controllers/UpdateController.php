@@ -5,6 +5,7 @@ namespace humhub\modules\updater\controllers;
 use humhub\components\Module;
 use humhub\modules\admin\components\Controller;
 use humhub\modules\updater\libs\OnlineUpdateAPI;
+use humhub\modules\updater\libs\UpdatePackage;
 use Yii;
 use yii\web\NotFoundHttpException;
 
@@ -93,7 +94,10 @@ class UpdateController extends Controller
 
         $availableUpdate->download();
 
-        return ['status' => 'ok'];
+        // Required by all following steps of the package installer
+        $token = (new UpdatePackage($availableUpdate->fileName))->createToken();
+
+        return ['status' => 'ok', 'token' => $token];
     }
 
     protected function isNewUpdaterModuleAvailable()
