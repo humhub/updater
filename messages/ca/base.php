@@ -34,6 +34,7 @@ return [
     'Migration Guide' => '',
     'New updater version available!' => '',
     'No error message available. Please check logfiles!' => '',
+    'No update available!' => '',
     'Please note:' => '',
     'Please read the {MigrationGuideLink}' => '',
     'Please update installed marketplace modules before and after the update' => '',

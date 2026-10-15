@@ -52,6 +52,7 @@ return [
     'Make sure all files are writable! ({files})' => '',
     'Manual upgrade' => '',
     'Migration Guide' => '',
+    'No update available!' => '',
     'Please read the {MigrationGuideLink}' => '',
     'Requirements' => '',
     'The Theme Builder module will be uninstalled.' => '',
