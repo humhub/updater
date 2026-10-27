@@ -5,7 +5,6 @@ namespace humhub\modules\updater\libs;
 use humhub\widgets\bootstrap\Link;
 use Yii;
 use yii\base\Exception;
-use yii\helpers\Json;
 use yii\helpers\FileHelper;
 
 /**
@@ -129,98 +128,50 @@ class UpdatePackage
     }
 
     /**
-     * Returns the package directory
+     * Returns the extracted package directory (`humhub-<version>`)
      *
      * @return string
      * @throws Exception
      */
     private function getDirectory()
     {
-
-        $dirName = basename(str_replace('.zip', '', $this->fileName));
-        $packageDir = $this->getTempPath() . DIRECTORY_SEPARATOR . $dirName;
+        $packageDir = $this->getTempPath() . DIRECTORY_SEPARATOR . basename($this->fileName, '.zip');
 
         if (!is_dir($packageDir)) {
-            throw new Exception("Could not get package directory!" . $packageDir);
+            throw new Exception('Could not get package directory! ' . $packageDir);
         }
 
         return $packageDir;
     }
 
-    /**
-     * Returns the package directory which contains all changed files
-     *
-     * @return string
-     * @throws Exception
-     */
-    private function getNewFileDirectory()
-    {
-        $fileDir = $this->getDirectory() . DIRECTORY_SEPARATOR . 'files';
-
-        if (!is_dir($fileDir)) {
-            throw new Exception("Could not get package file directory!");
-        }
-
-        return $fileDir;
-    }
-
     public function extract()
     {
         $targetFile = $this->getTempPath() . DIRECTORY_SEPARATOR . $this->fileName;
+        $packageDir = $this->getTempPath() . DIRECTORY_SEPARATOR . basename($this->fileName, '.zip');
+
+        if (is_dir($packageDir)) {
+            FileHelper::removeDirectory($packageDir);
+        }
 
         $zip = new \ZipArchive();
-        $res = $zip->open($targetFile);
-        if ($res === true) {
-            $zip->extractTo(Yii::$app->getModule('updater')->getTempPath());
-            $zip->close();
-        } else {
+        if ($zip->open($targetFile) !== true || !$zip->extractTo($this->getTempPath())) {
             throw new Exception(Yii::t('UpdaterModule.base', 'Could not extract update package!'));
+        }
+        $zip->close();
+
+        if ($this->getNewConfigValue('version') !== $this->getPackageVersion()) {
+            throw new Exception(Yii::t('UpdaterModule.base', 'Update package invalid!'));
         }
     }
 
     /**
-     * Returns the results of package validations
+     * Returns files and directories which must be writable for the update
+     *
+     * @return string[]
      */
     public function checkFilePermissions()
     {
-        $notWritable = [];
-        $changedFiles = $this->getChangedFiles();
-        foreach ($changedFiles as $fileName => $info) {
-            $realFilePath = Yii::getAlias('@webroot') . DIRECTORY_SEPARATOR . $fileName;
-            if ($info['changeType'] == 'D') {
-                if (is_file($realFilePath) && !$this->isWritable($realFilePath)) {
-                    $notWritable[] = $realFilePath;
-                    continue;
-                }
-            } elseif ($info['changeType'] == 'A') {
-                if (!$this->isWritable($realFilePath) || !$this->isWritable(dirname($realFilePath))) {
-                    $notWritable[] = $realFilePath;
-                }
-            } else {
-                if (!$this->isWritable($realFilePath)) {
-                    $notWritable[] = $realFilePath;
-                }
-            }
-        }
-
-        $vendorPath = Yii::getAlias('@webroot/protected/vendor');
-        if (!$this->isWritable($vendorPath)) {
-            $notWritable[] = $vendorPath;
-        }
-
-        // Only packages for HumHub prior 1.19 ship a complete `static` folder
-        if (is_dir($this->getNewFileDirectory() . DIRECTORY_SEPARATOR . 'static')) {
-            $webrootStaticPath = Yii::getAlias('@webroot/static');
-            if (!$this->isWritable($webrootStaticPath)) {
-                $notWritable[] = $webrootStaticPath;
-            }
-        }
-
-        // Test Backup Path
-        $this->getBackupPath();
-
-
-        return $notWritable;
+        return $this->getInstaller()->getNotWritable();
     }
 
     /**
@@ -264,176 +215,15 @@ class UpdatePackage
         return empty($errors) ? true : $errors;
     }
 
-    private function getNewConfigValue($configVarName, $defaultValue = null)
-    {
-        $changedFiles = $this->getChangedFiles();
-
-        $configFileName = 'protected/humhub/config/common.php';
-        if (isset($changedFiles[$configFileName]['newFileMD5'])) {
-            $newConfigFilePath = $this->getNewFileDirectory() . DIRECTORY_SEPARATOR . $changedFiles[$configFileName]['newFileMD5'];
-            if (file_exists($newConfigFilePath)) {
-                if (preg_match('/[\'"]' . preg_quote((string) $configVarName) . '[\'"]\s+=>\s+[\'"](.+?)[\'"]/', file_get_contents($newConfigFilePath), $match)) {
-                    return $match[1];
-                }
-            }
-        }
-
-        return $defaultValue;
-    }
-
     public function install()
     {
-        $warnings = [];
-
-        // Complete vendor package provided
-        if (is_dir($this->getNewFileDirectory() . DIRECTORY_SEPARATOR . 'vendor')) {
-            rename(Yii::getAlias('@webroot/protected/vendor'), $this->getBackupPath() . DIRECTORY_SEPARATOR . 'vendor_' . time());
-            rename($this->getNewFileDirectory() . DIRECTORY_SEPARATOR . 'vendor', Yii::getAlias('@webroot/protected/vendor'));
-        }
-
-        // Complete HumHub package provided
-        if (is_dir($this->getNewFileDirectory() . DIRECTORY_SEPARATOR . 'humhub')) {
-            rename(Yii::getAlias('@webroot/protected/humhub'), $this->getBackupPath() . DIRECTORY_SEPARATOR . 'humhub_' . time());
-            rename($this->getNewFileDirectory() . DIRECTORY_SEPARATOR . 'humhub', Yii::getAlias('@webroot/protected/humhub'));
-        }
-
-        // Complete static files package provided
-        if (is_dir($this->getNewFileDirectory() . DIRECTORY_SEPARATOR . 'static')) {
-
-            // Not exists prior 1.2
-            if (is_dir(Yii::getAlias('@webroot/static'))) {
-                rename(Yii::getAlias('@webroot/static'), $this->getBackupPath() . DIRECTORY_SEPARATOR . 'static_' . time());
-            }
-            rename($this->getNewFileDirectory() . DIRECTORY_SEPARATOR . 'static', Yii::getAlias('@webroot/static'));
-        }
-
-        $changedFiles = $this->getChangedFiles();
-        foreach ($changedFiles as $fileName => $info) {
-            $realFilePath = Yii::getAlias('@webroot') . DIRECTORY_SEPARATOR . $fileName;
-
-            if ($info['changeType'] == 'A' || $info['changeType'] == 'M') {
-                $newFile = $this->getNewFileDirectory() . DIRECTORY_SEPARATOR . $info['newFileMD5'];
-                if (!$this->installFile($newFile, $realFilePath)) {
-                    Yii::warning('Update of file:' . $realFilePath . ' failed!', 'updater');
-                }
-            } elseif ($info['changeType'] == 'D') {
-                if (!$this->deleteFile($realFilePath)) {
-                    Yii::warning('Deletion of file:' . $realFilePath . ' failed!', 'updater');
-                }
-            }
-        }
+        $this->getInstaller()->install();
 
         if (function_exists('opcache_reset')) {
             @opcache_reset();
         }
 
-        return $warnings;
-    }
-
-    public function getChangedFiles()
-    {
-        $file = $this->getDirectory() . DIRECTORY_SEPARATOR . "update.json";
-        if (!is_file($file)) {
-            throw new Exception("Could not open update.json!");
-        }
-        $update = Json::decode(file_get_contents($file));
-        return $update['changedFiles'];
-    }
-
-    public function getReleaseNotes()
-    {
-
-        $releaseNotesFile = $this->getDirectory() . DIRECTORY_SEPARATOR . 'changes.md';
-        if (is_file($releaseNotesFile)) {
-            return file_get_contents($releaseNotesFile);
-        }
-        return "";
-    }
-
-    /**
-     * Checks if given file is writeable, can be created or deleted
-     * If the parent directory doesn't exists yet - check it can be created
-     *
-     * @param String $f
-     */
-    private function isWritable($f)
-    {
-
-        if (is_dir($f) || is_file($f)) {
-            return is_writable($f);
-        }
-        do {
-            $f = dirname($f);
-
-            // If directory exists, be we have no access
-            if (is_dir($f)) {
-                if (is_writable($f)) {
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-        } while ($f != "/" && $f != "." && $f != "" && $f != "\\");
-
-        return false;
-    }
-
-    /**
-     * Installs a file
-     *
-     * @param String $file
-     */
-    private function installFile($source, $target)
-    {
-
-        $directory = dirname((string) $target);
-        if (!is_dir($directory)) {
-            if (!@mkdir($directory, 0777, true)) {
-                Yii::error("InstallFile - Could not create folder: " . $directory);
-                return false;
-            }
-        }
-
-        if (!is_file($source)) {
-            Yii::error("InstallFile - Could not find source: " . $source);
-            return false;
-        }
-
-        if (@copy($source, $target) == false) {
-            Yii::error("InstallFile - Could not copy to: " . $target);
-            return false;
-        }
-        return true;
-    }
-
-    /**
-     * Delete a file and parent directories which were left empty, e.g. the `static`
-     * and `themes/HumHub` folders which moved into `protected/humhub` with HumHub 1.19
-     *
-     * @param type $file
-     */
-    private function deleteFile($file)
-    {
-        if (!@unlink($file)) {
-            return false;
-        }
-
-        $webroot = realpath(Yii::getAlias('@webroot'));
-        if ($webroot === false) {
-            return true;
-        }
-
-        $directory = dirname($file);
-        while (
-            ($real = realpath($directory)) !== false
-            && $real !== $webroot
-            && str_starts_with($real, $webroot . DIRECTORY_SEPARATOR)
-            && @rmdir($real)
-        ) {
-            $directory = dirname($directory);
-        }
-
-        return true;
+        return [];
     }
 
     protected function getTempPath()
@@ -442,28 +232,23 @@ class UpdatePackage
     }
 
     /**
-     * Delete update package and temp files
+     * Delete update package and temp files (also used for legacy update packages)
      */
     public function delete()
     {
-
         $packageFile = $this->getTempPath() . DIRECTORY_SEPARATOR . $this->fileName;
-
-        if (!is_file($packageFile)) {
-            throw new Exception("Package file not found!");
+        if (is_file($packageFile)) {
+            @unlink($packageFile);
         }
-
-        if (!is_dir($this->getDirectory())) {
-            throw new Exception("Package directory not found!");
-        }
-
-        $this->deleteFile($packageFile);
         @unlink($this->getTokenFile());
 
-        try {
-            FileHelper::removeDirectory($this->getDirectory(), ['traverseSymlinks' => true]);
-        } catch (\Exception) {
-            Yii::error('Could not remove directory: ' . $this->getDirectory(), 'updater');
+        $packageDir = $this->getTempPath() . DIRECTORY_SEPARATOR . basename($this->fileName, '.zip');
+        if (is_dir($packageDir)) {
+            try {
+                FileHelper::removeDirectory($packageDir, ['traverseSymlinks' => true]);
+            } catch (\Exception) {
+                Yii::error('Could not remove directory: ' . $packageDir, 'updater');
+            }
         }
     }
 
@@ -478,11 +263,51 @@ class UpdatePackage
             mkdir($path);
         }
 
-        if (!$this->isWritable($path)) {
+        if (!is_writable($path)) {
             Yii::error('Backup directory not writable: ' . $path);
         }
 
         return $path;
+    }
+
+    /**
+     * Installation directory, which contains `protected/humhub`.
+     * Not `@webroot`, which is the `public` directory since HumHub 1.20.
+     */
+    public static function getBaseDirectory(): string
+    {
+        return dirname(Yii::getAlias('@humhub'), 2);
+    }
+
+    private function getInstaller(): PackageInstaller
+    {
+        /* @var \humhub\modules\updater\Module $module */
+        $module = Yii::$app->getModule('updater');
+
+        return new PackageInstaller(
+            self::getBaseDirectory(),
+            $this->getDirectory(),
+            $this->getBackupPath(),
+            PackageRules::fromFile($module->getBasePath() . '/config/package-rules.php'),
+            Yii::$app->version,
+            $this->getPackageVersion(),
+        );
+    }
+
+    private function getPackageVersion(): string
+    {
+        return substr(basename($this->fileName, '.zip'), strlen('humhub-'));
+    }
+
+    private function getNewConfigValue($configVarName, $defaultValue = null)
+    {
+        $configFile = $this->getTempPath() . DIRECTORY_SEPARATOR . basename($this->fileName, '.zip') . '/protected/humhub/config/common.php';
+        if (is_file($configFile)
+            && preg_match('/[\'"]' . preg_quote((string)$configVarName, '/') . '[\'"]\s+=>\s+[\'"](.+?)[\'"]/', file_get_contents($configFile), $match)) {
+            return $match[1];
+        }
+
+        return $defaultValue;
     }
 
 }
