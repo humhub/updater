@@ -23,54 +23,41 @@ class AvailableUpdate
     public $fileName;
     public $versionTo;
     public $downloadUrl;
-    public $md5;
+    public $sha256;
 
     public function download()
     {
         $targetFile = Yii::$app->getModule('updater')->getTempPath() . DIRECTORY_SEPARATOR . $this->fileName;
 
-        // Unlink download if exists and not matches the md5
-        if (is_file($targetFile) && md5_file($targetFile) != $this->md5) {
+        // Unlink download if exists and not matches the checksum
+        if (is_file($targetFile) && !hash_equals(strtolower($this->sha256), hash_file('sha256', $targetFile))) {
             unlink($targetFile);
         }
 
         // Download Package
         if (!is_file($targetFile)) {
             try {
-                if (class_exists('\yii\httpclient\Client')) {
-                    $fh = fopen($targetFile, 'w');
-                    $client = new \yii\httpclient\Client([
-                        'transport' => 'yii\httpclient\CurlTransport',
-                    ]);
-                    $response = $client->createRequest()
-                        ->setMethod('GET')
-                        ->setUrl($this->downloadUrl)
-                        ->setOutputFile($fh)
-                        ->setOptions(Yii::$app->getModule('updater')->getCurlOptions())
-                        ->send();
+                $fh = fopen($targetFile, 'w');
+                $client = new \yii\httpclient\Client([
+                    'transport' => 'yii\httpclient\CurlTransport',
+                ]);
+                $response = $client->createRequest()
+                    ->setMethod('GET')
+                    ->setUrl($this->downloadUrl)
+                    ->setOutputFile($fh)
+                    ->setOptions(Yii::$app->getModule('updater')->getCurlOptions())
+                    ->send();
 
-                    if (!$response->isOk) {
-                        Yii::error('Could not download upgrade package: ' . $response->getStatusCode());
-                        throw new \Exception('Download Response is not ok!');
-                    }
-                } else {
-                    // Older Versions
-                    $http = new \Zend\Http\Client($this->downloadUrl, [
-                        'adapter' => '\Zend\Http\Client\Adapter\Curl',
-                        'curloptions' => Yii::$app->getModule('updater')->getCurlOptions(),
-                        'timeout' => 300,
-                    ]);
-                    $http->setStream();
-                    $response = $http->send();
-                    copy($response->getStreamName(), $targetFile);
+                if (!$response->isOk) {
+                    Yii::error('Could not download upgrade package: ' . $response->getStatusCode());
+                    throw new \Exception('Download Response is not ok!');
                 }
-
             } catch (\Exception $ex) {
                 throw new \Exception(Yii::t('UpdaterModule.base', 'Update download failed! (%error%)', ['%error%' => $ex->getMessage()]));
             }
         }
 
-        if (md5_file($targetFile) != $this->md5) {
+        if (!hash_equals(strtolower($this->sha256), hash_file('sha256', $targetFile))) {
             throw new \Exception(Yii::t('UpdaterModule.base', 'Update package invalid!'));
         }
     }
