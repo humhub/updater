@@ -1,6 +1,7 @@
 <?php
 
 use humhub\modules\content\widgets\richtext\RichText;
+use humhub\modules\updater\libs\UpdatePackage;
 use humhub\widgets\bootstrap\Alert;
 use humhub\widgets\bootstrap\Button;
 use humhub\widgets\bootstrap\Link;
@@ -55,7 +56,7 @@ use humhub\widgets\modal\ModalButton;
                     ->right() ?>
                 <strong><?= Yii::t('UpdaterModule.base', 'Application folder not writable!') ?></strong><br>
                 <?= Yii::t('UpdaterModule.base', 'The updater requires write access to <strong>all</strong> files and folders in the application root folder.') ?><br>
-                <?= Yii::t('UpdaterModule.base', 'Application folder: {folder}', ['folder' => Yii::getAlias('@webroot')]) ?>
+                <?= Yii::t('UpdaterModule.base', 'Application folder: {folder}', ['folder' => UpdatePackage::getBaseDirectory()]) ?>
             </div>
         <?php endif ?>
 

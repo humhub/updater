@@ -30,7 +30,7 @@ class AvailableUpdate
         $targetFile = Yii::$app->getModule('updater')->getTempPath() . DIRECTORY_SEPARATOR . $this->fileName;
 
         // Unlink download if exists and not matches the checksum
-        if (is_file($targetFile) && !hash_equals($this->sha256, hash_file('sha256', $targetFile))) {
+        if (is_file($targetFile) && !hash_equals(strtolower($this->sha256), hash_file('sha256', $targetFile))) {
             unlink($targetFile);
         }
 
@@ -57,7 +57,7 @@ class AvailableUpdate
             }
         }
 
-        if (!hash_equals($this->sha256, hash_file('sha256', $targetFile))) {
+        if (!hash_equals(strtolower($this->sha256), hash_file('sha256', $targetFile))) {
             throw new \Exception(Yii::t('UpdaterModule.base', 'Update package invalid!'));
         }
     }
