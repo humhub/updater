@@ -1,6 +1,13 @@
 Changelog
 =========
 
+2.5.0 (Unreleased)
+------------------
+- Enh: Install core updates from full release packages instead of update packages
+- Enh: Version-dependent package rules for files outside `protected/humhub` (`config/package-rules.php`, see `docs/PACKAGE-RULES.md`)
+- Enh: Verify downloaded packages with SHA256
+- Chg: Minimum HumHub version 1.19, older installations keep updating with updater 2.4.x
+
 2.4.3 (October 27, 2026)
 ------------------------
 - Fix #68: Update start and download return 404 instead of a 500 error if no update is available
