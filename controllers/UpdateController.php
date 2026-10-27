@@ -151,7 +151,7 @@ class UpdateController extends Controller
         }
 
         // Extract major version like `1.18`
-        $newCoreVersion = preg_replace('/^[a-z]+(\d+\.\d+).*$/i', '$1', $newCoreVersion);
+        $newCoreVersion = preg_replace('/^v?(\d+\.\d+).*$/i', '$1', $newCoreVersion);
 
         $restrictedModules = [];
         foreach ($installedModules as $installedModule) {

@@ -4,6 +4,10 @@ Core updates install the full release package (`humhub-<version>.zip`), the same
 installations. **Everything from the package overwrites the installation.** `config/package-rules.php`
 only defines the exceptions.
 
+Unlike the former update packages, which only contained files changed by the release, this also
+overwrites local modifications of shipped files (e.g. `index.php`, or the root `.htaccess` from 1.20 on).
+The previous versions are kept in `protected/runtime/updater/backups/` for two days.
+
 ## Format
 
 ```php

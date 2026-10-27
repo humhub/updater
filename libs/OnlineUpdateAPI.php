@@ -28,7 +28,11 @@ class OnlineUpdateAPI
         ]);
 
         $release = UpdateSelector::select($info['releases'] ?? [], Yii::$app->version);
-        if ($release === null || !isset($release['packages']['zip']['url'], $release['packages']['zip']['sha256'])) {
+        if (
+            $release === null
+            || !preg_match('/^\d+\.\d+\.\d+(-(beta\.\d+|rc\d+))?$/D', (string)$release['version'])
+            || !isset($release['packages']['zip']['url'], $release['packages']['zip']['sha256'])
+        ) {
             return null;
         }
 
