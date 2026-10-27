@@ -30,15 +30,18 @@ class PackageRules
             if (!preg_match('/^\d+\.\d+\.\d+$/', (string)$version)) {
                 throw new InvalidArgumentException('Invalid package rules version: ' . $version);
             }
+            if (!is_array($section)) {
+                throw new InvalidArgumentException('Invalid package rules section: ' . $version);
+            }
             foreach ($section as $type => $paths) {
                 if (!in_array($type, self::TYPES, true)) {
                     throw new InvalidArgumentException('Invalid package rules type: ' . $type);
                 }
+                if (!is_array($paths)) {
+                    throw new InvalidArgumentException('Invalid package rules list: ' . $version . ' ' . $type);
+                }
                 foreach ($paths as $path) {
-                    $path = ltrim($path, '!');
-                    if ($path === '' || str_starts_with($path, '/') || preg_match('#(^|/)\.\.(/|$)#', $path)) {
-                        throw new InvalidArgumentException('Invalid package rules path: ' . $path);
-                    }
+                    self::validatePath($type, $path);
                 }
             }
         }
@@ -69,10 +72,15 @@ class PackageRules
     }
 
     /**
+     * Pre-release target versions use their base version, so entering a new layout with a pre-release
+     * applies its deletes (they are applied again with the final release, which finds nothing).
+     *
      * @return string[] delete patterns of all sections crossed by the update, in ascending version order
      */
     public function getDelete(string $fromVersion, string $toVersion): array
     {
+        $toVersion = self::getBaseVersion($toVersion);
+
         $paths = [];
         foreach ($this->sections as $version => $section) {
             if (version_compare($version, $fromVersion, '>') && version_compare($version, $toVersion, '<=')) {
@@ -116,9 +124,12 @@ class PackageRules
 
     /**
      * Uses the section with the highest version <= target version which defines the given type.
+     * Pre-release target versions use the rules of their base version (`1.20.0-beta.1` → `1.20.0`).
      */
     private function getState(string $type, string $toVersion): array
     {
+        $toVersion = self::getBaseVersion($toVersion);
+
         $result = [];
         foreach ($this->sections as $version => $section) {
             if (version_compare($version, $toVersion, '>')) {
@@ -130,5 +141,38 @@ class PackageRules
         }
 
         return $result;
+    }
+
+    /**
+     * Strips a pre-release or build suffix (`1.20.0-beta.1` → `1.20.0`).
+     */
+    private static function getBaseVersion(string $version): string
+    {
+        return preg_match('/^\d+\.\d+\.\d+/', $version, $match) ? $match[0] : $version;
+    }
+
+    private static function validatePath(string $type, mixed $path): void
+    {
+        if (!is_string($path)) {
+            throw new InvalidArgumentException('Invalid package rules path in ' . $type);
+        }
+
+        $pattern = $path;
+        if (str_starts_with($pattern, '!')) {
+            if ($type !== 'keep') {
+                throw new InvalidArgumentException('Exclusions are only allowed in keep: ' . $path);
+            }
+            $pattern = substr($pattern, 1);
+        }
+
+        foreach (explode('/', $pattern) as $segment) {
+            if ($segment === '' || $segment === '.' || $segment === '..') {
+                throw new InvalidArgumentException('Invalid package rules path: ' . $path);
+            }
+        }
+
+        if ($type === 'replace' && strpbrk($pattern, '*?[') !== false) {
+            throw new InvalidArgumentException('Wildcards are not allowed in replace: ' . $path);
+        }
     }
 }
