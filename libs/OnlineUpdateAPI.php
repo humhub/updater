@@ -14,7 +14,7 @@ use Yii;
 class OnlineUpdateAPI
 {
     /**
-     * Returns all available updates for a given version
+     * Returns the next available update for the installed version
      *
      * @return AvailableUpdate|null $version
      */
@@ -23,22 +23,22 @@ class OnlineUpdateAPI
         /* @var Module $module */
         $module = Yii::$app->getModule('updater');
 
-        $info = HumHubAPI::request('v1/modules/getHumHubUpdates', [
-            'updaterVersion' => $module->version,
+        $info = HumHubAPI::request('v1/core/releases', [
             'channel' => $module->getUpdateChannel(),
         ]);
 
-        if (!isset($info['fromVersion'])) {
+        $release = UpdateSelector::select($info['releases'] ?? [], Yii::$app->version);
+        if ($release === null || !isset($release['packages']['zip']['url'], $release['packages']['zip']['sha256'])) {
             return null;
         }
 
         $package = new AvailableUpdate();
-        $package->fileName = $info['fileName'];
-        $package->versionFrom = $info['fromVersion'];
-        $package->versionTo = $info['toVersion'];
-        $package->downloadUrl = $info['downloadUrl'];
-        $package->releaseNotes = $info['releaseNotes'];
-        $package->md5 = $info['md5'];
+        $package->fileName = 'humhub-' . $release['version'] . '.zip';
+        $package->versionFrom = Yii::$app->version;
+        $package->versionTo = $release['version'];
+        $package->downloadUrl = $release['packages']['zip']['url'];
+        $package->releaseNotes = $release['releaseNotes'] ?? '';
+        $package->sha256 = $release['packages']['zip']['sha256'];
         return $package;
     }
 
