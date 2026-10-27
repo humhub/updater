@@ -21,34 +21,47 @@ return [
 ```
 
 - Keys are core versions (`major.minor.patch`). A section describes the layout **from this core version on**.
-- Paths are relative to the installation directory, without leading `/` and without `..`.
-  - `dir/*` matches the directory and everything below it.
-  - Any other pattern matches a single file or directory; `*` inside a name is allowed (`config/*.example.php`) but does not match across directories.
+- Paths are relative to the installation directory: no leading `/`, no trailing `/`, no empty, `.` or `..` segments.
+  - `dir/*` matches the directory itself and everything below it. Directories always need `/*`.
+  - Any other pattern matches exactly one path. In `keep`, `config/common.php` matches only that file; a
+    pattern naming a directory without `/*` does not protect the files inside it.
+  - `*` inside a name is allowed (`config/*.example.php`) and does not match across directories. In `keep`
+    it also matches dotfiles (`config/*` covers `config/.env`); in `delete` it does not (`glob()` semantics).
 
-| Type | Meaning |
-| --- | --- |
-| `replace` | Directories swapped as a whole. The old directory is moved to the backup. |
-| `keep` | Files that are never overwritten; they are only created from the package if missing. An entry starting with `!` excludes matching paths from `keep` again, so they are overwritten. |
-| `delete` | Files or directories removed when an update crosses this version. |
+| Type | Meaning | Syntax |
+| --- | --- | --- |
+| `replace` | Directories swapped as a whole. The old directory is moved to the backup. If a swap fails, all swaps done so far are rolled back. | Plain paths, no wildcards, no `!` |
+| `keep` | Files that are never overwritten; they are only created from the package if missing. An entry starting with `!` excludes matching paths from `keep` again, so they are overwritten. | Patterns, `!` exclusions allowed |
+| `delete` | Files or directories removed when an update crosses this version. | Patterns, no `!` |
+
+Every value must be a list of strings; invalid rules abort the update before anything is changed.
 
 ## Evaluation
 
 For an update from version `F` to version `T`:
 
-- **`replace` and `keep`** — only the section with the **highest version `<= T`** that defines them is used. Sections are **not merged**, so each section lists `replace` and `keep` **completely**.
-- **`delete`** — the `delete` lists of **all sections with `F < version <= T`** are applied, in ascending order.
+- **Pre-releases use the rules of their base version**: for `T = 1.20.0-beta.1` the rules are evaluated as for
+  `1.20.0`, so a pre-release already gets the new layout.
+- **`replace` and `keep`** — only the section with the **highest version `<= base(T)`** that defines them is used.
+  Sections are **not merged**, so each section lists `replace` and `keep` **completely**.
+- **`delete`** — the `delete` lists of **all sections with `F < version <= base(T)`** are applied, in ascending order.
+  An update from a pre-release to its final release (`1.20.0-beta.1 → 1.20.0`) applies the deletes again,
+  which is harmless because the files are already gone.
 - A section may contain only `delete`. `replace`/`keep` then come from the nearest lower section that has them.
-- Pre-releases count as lower than the release: a `1.20.0` section does not apply to `1.20.0-rc1`.
 
 Example with the rules above:
 
 | Update | `replace` / `keep` from | `delete` applied |
 | --- | --- | --- |
 | 1.19.1 → 1.19.3 | 1.19.0 | — |
+| 1.19.3 → 1.20.0-beta.1 | 1.20.0 | 1.20.0 |
+| 1.20.0-beta.1 → 1.20.0 | 1.20.0 | 1.20.0 (finds nothing) |
 | 1.19.3 → 1.20.0 | 1.20.0 | 1.20.0 |
 | 1.19.1 → 1.20.2 | 1.20.0 | 1.20.0 |
 | 1.20.0 → 1.20.1 | 1.20.0 | — |
 
+Directories shipped in the package outside the `replace` directories are created if missing, also when they
+are empty (e.g. `public/assets/`).
 Files that exist only in the installation (not in the package, not in a `delete` rule) are never touched.
 Replaced, overwritten and deleted files are moved to `protected/runtime/updater/backups/` and removed
 after two days.
