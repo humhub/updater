@@ -125,23 +125,11 @@ class UpdateController extends Controller
 
     protected function isRootFolderWritable()
     {
-        $rootFolder = Yii::getAlias('@webroot');
-
-        if (!is_writable($rootFolder)) {
-            Yii::warning('Not writable: ' . $rootFolder, 'updater');
-            return false;
-        }
-
-        $staticFolder = Yii::getAlias('@webroot/static');
-        if (is_dir($staticFolder) && !is_writable($staticFolder)) {
-            Yii::warning('Not writable: ' . $staticFolder, 'updater');
-            return false;
-        }
-
-        $vendorFolder = Yii::getAlias('@vendor');
-        if (is_dir($vendorFolder) && !is_writable($vendorFolder)) {
-            Yii::warning('Not writable: ' . $vendorFolder, 'updater');
-            return false;
+        foreach ([UpdatePackage::getBaseDirectory(), Yii::getAlias('@humhub'), Yii::getAlias('@vendor')] as $folder) {
+            if (!is_writable($folder)) {
+                Yii::warning('Not writable: ' . $folder, 'updater');
+                return false;
+            }
         }
 
         return true;
@@ -163,7 +151,7 @@ class UpdateController extends Controller
         }
 
         // Extract major version like `1.18`
-        $newCoreVersion = preg_replace('/^[a-z]+(\d+\.\d+).*$/i', '$1', $newCoreVersion);
+        $newCoreVersion = preg_replace('/^v?(\d+\.\d+).*$/i', '$1', $newCoreVersion);
 
         $restrictedModules = [];
         foreach ($installedModules as $installedModule) {
