@@ -322,7 +322,7 @@ $warningMessage = $availableUpdate->getWarningMessage();
             .html(moduleHtml.html().replace('{moduleName}', module.name))
             .removeAttr('id')
             .attr('data-step-module-id', module.id)
-            .find('i').addClass('colorWarning fa fa-circle pulse animated infinite');
+            .find('i').addClass('text-warning fa fa-circle pulse animated infinite');
 
         const modal = document.getElementById('globalModal');
         if (modal) {
@@ -332,8 +332,8 @@ $warningMessage = $availableUpdate->getWarningMessage();
 
     function finishModuleStep(moduleId) {
         $('[data-step-module-id="' + moduleId + '"').find('i')
-            .removeClass('colorWarning fa-circle infinite pulse')
-            .addClass('swing fa-check-circle colorSuccess');
+            .removeClass('text-warning fa-circle infinite pulse')
+            .addClass('swing fa-check-circle text-success');
     }
 
     function showModuleError(moduleId, error) {
