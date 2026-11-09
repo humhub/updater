@@ -1,8 +1,12 @@
 Changelog
 =========
 
-2.4.4 (Unreleased)
+2.5.0 (Unreleased)
 ------------------
+- Enh: Install core updates from full release packages instead of update packages
+- Enh: Version-dependent package rules for files outside `protected/humhub` (`config/package-rules.php`, see `docs/PACKAGE-RULES.md`)
+- Enh: Verify downloaded packages with SHA256
+- Chg: Minimum HumHub version 1.19, older installations keep updating with updater 2.4.x
 - Enh: Replaced the Bootstrap 3 classes removed from the core (humhub/humhub#8696)
 
 2.4.3 (October 27, 2026)
