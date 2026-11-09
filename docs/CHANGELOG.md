@@ -1,8 +1,8 @@
 Changelog
 =========
 
-2.5.0 (Unreleased)
-------------------
+2.5.0 (November 9, 2026)
+------------------------
 - Enh: Install core updates from full release packages instead of update packages
 - Enh: Version-dependent package rules for files outside `protected/humhub` (`config/package-rules.php`, see `docs/PACKAGE-RULES.md`)
 - Enh: Verify downloaded packages with SHA256
