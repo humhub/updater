@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.5.1 (Unreleased)
+------------------
+- Enh: Automated code refactoring for HumHub 1.19 using Rector
+
 2.5.0 (November 9, 2026)
 ------------------------
 - Enh: Install core updates from full release packages instead of update packages

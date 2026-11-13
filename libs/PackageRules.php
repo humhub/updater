@@ -22,7 +22,7 @@ class PackageRules
     /**
      * @var array<string, array> rule sections by core version, ascending
      */
-    private array $sections;
+    private readonly array $sections;
 
     public function __construct(array $sections)
     {
