@@ -1,9 +1,9 @@
 <?php
 
 use humhub\helpers\Html;
-use humhub\modules\ui\icon\widgets\Icon;
 use humhub\modules\updater\libs\AvailableUpdate;
 use humhub\widgets\bootstrap\Alert;
+use humhub\widgets\Icon;
 use humhub\widgets\modal\Modal;
 use humhub\widgets\modal\ModalButton;
 use yii\helpers\Url;
@@ -101,13 +101,13 @@ $warningMessage = $availableUpdate->getWarningMessage();
 
     function showStep(id) {
         $('#step_' + id).show().find('i')
-            .addClass('text-warning fa fa-circle pulse animated infinite');
+            .addClass('text-warning ti ti-circle-filled pulse animated infinite');
     }
 
     function finishStep(id) {
         $('#step_' + id).find('i')
-            .removeClass('text-warning fa-circle infinite pulse')
-            .addClass('swing fa-check-circle text-success');
+            .removeClass('text-warning ti-circle-filled infinite pulse')
+            .addClass('swing ti-circle-check-filled text-success');
     }
 
     function showError(response) {
@@ -322,7 +322,7 @@ $warningMessage = $availableUpdate->getWarningMessage();
             .html(moduleHtml.html().replace('{moduleName}', module.name))
             .removeAttr('id')
             .attr('data-step-module-id', module.id)
-            .find('i').addClass('text-warning fa fa-circle pulse animated infinite');
+            .find('i').addClass('text-warning ti ti-circle-filled pulse animated infinite');
 
         const modal = document.getElementById('globalModal');
         if (modal) {
@@ -332,8 +332,8 @@ $warningMessage = $availableUpdate->getWarningMessage();
 
     function finishModuleStep(moduleId) {
         $('[data-step-module-id="' + moduleId + '"').find('i')
-            .removeClass('text-warning fa-circle infinite pulse')
-            .addClass('swing fa-check-circle text-success');
+            .removeClass('text-warning ti-circle-filled infinite pulse')
+            .addClass('swing ti-circle-check-filled text-success');
     }
 
     function showModuleError(moduleId, error) {

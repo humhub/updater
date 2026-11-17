@@ -10,7 +10,7 @@ namespace humhub\modules\updater;
 
 use humhub\helpers\ControllerHelper;
 use humhub\modules\admin\widgets\AdminMenu;
-use humhub\modules\ui\menu\MenuLink;
+use humhub\widgets\menu\MenuLink;
 use Yii;
 
 class Events

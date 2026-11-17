@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.6.0 (Unreleased)
+------------------
+- Enh: Update for HumHub 1.20 (core `MenuLink` and `Icon`, Tabler icons for the update steps)
+
 2.5.0 (November 9, 2026)
 ------------------------
 - Enh: Install core updates from full release packages instead of update packages
