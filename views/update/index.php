@@ -15,9 +15,9 @@ use humhub\widgets\modal\ModalButton;
 /* @var array $restrictedMaxVersionModules */
 /* @var bool $allowStart */
 ?>
-<div class="panel panel-default">
-    <div class="panel-heading"><?= Yii::t('UpdaterModule.base', '<strong>Update</strong> HumHub') ?></div>
-    <div class="panel-body">
+<div class="card content-card">
+    <div class="card-header"><div class="card-title"><?= Yii::t('UpdaterModule.base', '<strong>Update</strong> HumHub') ?></div></div>
+    <div class="card-body">
         <?= Alert::success(Yii::t('UpdaterModule.base', 'There is a new update to %version% available!', [
             '%version%' => '<strong>' . $versionTo . '</strong>',
         ]))->closeButton(false) ?>

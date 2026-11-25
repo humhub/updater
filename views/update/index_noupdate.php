@@ -6,9 +6,9 @@ use humhub\widgets\bootstrap\Button;
 /* @var Module $module */
 $module = Yii::$app->getModule('updater');
 ?>
-<div class="panel panel-default">
-    <div class="panel-heading"><?= Yii::t('UpdaterModule.base', '<strong>Update</strong> HumHub') ?></div>
-    <div class="panel-body">
+<div class="card content-card">
+    <div class="card-header"><div class="card-title"><?= Yii::t('UpdaterModule.base', '<strong>Update</strong> HumHub') ?></div></div>
+    <div class="card-body">
         <p><?= Yii::t('UpdaterModule.base', 'There is no new HumHub update available!') ?></p>
         <p><?= Yii::t('UpdaterModule.base', 'Current update channel: {updateChannel}', [
                 'updateChannel' => '<strong>' . $module->getUpdateChannelTitle() . '</strong>'

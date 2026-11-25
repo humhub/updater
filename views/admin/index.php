@@ -10,9 +10,9 @@ use humhub\widgets\bootstrap\Button;
 use humhub\widgets\form\ActiveForm;
 
 ?>
-<div class="panel panel-default">
-    <div class="panel-heading"><?= Yii::t('UpdaterModule.base', 'Updater Configuration') ?></div>
-    <div class="panel-body">
+<div class="card content-card">
+    <div class="card-header"><div class="card-title"><?= Yii::t('UpdaterModule.base', 'Updater Configuration') ?></div></div>
+    <div class="card-body">
         <?php $form = ActiveForm::begin(['id' => 'configure-form', 'enableClientValidation' => false, 'enableClientScript' => false]) ?>
 
         <?= $form->field($model, 'channel')->dropDownList(ConfigureForm::getChannels()) ?>

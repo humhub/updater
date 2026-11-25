@@ -3,6 +3,7 @@ Changelog
 
 2.6.0 (Unreleased)
 ------------------
+- Enh: Cards instead of Bootstrap 3 panels of the core 1.20 (humhub/humhub#8777)
 - Enh: Update for HumHub 1.20 (core `MenuLink` and `Icon`, Tabler icons for the update steps)
 
 2.5.0 (November 9, 2026)
