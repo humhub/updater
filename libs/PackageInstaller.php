@@ -24,7 +24,7 @@ use RuntimeException;
  */
 class PackageInstaller
 {
-    private string $backupId;
+    private readonly string $backupId;
 
     /**
      * @param string $baseDir installation directory
@@ -34,10 +34,10 @@ class PackageInstaller
     public function __construct(
         private string $baseDir,
         private string $packageDir,
-        private string $backupDir,
-        private PackageRules $rules,
-        private string $fromVersion,
-        private string $toVersion,
+        private readonly string $backupDir,
+        private readonly PackageRules $rules,
+        private readonly string $fromVersion,
+        private readonly string $toVersion,
     ) {
         $this->baseDir = rtrim($baseDir, '/\\');
         $this->packageDir = rtrim($packageDir, '/\\');

@@ -298,7 +298,7 @@ class PackageInstallerTest extends Unit
         return new class ($base, $package, $backup, $rules ?? $this->getRules(), '1.19.3', '1.19.4', $renameFilter, $foreignDeviceDir) extends PackageInstaller {
             private $renameFilter;
 
-            public function __construct(string $base, string $package, string $backup, PackageRules $rules, string $from, string $to, ?callable $renameFilter, private ?string $foreignDeviceDir)
+            public function __construct(string $base, string $package, string $backup, PackageRules $rules, string $from, string $to, ?callable $renameFilter, private readonly ?string $foreignDeviceDir)
             {
                 parent::__construct($base, $package, $backup, $rules, $from, $to);
                 $this->renameFilter = $renameFilter;
